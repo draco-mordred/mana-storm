@@ -21,16 +21,16 @@ export default function MainMenu({ onStartGame }: MainMenuProps) {
   };
 
   const styles = {
-    container: { display: 'flex', flexDirection: 'column' as const, alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '2rem', background: 'linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #0a0e27 100%)', },
+    container: { display: 'flex', flexDirection: 'column' as const, alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '2rem', background: 'linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #0a0e27 100%)' },
     title: { fontSize: '4rem', fontWeight: 'bold' as const, color: '#fff', textShadow: '0 0 20px #00ffff, 0 0 40px #00ffff', marginBottom: '2rem', letterSpacing: '0.5rem' },
     subtitle: { fontSize: '1.2rem', color: '#aaa', marginBottom: '3rem', textAlign: 'center' as const },
-    form: { background: 'rgba(0, 0, 0, 0.7)', padding: '2rem', borderRadius: '15px', width: '100%', maxWidth: '500px', border: '1px solid rgba(0, 255, 255, 0.3)', },
+    form: { background: 'rgba(0, 0, 0, 0.7)', padding: '2rem', borderRadius: '15px', width: '100%', maxWidth: '500px', border: '1px solid rgba(0, 255, 255, 0.3)' },
     inputGroup: { marginBottom: '1.5rem' },
     label: { display: 'block', color: '#00ffff', marginBottom: '0.5rem', fontSize: '1.1rem' },
     input: { width: '100%', padding: '0.8rem', background: 'rgba(0, 0, 0, 0.5)', border: '1px solid #00ffff', borderRadius: '8px', color: '#fff', fontSize: '1rem', outline: 'none' },
     characterGrid: { display: 'grid' as const, gridTemplateColumns: 'repeat(5, 1fr)', gap: '1rem', margin: '1.5rem 0' },
     characterCard: { background: 'rgba(0, 0, 0, 0.5)', border: '2px solid transparent', borderRadius: '10px', padding: '1rem', cursor: 'pointer', transition: 'all 0.3s', textAlign: 'center' as const },
-    characterCardSelected: { borderColor: '#00ffff', background: 'rgba(0, 255, 255, 0.1)', transform: 'scale(1.05)', },
+    characterCardSelected: { borderColor: '#00ffff', background: 'rgba(0, 255, 255, 0.1)', transform: 'scale(1.05)' },
     characterIcon: { width: '60px', height: '60px', borderRadius: '50%', margin: '0 auto 0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' },
     characterName: { fontSize: '0.9rem', color: '#fff', fontWeight: 'bold' as const },
     button: { width: '100%', padding: '1rem', background: 'linear-gradient(135deg, #00ffff, #0080ff)', border: 'none', borderRadius: '8px', color: '#000', fontSize: '1.2rem', fontWeight: 'bold' as const, cursor: 'pointer', transition: 'all 0.3s', marginTop: '1rem' },
