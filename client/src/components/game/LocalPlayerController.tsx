@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Player } from '../../types';
 
 interface LocalPlayerControllerProps {
@@ -13,16 +13,20 @@ export default function LocalPlayerController({ playerId, players, socket }: Loc
 
   useEffect(() => {
     if (!socket || !players[playerId]) return;
+
     const handleClick = () => {
       const canvas = document.querySelector('canvas');
       if (canvas && !pointerLockRef.current) canvas.requestPointerLock();
     };
+
     const handlePointerLockChange = () => {
       pointerLockRef.current = document.pointerLockElement !== null;
     };
+
     document.addEventListener('pointerlockchange', handlePointerLockChange);
     const canvas = document.querySelector('canvas');
     if (canvas) canvas.addEventListener('click', handleClick);
+
     return () => {
       document.removeEventListener('pointerlockchange', handlePointerLockChange);
       if (canvas) canvas.removeEventListener('click', handleClick);
@@ -35,30 +39,32 @@ export default function LocalPlayerController({ playerId, players, socket }: Loc
     const handleKeyUp = (e: KeyboardEvent) => keysRef.current[e.code] = false;
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
+    return () => { window.removeEventListener('keydown', handleKeyDown); window.removeEventListener('keyup', handleKeyUp); };
   }, []);
 
   useEffect(() => {
     if (!socket || !players[playerId] || !pointerLockRef.current) return;
     const player = players[playerId];
     const moveSpeed = 0.2;
+
     const moveLoop = setInterval(() => {
       const moveVector = { x: 0, y: 0, z: 0 };
       let isMoving = false;
+
       if (keysRef.current['KeyW'] || keysRef.current['ArrowUp']) { moveVector.z -= moveSpeed; isMoving = true; }
       if (keysRef.current['KeyS'] || keysRef.current['ArrowDown']) { moveVector.z += moveSpeed; isMoving = true; }
       if (keysRef.current['KeyA'] || keysRef.current['ArrowLeft']) { moveVector.x -= moveSpeed; isMoving = true; }
       if (keysRef.current['KeyD'] || keysRef.current['ArrowRight']) { moveVector.x += moveSpeed; isMoving = true; }
       if (keysRef.current['Space'] && player.position.y <= 0.1) { moveVector.y += 0.5; socket.emit('action', { type: 'jump' }); }
+
       if (isMoving) {
-        socket.emit('move', { position: { x: player.position.x + moveVector.x, y: player.position.y + moveVector.y, z: player.position.z + moveVector.z }, animation: 'running' });
+        const newPosition = { x: player.position.x + moveVector.x, y: player.position.y + moveVector.y, z: player.position.z + moveVector.z };
+        socket.emit('move', { position: newPosition, animation: 'running' });
       } else {
         socket.emit('move', { animation: 'idle' });
       }
     }, 16);
+
     return () => clearInterval(moveLoop);
   }, [socket, players, playerId]);
 

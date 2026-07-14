@@ -31,7 +31,7 @@ export default function Character({ player, isLocalPlayer = false }: CharacterPr
     const headGeometry = new window.THREE.SphereGeometry(0.25, 16, 16);
     const headMaterial = new window.THREE.MeshStandardMaterial({ color: 0xffccaa, roughness: 0.8 });
     const head = new window.THREE.Mesh(headGeometry, headMaterial);
-    head.position.y = 1.05;
+    head.position.y = 0.8 + 0.25;
     head.castShadow = true;
     group.add(head);
 

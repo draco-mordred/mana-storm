@@ -10,6 +10,13 @@ export default function GameWorld({ players }: GameWorldProps) {
     if (!window.THREE) return;
     const scene = (window as any).scene;
     if (!scene) return;
+
+    Object.values(players).forEach(player => {
+      if (!scene.getObjectByName(player.id)) {
+        // Character rendering handled by Character component
+      }
+    });
+
     return () => {
       Object.values(players).forEach(player => {
         const obj = scene.getObjectByName(player.id);
@@ -17,5 +24,6 @@ export default function GameWorld({ players }: GameWorldProps) {
       });
     };
   }, [players]);
+
   return null;
 }
