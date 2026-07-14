@@ -12,8 +12,8 @@
   "dependencies": {
     "@react-three/drei": "^9.92.7",
     "@react-three/fiber": "^8.15.12",
-    "@react-three/postprocessing": "^2.15.12",
-    "postprocessing": "^6.35.3",
+    "@react-three/postprocessing": "^3.0.4",
+    "postprocessing": "^6.39.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "socket.io-client": "^4.7.4",
