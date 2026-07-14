@@ -1,628 +1,165 @@
 import type { CharacterPreset, Skill } from '../types';
 
 // ============================================
-// 🎭 CHARACTER PRESETS (Anime Style)
+// 🎭 CHARACTER PRESETS (Anime-Style)
 // ============================================
+// Rudeus Greyrat - Main protagonist from Mushoku Tensei
+// Visual: Blue hair, young mage appearance, robe outfit
 export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
-  // Rudeus Greyrat - Default character (Mushoku Tensei)
+  // Default character - Rudeus Greyrat
   rudeus: {
     type: 'rudeus',
     name: 'Rudeus Greyrat',
     baseHealth: 100,
     baseMana: 150,
-    baseAttack: 20,
+    baseAttack: 25,
     baseDefense: 15,
     baseSpeed: 10,
-    skills: ['magic-missile', 'healing', 'water-blast', 'teleportation'],
+    skills: ['fireball', 'ice-shield', 'heal', 'teleport'],
     model: 'rudeus',
-    color: 0x4169e1, // Royal blue
-    hairColor: 0x1e90ff, // Dodger blue
+    color: 0x4a90d9, // Blue color for Rudeus
+    description: 'The reincarnated prodigy mage with vast magical knowledge',
     outfit: 'blue_robe',
-    weapon: 'staff',
-    description: 'A young magic prodigy with immense mana capacity. Specializes in all elements of magic.'
+    hairColor: 0x4a90d9,
+    hairStyle: 'medium',
+    age: 'teen',
   },
   
-  // Original classes (updated for anime style)
+  // Warrior class
   warrior: {
     type: 'warrior',
-    name: 'Sword Master',
+    name: 'Warrior',
     baseHealth: 120,
     baseMana: 60,
-    baseAttack: 25,
+    baseAttack: 18,
     baseDefense: 20,
     baseSpeed: 8,
-    skills: ['sword-slash', 'shield-block', 'power-strike'],
+    skills: ['sword-slash', 'shield-block', 'war-cry', 'ground-stomp'],
     model: 'warrior',
-    color: 0xff4500, // Orange-red
-    hairColor: 0x8b0000, // Dark red
+    color: 0xff3333,
+    description: 'A powerful melee fighter with high defense',
     outfit: 'plate_armor',
-    weapon: 'sword',
-    description: 'A melee specialist with powerful sword techniques and high defense.'
+    hairColor: 0x8b4513,
+    hairStyle: 'short',
+    age: 'adult',
   },
+  
+  // Mage class
   mage: {
     type: 'mage',
-    name: 'Elemental Mage',
+    name: 'Mage',
     baseHealth: 80,
-    baseMana: 180,
-    baseAttack: 30,
+    baseMana: 120,
+    baseAttack: 25,
     baseDefense: 5,
     baseSpeed: 7,
     skills: ['fireball', 'ice-shield', 'lightning-bolt', 'teleport'],
     model: 'mage',
-    color: 0x9370db, // Medium purple
-    hairColor: 0x9932cc, // Dark orchid
+    color: 0x0066ff,
+    description: 'A spellcaster with powerful magical abilities',
     outfit: 'robe',
-    weapon: 'staff',
-    description: 'A master of elemental magic with devastating spell power.'
+    hairColor: 0xffffff,
+    hairStyle: 'long',
+    age: 'adult',
   },
+  
+  // Rogue class
   rogue: {
     type: 'rogue',
-    name: 'Shadow Assassin',
+    name: 'Rogue',
     baseHealth: 90,
     baseMana: 80,
-    baseAttack: 22,
+    baseAttack: 20,
     baseDefense: 10,
-    baseSpeed: 15,
-    skills: ['backstab', 'stealth', 'poison-dagger', 'shadow-clone'],
+    baseSpeed: 12,
+    skills: ['backstab', 'stealth', 'poison-dagger', 'smoke-bomb'],
     model: 'rogue',
-    color: 0x228b22, // Forest green
-    hairColor: 0x2e8b57, // Sea green
+    color: 0x00aa00,
+    description: 'A stealthy attacker with high speed and critical hits',
     outfit: 'leather_armor',
-    weapon: 'dagger',
-    description: 'A stealthy fighter who excels at critical hits and evasion.'
+    hairColor: 0x228b22,
+    hairStyle: 'short',
+    age: 'adult',
   },
+  
+  // Archer class
   archer: {
     type: 'archer',
-    name: 'Sniper',
+    name: 'Archer',
     baseHealth: 95,
     baseMana: 70,
-    baseAttack: 20,
+    baseAttack: 18,
     baseDefense: 8,
-    baseSpeed: 12,
+    baseSpeed: 10,
     skills: ['arrow-rain', 'snipe', 'trap', 'piercing-shot'],
     model: 'archer',
-    color: 0xdaa520, // Goldenrod
-    hairColor: 0xffd700, // Gold
+    color: 0xffaa00,
+    description: 'A ranged attacker with precise long-distance shots',
     outfit: 'hunter_gear',
-    weapon: 'bow',
-    description: 'A ranged specialist with precise long-distance attacks.'
+    hairColor: 0xdaa520,
+    hairStyle: 'ponytail',
+    age: 'adult',
   },
+  
+  // Healer class
   healer: {
     type: 'healer',
-    name: 'Saint',
+    name: 'Healer',
     baseHealth: 100,
-    baseMana: 200,
-    baseAttack: 8,
+    baseMana: 150,
+    baseAttack: 5,
     baseDefense: 12,
     baseSpeed: 9,
-    skills: ['heal', 'revive', 'bless', 'holy-barrier'],
+    skills: ['heal', 'revive', 'bless', 'cleanse'],
     model: 'healer',
-    color: 0xffd700, // Gold
-    hairColor: 0xff69b4, // Hot pink
+    color: 0xff69b4,
+    description: 'A supportive class with healing and buff abilities',
     outfit: 'priest_robe',
-    weapon: 'holy_symbol',
-    description: 'A support specialist who can heal allies and provide buffs.'
+    hairColor: 0xffd700,
+    hairStyle: 'long',
+    age: 'adult',
   },
 };
 
 // ============================================
-// ⚔️ SKILLS DATABASE (Anime Style)
+// ⚔️ SKILLS DATABASE (Anime-Style)
 // ============================================
 export const SKILLS: Record<string, Skill> = {
   // Rudeus Skills
-  'magic-missile': {
-    id: 'magic-missile',
-    name: 'Magic Missile',
-    description: 'Fires multiple homing magic projectiles',
-    type: 'attack',
-    damage: 35,
-    manaCost: 20,
-    cooldown: 2500,
-    range: 20,
-    animation: 'cast_magic'
-  },
-  'healing': {
-    id: 'healing',
-    name: 'Healing Magic',
-    description: 'Restores a large amount of health',
-    type: 'heal',
-    healAmount: 50,
-    manaCost: 30,
-    cooldown: 4000,
-    range: 15,
-    animation: 'cast_heal'
-  },
-  'water-blast': {
-    id: 'water-blast',
-    name: 'Water Blast',
-    description: 'Unleashes a powerful jet of water',
-    type: 'attack',
-    damage: 45,
-    manaCost: 25,
-    cooldown: 3500,
-    range: 18,
-    animation: 'cast_water'
-  },
-  'teleportation': {
-    id: 'teleportation',
-    name: 'Teleportation',
-    description: 'Instantly move to a target location',
-    type: 'utility',
-    manaCost: 40,
-    cooldown: 10000,
-    range: 30,
-    animation: 'teleport'
-  },
+  'fireball': { id: 'fireball', name: 'Fireball', description: 'Launches a ball of fire at enemies', type: 'attack', damage: 40, manaCost: 25, cooldown: 3000, range: 15 },
+  'ice-shield': { id: 'ice-shield', name: 'Ice Shield', description: 'Creates a protective ice barrier', type: 'defense', manaCost: 20, cooldown: 8000, range: 1 },
+  'heal': { id: 'heal', name: 'Heal', description: 'Restores health to a target', type: 'heal', healAmount: 40, manaCost: 25, cooldown: 3000, range: 10 },
+  'teleport': { id: 'teleport', name: 'Teleport', description: 'Instantly move to a nearby location', type: 'utility', manaCost: 30, cooldown: 15000, range: 20 },
   
   // Warrior Skills
-  'sword-slash': {
-    id: 'sword-slash',
-    name: 'Sword Slash',
-    description: 'A powerful melee attack that cleaves through enemies',
-    type: 'attack',
-    damage: 40,
-    manaCost: 10,
-    cooldown: 1500,
-    range: 2,
-    animation: 'slash'
-  },
-  'shield-block': {
-    id: 'shield-block',
-    name: 'Shield Block',
-    description: 'Raises shield to reduce incoming damage by 50%',
-    type: 'defense',
-    manaCost: 15,
-    cooldown: 6000,
-    range: 1,
-    animation: 'block'
-  },
-  'power-strike': {
-    id: 'power-strike',
-    name: 'Power Strike',
-    description: 'A charged attack that deals massive damage',
-    type: 'attack',
-    damage: 70,
-    manaCost: 25,
-    cooldown: 5000,
-    range: 2,
-    animation: 'charge_attack'
-  },
+  'sword-slash': { id: 'sword-slash', name: 'Sword Slash', description: 'A powerful melee attack', type: 'attack', damage: 25, manaCost: 10, cooldown: 2000, range: 2 },
+  'shield-block': { id: 'shield-block', name: 'Shield Block', description: 'Reduces incoming damage', type: 'defense', manaCost: 15, cooldown: 5000, range: 1 },
+  'war-cry': { id: 'war-cry', name: 'War Cry', description: 'Increases attack power temporarily', type: 'utility', manaCost: 20, cooldown: 10000, range: 10 },
+  'ground-stomp': { id: 'ground-stomp', name: 'Ground Stomp', description: 'Stuns nearby enemies', type: 'utility', manaCost: 25, cooldown: 12000, range: 8 },
   
   // Mage Skills
-  'fireball': {
-    id: 'fireball',
-    name: 'Fireball',
-    description: 'Launches an explosive ball of fire',
-    type: 'attack',
-    damage: 60,
-    manaCost: 30,
-    cooldown: 4000,
-    range: 25,
-    animation: 'cast_fire'
-  },
-  'ice-shield': {
-    id: 'ice-shield',
-    name: 'Ice Shield',
-    description: 'Creates a protective barrier of ice',
-    type: 'defense',
-    manaCost: 20,
-    cooldown: 7000,
-    range: 1,
-    animation: 'cast_ice'
-  },
-  'lightning-bolt': {
-    id: 'lightning-bolt',
-    name: 'Lightning Bolt',
-    description: 'Strikes enemies with a powerful lightning bolt',
-    type: 'attack',
-    damage: 55,
-    manaCost: 35,
-    cooldown: 5000,
-    range: 20,
-    animation: 'cast_lightning'
-  },
+  'lightning-bolt': { id: 'lightning-bolt', name: 'Lightning Bolt', description: 'Strikes enemies with lightning', type: 'attack', damage: 50, manaCost: 35, cooldown: 4000, range: 20 },
   
   // Rogue Skills
-  'backstab': {
-    id: 'backstab',
-    name: 'Backstab',
-    description: 'Deals critical damage when attacking from behind',
-    type: 'attack',
-    damage: 80,
-    manaCost: 20,
-    cooldown: 6000,
-    range: 1,
-    animation: 'backstab'
-  },
-  'stealth': {
-    id: 'stealth',
-    name: 'Stealth',
-    description: 'Become invisible to enemies for a short time',
-    type: 'utility',
-    manaCost: 25,
-    cooldown: 12000,
-    range: 1,
-    animation: 'stealth'
-  },
-  'poison-dagger': {
-    id: 'poison-dagger',
-    name: 'Poison Dagger',
-    description: 'Throws a dagger that poisons the target',
-    type: 'attack',
-    damage: 25,
-    manaCost: 15,
-    cooldown: 3000,
-    range: 12,
-    animation: 'throw'
-  },
-  'shadow-clone': {
-    id: 'shadow-clone',
-    name: 'Shadow Clone',
-    description: 'Creates a temporary clone that mimics your actions',
-    type: 'utility',
-    manaCost: 50,
-    cooldown: 15000,
-    range: 1,
-    animation: 'clone'
-  },
+  'backstab': { id: 'backstab', name: 'Backstab', description: 'Deals massive damage from behind', type: 'attack', damage: 50, manaCost: 20, cooldown: 5000, range: 1 },
+  'stealth': { id: 'stealth', name: 'Stealth', description: 'Become invisible for a short time', type: 'utility', manaCost: 15, cooldown: 12000, range: 1 },
+  'poison-dagger': { id: 'poison-dagger', name: 'Poison Dagger', description: 'Applies damage over time', type: 'attack', damage: 15, manaCost: 10, cooldown: 2000, range: 10 },
+  'smoke-bomb': { id: 'smoke-bomb', name: 'Smoke Bomb', description: 'Creates a smoke screen to escape', type: 'utility', manaCost: 20, cooldown: 15000, range: 5 },
   
   // Archer Skills
-  'arrow-rain': {
-    id: 'arrow-rain',
-    name: 'Arrow Rain',
-    description: 'Fires multiple arrows in an area',
-    type: 'attack',
-    damage: 30,
-    manaCost: 25,
-    cooldown: 4000,
-    range: 25,
-    animation: 'arrow_rain'
-  },
-  'snipe': {
-    id: 'snipe',
-    name: 'Snipe',
-    description: 'A precise long-range shot that deals high damage',
-    type: 'attack',
-    damage: 90,
-    manaCost: 40,
-    cooldown: 8000,
-    range: 40,
-    animation: 'snipe'
-  },
-  'trap': {
-    id: 'trap',
-    name: 'Bear Trap',
-    description: 'Places a trap that roots enemies',
-    type: 'utility',
-    manaCost: 20,
-    cooldown: 10000,
-    range: 8,
-    animation: 'place_trap'
-  },
-  'piercing-shot': {
-    id: 'piercing-shot',
-    name: 'Piercing Shot',
-    description: 'An arrow that pierces through multiple enemies',
-    type: 'attack',
-    damage: 45,
-    manaCost: 30,
-    cooldown: 5000,
-    range: 30,
-    animation: 'piercing_shot'
-  },
+  'arrow-rain': { id: 'arrow-rain', name: 'Arrow Rain', description: 'Fires multiple arrows at once', type: 'attack', damage: 20, manaCost: 25, cooldown: 4000, range: 20 },
+  'snipe': { id: 'snipe', name: 'Snipe', description: 'A precise long-range shot', type: 'attack', damage: 60, manaCost: 35, cooldown: 8000, range: 30 },
+  'trap': { id: 'trap', name: 'Trap', description: 'Places a damaging trap on the ground', type: 'utility', manaCost: 20, cooldown: 10000, range: 5 },
+  'piercing-shot': { id: 'piercing-shot', name: 'Piercing Shot', description: 'Arrow that pierces through multiple enemies', type: 'attack', damage: 35, manaCost: 30, cooldown: 6000, range: 25 },
   
   // Healer Skills
-  'heal': {
-    id: 'heal',
-    name: 'Heal',
-    description: 'Restores health to a target ally',
-    type: 'heal',
-    healAmount: 40,
-    manaCost: 25,
-    cooldown: 3000,
-    range: 15,
-    animation: 'heal'
-  },
-  'revive': {
-    id: 'revive',
-    name: 'Revive',
-    description: 'Brings a fallen ally back to life',
-    type: 'heal',
-    healAmount: 100,
-    manaCost: 60,
-    cooldown: 30000,
-    range: 8,
-    animation: 'revive'
-  },
-  'bless': {
-    id: 'bless',
-    name: 'Bless',
-    description: 'Increases ally attack and defense temporarily',
-    type: 'utility',
-    manaCost: 35,
-    cooldown: 15000,
-    range: 20,
-    animation: 'bless'
-  },
-  'holy-barrier': {
-    id: 'holy-barrier',
-    name: 'Holy Barrier',
-    description: 'Creates a protective barrier that absorbs damage',
-    type: 'defense',
-    manaCost: 40,
-    cooldown: 10000,
-    range: 10,
-    animation: 'barrier'
-  },
+  'revive': { id: 'revive', name: 'Revive', description: 'Brings a fallen ally back to life', type: 'heal', healAmount: 100, manaCost: 50, cooldown: 30000, range: 5 },
+  'bless': { id: 'bless', name: 'Bless', description: 'Increases ally stats temporarily', type: 'utility', manaCost: 30, cooldown: 15000, range: 10 },
+  'cleanse': { id: 'cleanse', name: 'Cleanse', description: 'Removes debuffs from allies', type: 'utility', manaCost: 25, cooldown: 10000, range: 8 },
 };
 
 // ============================================
-// 🗺️ BUena VILLAGE MAP DATA
-// ============================================
-export interface MapObject {
-  type: 'house' | 'tree' | 'rock' | 'well' | 'fence' | 'path' | 'sign';
-  position: { x: number; y: number; z: number };
-  rotation?: { x: number; y: number; z: number };
-  scale?: { x: number; y: number; z: number };
-  color?: number;
-  model?: string;
-}
-
-export interface GameMap {
-  id: string;
-  name: string;
-  description: string;
-  size: { width: number; height: number };
-  groundColor: number;
-  skyColor: number;
-  fogColor: number;
-  fogDensity: number;
-  objects: MapObject[];
-  spawnPoints: { x: number; y: number; z: number }[];
-  ambientLight: number;
-  directionalLight: number;
-}
-
-export const BUena_VILLAGE: GameMap = {
-  id: 'buena-village',
-  name: 'Buena Village',
-  description: 'A peaceful village from the world of Jobless Reincarnation. Home of Rudeus Greyrat.',
-  size: { width: 200, height: 200 },
-  groundColor: 0x1e3a1e, // Dark green grass
-  skyColor: 0x87ceeb, // Sky blue
-  fogColor: 0xa0c4e8,
-  fogDensity: 0.001,
-  ambientLight: 0x666666,
-  directionalLight: 0xffffff,
-  
-  spawnPoints: [
-    { x: 0, y: 0, z: 0 },
-    { x: 10, y: 0, z: 0 },
-    { x: -10, y: 0, z: 0 },
-    { x: 0, y: 0, z: 10 },
-    { x: 0, y: 0, z: -10 },
-  ],
-  
-  objects: [
-    // Central well
-    {
-      type: 'well',
-      position: { x: 0, y: 0, z: 0 },
-      scale: { x: 1.5, y: 1.5, z: 1.5 },
-      model: 'well',
-      color: 0x8b4513 // Saddle brown
-    },
-    
-    // Rudeus's House (Greyrat House)
-    {
-      type: 'house',
-      position: { x: -25, y: 0, z: -15 },
-      rotation: { x: 0, y: Math.PI / 4, z: 0 },
-      scale: { x: 2, y: 1.5, z: 2 },
-      model: 'wooden_house',
-      color: 0x8b4513 // Brown
-    },
-    
-    // Paul's Workshop
-    {
-      type: 'house',
-      position: { x: 25, y: 0, z: -15 },
-      rotation: { x: 0, y: -Math.PI / 4, z: 0 },
-      scale: { x: 1.5, y: 1.2, z: 1.5 },
-      model: 'workshop',
-      color: 0x654321 // Dark wood
-    },
-    
-    // Zenith's Training Ground
-    {
-      type: 'house',
-      position: { x: 0, y: 0, z: -30 },
-      scale: { x: 3, y: 2, z: 3 },
-      model: 'training_hall',
-      color: 0x556b2f // Dark olive green
-    },
-    
-    // Village Church
-    {
-      type: 'house',
-      position: { x: -30, y: 0, z: 20 },
-      rotation: { x: 0, y: Math.PI / 2, z: 0 },
-      scale: { x: 2.5, y: 2, z: 1.5 },
-      model: 'church',
-      color: 0xf5f5dc // Beige
-    },
-    
-    // Trees - scattered around the village
-    { type: 'tree', position: { x: -40, y: 0, z: -40 }, scale: { x: 1.5, y: 2, z: 1.5 }, model: 'oak_tree', color: 0x228b22 },
-    { type: 'tree', position: { x: 40, y: 0, z: -40 }, scale: { x: 1.2, y: 1.8, z: 1.2 }, model: 'pine_tree', color: 0x228b22 },
-    { type: 'tree', position: { x: -45, y: 0, z: 30 }, scale: { x: 1.4, y: 2.2, z: 1.4 }, model: 'oak_tree', color: 0x228b22 },
-    { type: 'tree', position: { x: 45, y: 0, z: 30 }, scale: { x: 1.3, y: 2, z: 1.3 }, model: 'pine_tree', color: 0x228b22 },
-    { type: 'tree', position: { x: -35, y: 0, z: 0 }, scale: { x: 1, y: 1.5, z: 1 }, model: 'oak_tree', color: 0x228b22 },
-    { type: 'tree', position: { x: 35, y: 0, z: 0 }, scale: { x: 1.1, y: 1.7, z: 1.1 }, model: 'pine_tree', color: 0x228b22 },
-    { type: 'tree', position: { x: 0, y: 0, z: 40 }, scale: { x: 1.6, y: 2.5, z: 1.6 }, model: 'oak_tree', color: 0x228b22 },
-    { type: 'tree', position: { x: 0, y: 0, z: -45 }, scale: { x: 1.3, y: 2, z: 1.3 }, model: 'pine_tree', color: 0x228b22 },
-    
-    // Rocks
-    { type: 'rock', position: { x: -30, y: 0, z: -35 }, scale: { x: 0.8, y: 0.8, z: 0.8 }, color: 0x808080 },
-    { type: 'rock', position: { x: 30, y: 0, z: -35 }, scale: { x: 0.6, y: 0.6, z: 0.6 }, color: 0x808080 },
-    { type: 'rock', position: { x: -25, y: 0, z: 35 }, scale: { x: 1, y: 1, z: 1 }, color: 0x808080 },
-    { type: 'rock', position: { x: 25, y: 0, z: 35 }, scale: { x: 0.7, y: 0.7, z: 0.7 }, color: 0x808080 },
-    
-    // Fences
-    { type: 'fence', position: { x: -15, y: 0, z: -20 }, rotation: { x: 0, y: Math.PI / 2, z: 0 }, scale: { x: 5, y: 1, z: 0.2 }, color: 0x8b4513 },
-    { type: 'fence', position: { x: 15, y: 0, z: -20 }, rotation: { x: 0, y: Math.PI / 2, z: 0 }, scale: { x: 5, y: 1, z: 0.2 }, color: 0x8b4513 },
-    { type: 'fence', position: { x: 0, y: 0, z: -25 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 10, y: 1, z: 0.2 }, color: 0x8b4513 },
-    
-    // Paths (using thin boxes as path markers)
-    { type: 'path', position: { x: 0, y: -0.1, z: 0 }, scale: { x: 50, y: 0.1, z: 2 }, color: 0xd2b48c },
-    { type: 'path', position: { x: 0, y: -0.1, z: 15 }, scale: { x: 2, y: 0.1, z: 40 }, color: 0xd2b48c },
-    { type: 'path', position: { x: -20, y: -0.1, z: 0 }, scale: { x: 25, y: 0.1, z: 2 }, color: 0xd2b48c },
-    { type: 'path', position: { x: 20, y: -0.1, z: 0 }, scale: { x: 25, y: 0.1, z: 2 }, color: 0xd2b48c },
-    
-    // Village sign
-    { type: 'sign', position: { x: 0, y: 0, z: 25 }, rotation: { x: 0, y: Math.PI, z: 0 }, scale: { x: 1, y: 1.5, z: 0.1 }, model: 'sign', color: 0x8b4513 },
-  ]
-};
-
-// ============================================
-// 🎨 ANIME STYLE RENDERING SETTINGS
-// ============================================
-export const ANIME_RENDER_SETTINGS = {
-  // Toon shading (cel-shading like Naruto Storm)
-  useToonShading: true,
-  
-  // Outline settings
-  useOutlines: true,
-  outlineColor: 0x000000,
-  outlineWidth: 0.02,
-  
-  // Character appearance
-  characterScale: 1.0,
-  headScale: 1.1, // Slightly larger heads for anime style
-  
-  // Animation settings
-  idleAnimation: 'idle_anime',
-  walkAnimation: 'walk_anime',
-  runAnimation: 'run_anime',
-  attackAnimation: 'attack_anime',
-  
-  // Camera settings for anime feel
-  cameraFov: 75,
-  cameraNear: 0.1,
-  cameraFar: 1000,
-  
-  // Lighting for anime aesthetic
-  ambientIntensity: 0.5,
-  directionalIntensity: 0.8,
-  
-  // Post-processing effects
-  bloomEnabled: true,
-  bloomStrength: 0.5,
-  bloomRadius: 0.5,
-  
-  // Color grading
-  saturation: 1.2,
-  contrast: 1.1,
-  brightness: 1.0,
-};
-
-// ============================================
-// 🎭 CHARACTER VISUAL DATA
-// ============================================
-export interface CharacterVisual {
-  name: string;
-  description: string;
-  baseColor: number;
-  hairColor: number;
-  hairStyle: string;
-  outfit: string;
-  weapon: string;
-  accessory?: string;
-  height: number;
-  build: 'slim' | 'average' | 'muscular';
-  face: string;
-  voice?: string;
-}
-
-export const CHARACTER_VISUALS: Record<string, CharacterVisual> = {
-  rudeus: {
-    name: 'Rudeus Greyrat',
-    description: 'A young boy with blue hair and a magic staff. The reincarnation of a former NEET.',
-    baseColor: 0xffffff, // White robe
-    hairColor: 0x1e90ff, // Blue hair
-    hairStyle: 'short_messy',
-    outfit: 'blue_robe_with_hood',
-    weapon: 'magic_staff',
-    accessory: 'mana_crystal',
-    height: 1.4, // Slightly shorter
-    build: 'slim',
-    face: 'young_boy'
-  },
-  warrior: {
-    name: 'Sword Master',
-    description: 'A muscular warrior with a mighty sword.',
-    baseColor: 0xff4500,
-    hairColor: 0x8b0000,
-    hairStyle: 'short_spiky',
-    outfit: 'plate_armor',
-    weapon: 'greatsword',
-    height: 1.8,
-    build: 'muscular',
-    face: 'rugged'
-  },
-  mage: {
-    name: 'Elemental Mage',
-    description: 'A wise mage with flowing robes.',
-    baseColor: 0x9370db,
-    hairColor: 0x9932cc,
-    hairStyle: 'long_flowing',
-    outfit: 'purple_robe',
-    weapon: 'ornate_staff',
-    height: 1.75,
-    build: 'average',
-    face: 'wise'
-  },
-  rogue: {
-    name: 'Shadow Assassin',
-    description: 'A stealthy rogue with dark clothing.',
-    baseColor: 0x228b22,
-    hairColor: 0x2e8b57,
-    hairStyle: 'medium_messy',
-    outfit: 'black_leather',
-    weapon: 'twin_daggers',
-    height: 1.7,
-    build: 'slim',
-    face: 'sharp'
-  },
-  archer: {
-    name: 'Sniper',
-    description: 'A skilled archer with a long bow.',
-    baseColor: 0xdaa520,
-    hairColor: 0xffd700,
-    hairStyle: 'long_tied',
-    outfit: 'hunter_gear',
-    weapon: 'longbow',
-    height: 1.75,
-    build: 'average',
-    face: 'focused'
-  },
-  healer: {
-    name: 'Saint',
-    description: 'A holy healer with divine powers.',
-    baseColor: 0xffd700,
-    hairColor: 0xff69b4,
-    hairStyle: 'long_wavy',
-    outfit: 'white_robe',
-    weapon: 'holy_staff',
-    accessory: 'halo',
-    height: 1.7,
-    build: 'average',
-    face: 'kind'
-  },
-};
-
-// ============================================
-// 🎯 GAME CONSTANTS
+// 🗺️ WORLD CONSTANTS
 // ============================================
 export const GAME_CONSTANTS = {
   WORLD_SIZE: 1000,
@@ -635,17 +172,10 @@ export const GAME_CONSTANTS = {
   TICK_RATE: 30,
   DEFAULT_HEALTH: 100,
   DEFAULT_MANA: 100,
-  
-  // Anime style specific
-  ANIME_CAMERA_HEIGHT: 1.6,
-  ANIME_CAMERA_DISTANCE: 4,
-  
-  // Default map
-  DEFAULT_MAP: 'buena-village',
 };
 
 // ============================================
-// 🌍 WORLD SETTINGS
+// 🎨 WORLD SETTINGS (Naruto Storm Style)
 // ============================================
 export const WORLD_SETTINGS = {
   groundColor: 0x1a5fb4,
@@ -654,62 +184,272 @@ export const WORLD_SETTINGS = {
   fogDensity: 0.0005,
   ambientLight: 0x404040,
   directionalLight: 0xffffff,
+  // Anime-style lighting
+  animeShading: true,
+  outlineColor: 0x000000,
+  outlineWidth: 0.02,
 };
 
 // ============================================
-// 👤 USER ACCOUNT SYSTEM
+// 🏡 BUENA VILLAGE MAP DATA
 // ============================================
-export interface UserAccount {
-  id: string;
-  username: string;
-  email?: string;
-  passwordHash: string; // In real app, use proper hashing
-  character: CharacterType;
-  characterName: string;
-  level: number;
-  xp: number;
-  lastLogin: number;
-  createdAt: number;
-  saveData: {
-    lastPosition: { x: number; y: number; z: number };
-    lastMap: string;
-    questProgress: Record<string, number>;
-    inventory: string[];
-    equipment: Record<string, string>;
-  };
-}
+export const BUENA_VILLAGE = {
+  name: 'Buena Village',
+  description: 'A peaceful rural village from the world of Mushoku Tensei',
+  spawnPoint: { x: 0, y: 0, z: 0 },
+  buildings: [
+    {
+      id: 'rudeus-house',
+      name: "Rudeus's House",
+      type: 'house',
+      position: { x: 10, y: 0, z: -5 },
+      size: { width: 8, depth: 6, height: 4 },
+      color: 0x8b4513, // Wood brown
+      roofColor: 0x654321,
+    },
+    {
+      id: 'paul-house',
+      name: "Paul's House",
+      type: 'house',
+      position: { x: -10, y: 0, z: -5 },
+      size: { width: 8, depth: 6, height: 4 },
+      color: 0x8b4513,
+      roofColor: 0x654321,
+    },
+    {
+      id: 'zenith-house',
+      name: "Zenith's House",
+      type: 'house',
+      position: { x: 0, y: 0, z: -15 },
+      size: { width: 6, depth: 5, height: 3.5 },
+      color: 0x8b4513,
+      roofColor: 0x654321,
+    },
+    {
+      id: 'village-center',
+      name: 'Village Center',
+      type: 'square',
+      position: { x: 0, y: 0, z: 10 },
+      size: { width: 20, depth: 20, height: 0.5 },
+      color: 0xc0c0c0,
+    },
+    {
+      id: 'well',
+      name: 'Village Well',
+      type: 'well',
+      position: { x: 0, y: 0, z: 10 },
+      radius: 1,
+      height: 2,
+      color: 0x808080,
+    },
+  ],
+  trees: [
+    { position: { x: 15, y: 0, z: 0 }, type: 'oak', height: 6, radius: 1 },
+    { position: { x: -15, y: 0, z: 0 }, type: 'oak', height: 6, radius: 1 },
+    { position: { x: 0, y: 0, z: 20 }, type: 'oak', height: 6, radius: 1 },
+    { position: { x: 20, y: 0, z: 15 }, type: 'pine', height: 8, radius: 1.2 },
+    { position: { x: -20, y: 0, z: 15 }, type: 'pine', height: 8, radius: 1.2 },
+    { position: { x: 18, y: 0, z: -10 }, type: 'oak', height: 6, radius: 1 },
+    { position: { x: -18, y: 0, z: -10 }, type: 'oak', height: 6, radius: 1 },
+  ],
+  paths: [
+    { start: { x: 0, z: 0 }, end: { x: 10, z: -5 }, width: 2, color: 0xd2b48c },
+    { start: { x: 0, z: 0 }, end: { x: -10, z: -5 }, width: 2, color: 0xd2b48c },
+    { start: { x: 0, z: 0 }, end: { x: 0, z: -15 }, width: 2, color: 0xd2b48c },
+    { start: { x: 10, z: -5 }, end: { x: 0, z: 10 }, width: 2, color: 0xd2b48c },
+    { start: { x: -10, z: -5 }, end: { x: 0, z: 10 }, width: 2, color: 0xd2b48c },
+  ],
+  fences: [
+    { start: { x: 25, z: 25 }, end: { x: -25, z: 25 }, height: 1.5, color: 0x8b4513 },
+    { start: { x: -25, z: 25 }, end: { x: -25, z: -25 }, height: 1.5, color: 0x8b4513 },
+    { start: { x: -25, z: -25 }, end: { x: 25, z: -25 }, height: 1.5, color: 0x8b4513 },
+    { start: { x: 25, z: -25 }, end: { x: 25, z: 25 }, height: 1.5, color: 0x8b4513 },
+  ],
+  // Gates
+  gates: [
+    { position: { x: 0, z: 25 }, width: 4, height: 3, color: 0x8b4513 },
+    { position: { x: 25, z: 0 }, width: 4, height: 3, color: 0x8b4513 },
+  ],
+};
 
 // ============================================
-// 🎨 COLOR PALETTES (Anime Style)
+// 👤 CHARACTER VISUAL PRESETS
 // ============================================
-export const ANIME_COLORS = {
-  // Rudeus colors
-  rudeusBlue: 0x1e90ff,
-  rudeusWhite: 0xffffff,
-  rudeusGold: 0xffd700,
-  
-  // Fire colors
-  fireRed: 0xff4500,
-  fireOrange: 0xffa500,
-  fireYellow: 0xffff00,
-  
-  // Water colors
-  waterBlue: 0x00bfff,
-  waterLight: 0x87ceeb,
-  waterDark: 0x00008b,
-  
-  // Earth colors
-  earthBrown: 0x8b4513,
-  earthGreen: 0x228b22,
-  earthGray: 0x808080,
-  
-  // Light colors
-  lightWhite: 0xffffff,
-  lightYellow: 0xffffe0,
-  lightGold: 0xffd700,
-  
-  // Dark colors
-  darkBlack: 0x000000,
-  darkPurple: 0x4b0082,
-  darkBlue: 0x00008b,
+export const CHARACTER_VISUALS = {
+  rudeus: {
+    // Head
+    head: {
+      geometry: 'sphere',
+      radius: 0.25,
+      color: 0xffccaa, // Skin tone
+      position: { x: 0, y: 1.05, z: 0 },
+    },
+    // Hair (blue, medium length)
+    hair: {
+      geometry: 'capsule',
+      radius: 0.3,
+      height: 0.4,
+      color: 0x4a90d9, // Blue hair
+      position: { x: 0, y: 1.2, z: 0 },
+    },
+    // Body
+    body: {
+      geometry: 'capsule',
+      radius: 0.3,
+      height: 0.8,
+      color: 0x4a90d9, // Blue robe
+      position: { x: 0, y: 0.4, z: 0 },
+    },
+    // Robe sleeves
+    sleeves: {
+      left: {
+        geometry: 'capsule',
+        radius: 0.15,
+        height: 0.6,
+        color: 0x4a90d9,
+        position: { x: -0.35, y: 0.7, z: 0 },
+        rotation: { x: 0, y: 0, z: Math.PI / 2 },
+      },
+      right: {
+        geometry: 'capsule',
+        radius: 0.15,
+        height: 0.6,
+        color: 0x4a90d9,
+        position: { x: 0.35, y: 0.7, z: 0 },
+        rotation: { x: 0, y: 0, z: Math.PI / 2 },
+      },
+    },
+    // Staff (optional accessory)
+    staff: {
+      geometry: 'capsule',
+      radius: 0.05,
+      height: 1.5,
+      color: 0x8b4513, // Wood
+      position: { x: 0.2, y: 0.2, z: 0 },
+      rotation: { x: 0.2, y: 0, z: 0 },
+    },
+    // Height offset for camera
+    cameraOffset: { x: 0, y: 1.6, z: 3 },
+  },
+  warrior: {
+    head: { geometry: 'sphere', radius: 0.25, color: 0xffccaa, position: { x: 0, y: 1.05, z: 0 } },
+    hair: { geometry: 'capsule', radius: 0.3, height: 0.3, color: 0x8b4513, position: { x: 0, y: 1.2, z: 0 } },
+    body: { geometry: 'capsule', radius: 0.35, height: 0.85, color: 0x808080, position: { x: 0, y: 0.425, z: 0 } },
+    armor: {
+      chest: { geometry: 'box', width: 0.5, height: 0.4, depth: 0.3, color: 0x696969, position: { x: 0, y: 0.6, z: 0 } },
+      shoulders: { geometry: 'box', width: 0.4, height: 0.2, depth: 0.3, color: 0x696969, position: { x: 0, y: 0.85, z: 0 } },
+    },
+    weapon: {
+      geometry: 'box',
+      width: 0.1, height: 0.8, depth: 0.3,
+      color: 0xc0c0c0,
+      position: { x: 0.25, y: 0.2, z: 0 },
+      rotation: { x: 0, y: 0, z: Math.PI / 4 },
+    },
+    cameraOffset: { x: 0, y: 1.7, z: 3 },
+  },
+  mage: {
+    head: { geometry: 'sphere', radius: 0.25, color: 0xffccaa, position: { x: 0, y: 1.05, z: 0 } },
+    hair: { geometry: 'capsule', radius: 0.3, height: 0.4, color: 0xffffff, position: { x: 0, y: 1.2, z: 0 } },
+    body: { geometry: 'capsule', radius: 0.3, height: 0.8, color: 0x000080, position: { x: 0, y: 0.4, z: 0 } },
+    robe: {
+      geometry: 'cone',
+      radius: 0.4,
+      height: 0.6,
+      color: 0x000080,
+      position: { x: 0, y: 0.4, z: 0 },
+    },
+    staff: {
+      geometry: 'capsule',
+      radius: 0.05,
+      height: 1.8,
+      color: 0x8b4513,
+      position: { x: 0.15, y: -0.3, z: 0 },
+      rotation: { x: 0.1, y: 0, z: 0 },
+    },
+    cameraOffset: { x: 0, y: 1.6, z: 3 },
+  },
+  rogue: {
+    head: { geometry: 'sphere', radius: 0.23, color: 0xffccaa, position: { x: 0, y: 1.0, z: 0 } },
+    hair: { geometry: 'capsule', radius: 0.25, height: 0.25, color: 0x228b22, position: { x: 0, y: 1.15, z: 0 } },
+    body: { geometry: 'capsule', radius: 0.28, height: 0.75, color: 0x222222, position: { x: 0, y: 0.375, z: 0 } },
+    cloak: {
+      geometry: 'plane',
+      width: 0.6,
+      height: 0.8,
+      color: 0x333333,
+      position: { x: 0, y: 0.4, z: -0.3 },
+      rotation: { x: 0.3, y: 0, z: 0 },
+    },
+    daggerLeft: {
+      geometry: 'box',
+      width: 0.05, height: 0.2, depth: 0.3,
+      color: 0xc0c0c0,
+      position: { x: -0.2, y: 0.2, z: 0 },
+      rotation: { x: 0, y: 0, z: Math.PI / 4 },
+    },
+    daggerRight: {
+      geometry: 'box',
+      width: 0.05, height: 0.2, depth: 0.3,
+      color: 0xc0c0c0,
+      position: { x: 0.2, y: 0.2, z: 0 },
+      rotation: { x: 0, y: 0, z: -Math.PI / 4 },
+    },
+    cameraOffset: { x: 0, y: 1.5, z: 2.5 },
+  },
+  archer: {
+    head: { geometry: 'sphere', radius: 0.25, color: 0xffccaa, position: { x: 0, y: 1.05, z: 0 } },
+    hair: { geometry: 'capsule', radius: 0.3, height: 0.35, color: 0xdaa520, position: { x: 0, y: 1.2, z: 0 } },
+    body: { geometry: 'capsule', radius: 0.3, height: 0.8, color: 0x228b22, position: { x: 0, y: 0.4, z: 0 } },
+    quiver: {
+      geometry: 'capsule',
+      radius: 0.15,
+      height: 0.4,
+      color: 0x8b4513,
+      position: { x: -0.2, y: 0.6, z: 0 },
+      rotation: { x: 0, y: 0, z: Math.PI / 2 },
+    },
+    bow: {
+      geometry: 'box',
+      width: 0.8,
+      height: 0.05,
+      depth: 0.1,
+      color: 0x8b4513,
+      position: { x: 0.3, y: 0.3, z: 0 },
+      rotation: { x: 0, y: Math.PI / 2, z: 0 },
+    },
+    cameraOffset: { x: 0, y: 1.6, z: 4 },
+  },
+  healer: {
+    head: { geometry: 'sphere', radius: 0.25, color: 0xffccaa, position: { x: 0, y: 1.05, z: 0 } },
+    hair: { geometry: 'capsule', radius: 0.3, height: 0.45, color: 0xffd700, position: { x: 0, y: 1.225, z: 0 } },
+    body: { geometry: 'capsule', radius: 0.3, height: 0.8, color: 0xffffff, position: { x: 0, y: 0.4, z: 0 } },
+    robe: {
+      geometry: 'cone',
+      radius: 0.4,
+      height: 0.65,
+      color: 0xffffff,
+      position: { x: 0, y: 0.4, z: 0 },
+    },
+    staff: {
+      geometry: 'capsule',
+      radius: 0.04,
+      height: 1.6,
+      color: 0xffd700,
+      position: { x: 0.1, y: -0.2, z: 0 },
+      rotation: { x: 0.15, y: 0, z: 0 },
+    },
+    cameraOffset: { x: 0, y: 1.6, z: 3 },
+  },
 };
+
+// ============================================
+// 🎯 DEFAULT CHARACTER
+// ============================================
+export const DEFAULT_CHARACTER: CharacterType = 'rudeus';
+
+// ============================================
+// 📦 EXPORT ALL
+// ============================================
+export { CHARACTER_PRESETS as PRESETS };
+export { SKILLS as SKILLS_DB };
