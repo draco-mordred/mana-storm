@@ -1,4 +1,4 @@
-url: https://raw.githubusercontent.com/draco-mordred/mana-storm/main/client/src/utils/constants.ts
+// url: https://raw.githubusercontent.com/draco-mordred/mana-storm/main/client/src/utils/constants.ts
 
 import type { CharacterPreset, Skill, CharacterType } from '../types';
 
