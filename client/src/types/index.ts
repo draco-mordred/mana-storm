@@ -1,36 +1,6 @@
-// ============================================
-// 🎭 CHARACTER TYPES
-// ============================================
+import type { GameMap, MapObject, CharacterVisual, UserAccount } from '../utils/constants';
 
-export type CharacterType = 
-  | 'rudeus'
-  | 'warrior'
-  | 'mage'
-  | 'rogue'
-  | 'archer'
-  | 'healer';
-
-export interface CharacterPreset {
-  type: CharacterType;
-  name: string;
-  baseHealth: number;
-  baseMana: number;
-  baseAttack: number;
-  baseDefense: number;
-  baseSpeed: number;
-  skills: string[];
-  model: string;
-  color: number;
-  description: string;
-  outfit: string;
-  hairColor: number;
-  hairStyle: string;
-}
-
-// ============================================
-// 👤 PLAYER TYPE
-// ============================================
-
+// Game Types
 export interface Player {
   id: string;
   name: string;
@@ -45,22 +15,27 @@ export interface Player {
   xp: number;
   skills: Skill[];
   equipment: Equipment;
-  partyId: string | null;
-  activeQuests: string[];
-  stats: {
-    attack: number;
-    defense: number;
-    speed: number;
-  };
   animation?: string;
-  hairColor?: number;
-  hairStyle?: string;
-  eyeColor?: number;
 }
 
-// ============================================
-// ⚔️ SKILL TYPE
-// ============================================
+export type CharacterType = 'rudeus' | 'warrior' | 'mage' | 'rogue' | 'archer' | 'healer';
+
+export interface CharacterPreset {
+  type: CharacterType;
+  name: string;
+  baseHealth: number;
+  baseMana: number;
+  baseAttack: number;
+  baseDefense: number;
+  baseSpeed: number;
+  skills: string[];
+  model: string;
+  color: number;
+  hairColor?: number;
+  outfit?: string;
+  weapon?: string;
+  description?: string;
+}
 
 export interface Skill {
   id: string;
@@ -72,11 +47,8 @@ export interface Skill {
   manaCost: number;
   cooldown: number;
   range: number;
+  animation?: string;
 }
-
-// ============================================
-// 🎒 EQUIPMENT TYPE
-// ============================================
 
 export interface Equipment {
   weapon?: string;
@@ -84,67 +56,24 @@ export interface Equipment {
   accessory?: string;
 }
 
-// ============================================
-// 🗺️ MAP TYPES
-// ============================================
-
-export interface MapObject {
-  type: 'house' | 'tree' | 'path' | 'well' | 'fence' | 'sign' | 'npc' | 'rock' | 'bush';
-  position: { x: number; y: number; z: number };
-  rotation?: { x: number; y: number; z: number };
-  scale?: { x: number; y: number; z: number };
-  color?: number;
-  size?: number;
-  texture?: string;
-}
-
-export interface GameMap {
-  id: string;
-  name: string;
-  description: string;
-  size: { width: number; height: number };
-  groundColor: number;
-  skyColor: number;
-  fogColor: number;
-  fogDensity: number;
-  ambientLight: number;
-  objects: MapObject[];
-  spawnPoints: { x: number; y: number; z: number }[];
-  backgroundMusic?: string;
-  ambientSounds?: string[];
-}
-
-// ============================================
-// 🎮 GAME STATE
-// ============================================
-
 export interface GameState {
   players: Record<string, Player>;
   currentPlayerId: string;
   world: {
     time: number;
     weather: string;
-    currentMap: string;
   };
   parties: Party[];
   quests: Quest[];
+  currentMap: string;
 }
-
-// ============================================
-// 👥 PARTY SYSTEM
-// ============================================
 
 export interface Party {
   id: string;
   name: string;
   leaderId: string;
   memberIds: string[];
-  createdAt: number;
 }
-
-// ============================================
-// 📜 QUEST SYSTEM
-// ============================================
 
 export interface Quest {
   id: string;
@@ -160,28 +89,11 @@ export interface Quest {
 }
 
 export interface QuestObjective {
-  type: 'kill' | 'collect' | 'reach' | 'talk' | 'use';
+  type: 'kill' | 'collect' | 'reach' | 'talk';
   target: string;
   required: number;
   current: number;
-  description?: string;
 }
-
-// ============================================
-// 💬 CHAT MESSAGE
-// ============================================
-
-export interface ChatMessage {
-  playerId: string;
-  playerName: string;
-  message: string;
-  timestamp: number;
-  type: 'global' | 'party' | 'whisper' | 'system';
-}
-
-// ============================================
-// 📡 NETWORK MESSAGES
-// ============================================
 
 export interface ServerMessage {
   type: 'init' | 'update' | 'chat' | 'party' | 'quest' | 'error' | 'player-joined' | 'player-left' | 'player-moved' | 'player-action' | 'world-update';
@@ -189,14 +101,10 @@ export interface ServerMessage {
 }
 
 export interface ClientMessage {
-  type: 'join' | 'move' | 'action' | 'chat' | 'party' | 'quest' | 'save' | 'load';
+  type: 'join' | 'move' | 'action' | 'chat' | 'party' | 'quest' | 'register' | 'login' | 'save' | 'load';
   data: any;
   playerId?: string;
 }
-
-// ============================================
-// 📍 POSITION UPDATE
-// ============================================
 
 export interface PositionUpdate {
   x: number;
@@ -206,88 +114,60 @@ export interface PositionUpdate {
   animation?: string;
 }
 
-// ============================================
-// 👤 USER ACCOUNT
-// ============================================
-
-export interface UserAccount {
-  id: string;
-  username: string;
-  password?: string; // Only for local storage, not sent to server
-  character: CharacterType;
-  hairColor: number;
-  hairStyle: string;
-  eyeColor: number;
-  createdAt: number;
-  lastLogin: number;
-  playtime: number; // in seconds
-  achievements: string[];
+// Network Types
+export interface SocketEvent {
+  type: string;
+  [key: string]: any;
 }
 
-// ============================================
-// 💾 SAVE DATA
-// ============================================
+// UI Types
+export interface MenuState {
+  currentScreen: 'main' | 'login' | 'register' | 'character-select' | 'settings';
+  error?: string;
+  loading?: boolean;
+}
 
-export interface SaveData {
-  id: string;
-  name: string;
-  player: Player;
-  timestamp: number;
-  mapId: string;
+export interface LoginForm {
+  username: string;
+  password: string;
+}
+
+export interface RegisterForm extends LoginForm {
+  email: string;
+  characterName: string;
+  characterType: CharacterType;
+}
+
+// Save/Load Types
+export interface SaveGameData {
+  playerId: string;
+  playerName: string;
+  characterType: CharacterType;
   position: { x: number; y: number; z: number };
-  inventory: string[];
-  equipment: Equipment;
-  quests: string[];
+  map: string;
+  timestamp: number;
   level: number;
   xp: number;
+  health: number;
+  mana: number;
+  equipment: Equipment;
+  inventory: string[];
+  questProgress: Record<string, number>;
 }
 
-export interface SaveSlot {
-  id: string;
-  name: string;
-  characterType: CharacterType;
-  level: number;
-  lastPlayed: number;
-  previewImage?: string;
+// Authentication Types
+export interface AuthState {
+  isAuthenticated: boolean;
+  user?: UserAccount;
+  token?: string;
+  loading: boolean;
+  error?: string;
 }
 
-// ============================================
-// 🎨 GRAPHIC SETTINGS
-// ============================================
-
-export interface GraphicSettings {
-  useCellShading: boolean;
-  cellShadingLevels: number;
-  useOutlines: boolean;
-  outlineColor: number;
-  outlineWidth: number;
-  rimLightColor: number;
-  rimLightIntensity: number;
-  saturation: number;
-  useBloom: boolean;
-  bloomIntensity: number;
-  useDOF: boolean;
-  useMotionBlur: boolean;
-  shadowQuality: 'low' | 'medium' | 'high';
-  textureQuality: 'low' | 'medium' | 'high';
-}
-
-// ============================================
-// ⚙️ GAME SETTINGS
-// ============================================
-
-export interface GameSettings {
-  graphics: GraphicSettings;
-  audio: {
-    masterVolume: number;
-    musicVolume: number;
-    sfxVolume: number;
-    voiceVolume: number;
-  };
-  controls: {
-    sensitivity: number;
-    invertY: boolean;
-    keybindings: Record<string, string>;
-  };
-  language: string;
+export interface AuthContextType extends AuthState {
+  login: (username: string, password: string) => Promise<boolean>;
+  register: (form: RegisterForm) => Promise<boolean>;
+  logout: () => void;
+  saveGame: (data: SaveGameData) => Promise<boolean>;
+  loadGame: (playerId: string) => Promise<SaveGameData | null>;
 }
