@@ -49,7 +49,10 @@ export interface Equipment {
 export interface GameState {
   players: Record<string, Player>;
   currentPlayerId: string;
-  world: { time: number; weather: string };
+  world: {
+    time: number;
+    weather: string;
+  };
   parties: Party[];
   quests: Quest[];
 }
@@ -66,7 +69,11 @@ export interface Quest {
   title: string;
   description: string;
   objectives: QuestObjective[];
-  reward: { gold: number; xp: number; items?: string[] };
+  reward: {
+    gold: number;
+    xp: number;
+    items?: string[];
+  };
   status: 'available' | 'in-progress' | 'completed';
 }
 
