@@ -38,11 +38,11 @@ export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
       <div style={styles.stats}>
         <div style={styles.statRow}><span>HP:</span><span>{Math.floor(player.health)}/{player.maxHealth}</span></div>
         <div style={styles.barContainer}>
-          <div style={styles.bar}><div style={{ ...styles.barFill, ...styles.healthBar, width: healthPercent + '%' }} /></div>
+          <div style={styles.bar}><div style={{ ...styles.barFill, ...styles.healthBar, width: `${healthPercent}%` }} /></div>
         </div>
         <div style={styles.statRow}><span>MP:</span><span>{Math.floor(player.mana)}/{player.maxMana}</span></div>
         <div style={styles.barContainer}>
-          <div style={styles.bar}><div style={{ ...styles.barFill, ...styles.manaBar, width: manaPercent + '%' }} /></div>
+          <div style={styles.bar}><div style={{ ...styles.barFill, ...styles.manaBar, width: `${manaPercent}%` }} /></div>
         </div>
       </div>
       <div style={styles.skills}>
