@@ -5,14 +5,14 @@ import { CHARACTER_PRESETS } from '../../utils/constants';
 
 interface CharacterProps {
   player: Player;
+  scene: THREE.Scene;
   isLocalPlayer?: boolean;
 }
 
-export default function Character({ player, isLocalPlayer = false }: CharacterProps) {
+export default function Character({ player, scene, isLocalPlayer = false }: CharacterProps) {
   const meshRef = useRef<THREE.Group | null>(null);
 
   useEffect(() => {
-    const scene = sceneRef.current;
     if (!scene) return;
 
     const group = new THREE.Group();
@@ -39,7 +39,7 @@ export default function Character({ player, isLocalPlayer = false }: CharacterPr
     scene.add(group);
 
     return () => { scene.remove(group); bodyMaterial.dispose(); headMaterial.dispose(); };
-  }, [player]);
+  }, [player, scene]);
 
   useEffect(() => {
     if (!meshRef.current) return;
