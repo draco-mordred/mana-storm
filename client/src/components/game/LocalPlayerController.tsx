@@ -1,5 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
 import type { Player } from '../../types';
+
+interface LocalPlayerControllerProps {
+  playerId: string;
+  players: Record<string, Player>;
+  socket: Socket;
+}
 
 interface LocalPlayerControllerProps {
   playerId: string;
@@ -71,7 +78,7 @@ export default function LocalPlayerController({ playerId, players, socket }: Loc
   useEffect(() => {
     if (!pointerLockRef.current) return;
     const handleMouseMove = (e: MouseEvent) => {
-      const camera = (window as any).camera;
+      const camera = cameraRef.current;
       if (camera) {
         camera.rotation.order = 'YXZ';
         camera.rotation.y -= e.movementX * 0.002;
