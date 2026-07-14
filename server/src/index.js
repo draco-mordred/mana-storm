@@ -17,24 +17,20 @@ app.use(cors());
 app.use(express.json());
 
 // ============================================
-// 👤 ACCOUNT SYSTEM (Simple in-memory storage)
+// 👤 ACCOUNT SYSTEM
 // ============================================
 const accounts = new Map();
 const loggedInSockets = new Map();
 
-// Create account
 app.post('/api/register', (req, res) => {
   try {
     const { username, password, email, characterName, characterType } = req.body;
-    
     if (!username || !password) {
       return res.status(400).json({ error: 'Username and password are required' });
     }
-    
     if (accounts.has(username)) {
       return res.status(400).json({ error: 'Username already exists' });
     }
-    
     const account = {
       id: uuidv4(),
       username,
@@ -46,9 +42,7 @@ app.post('/api/register', (req, res) => {
       lastLogin: null,
       savedGames: [],
     };
-    
     accounts.set(username, account);
-    
     res.json({
       success: true,
       message: 'Account created successfully',
@@ -60,27 +54,20 @@ app.post('/api/register', (req, res) => {
   }
 });
 
-// Login
 app.post('/api/login', (req, res) => {
   try {
     const { username, password } = req.body;
-    
     if (!username || !password) {
       return res.status(400).json({ error: 'Username and password are required' });
     }
-    
     const account = accounts.get(username);
-    
     if (!account) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    
     if (account.password !== password) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    
     account.lastLogin = Date.now();
-    
     res.json({
       success: true,
       message: 'Login successful',
@@ -92,29 +79,22 @@ app.post('/api/login', (req, res) => {
   }
 });
 
-// Save game
 app.post('/api/save-game', (req, res) => {
   try {
     const { username, gameData } = req.body;
-    
     if (!username || !gameData) {
       return res.status(400).json({ error: 'Username and game data are required' });
     }
-    
     const account = accounts.get(username);
-    
     if (!account) {
       return res.status(404).json({ error: 'Account not found' });
     }
-    
     const existingIndex = account.savedGames.findIndex(g => g.id === gameData.id);
-    
     if (existingIndex !== -1) {
       account.savedGames[existingIndex] = gameData;
     } else {
       account.savedGames.push(gameData);
     }
-    
     res.json({ success: true, message: 'Game saved successfully' });
   } catch (error) {
     console.error('Save game error:', error);
@@ -122,16 +102,13 @@ app.post('/api/save-game', (req, res) => {
   }
 });
 
-// Load games
 app.get('/api/load-games/:username', (req, res) => {
   try {
     const { username } = req.params;
     const account = accounts.get(username);
-    
     if (!account) {
       return res.status(404).json({ error: 'Account not found' });
     }
-    
     res.json({ success: true, games: account.savedGames });
   } catch (error) {
     console.error('Load games error:', error);
@@ -139,18 +116,14 @@ app.get('/api/load-games/:username', (req, res) => {
   }
 });
 
-// Delete game
 app.delete('/api/delete-game/:username/:gameId', (req, res) => {
   try {
     const { username, gameId } = req.params;
     const account = accounts.get(username);
-    
     if (!account) {
       return res.status(404).json({ error: 'Account not found' });
     }
-    
     account.savedGames = account.savedGames.filter(g => g.id !== gameId);
-    
     res.json({ success: true, message: 'Game deleted successfully' });
   } catch (error) {
     console.error('Delete game error:', error);
@@ -266,18 +239,9 @@ const SKILLS = {
 // 🌍 AREA DEFINITIONS
 // ============================================
 const AREAS = {
-  'buena-village': {
-    name: 'Buena Village',
-    spawnPoint: { x: 0, y: 0, z: 0 },
-  },
-  'asura-kingdom': {
-    name: 'Asura Kingdom',
-    spawnPoint: { x: 0, y: 0, z: 0 },
-  },
-  'magic-city-sharia': {
-    name: 'Magic City Sharia',
-    spawnPoint: { x: 0, y: 0, z: 0 },
-  },
+  'buena-village': { name: 'Buena Village', spawnPoint: { x: 0, y: 0, z: 0 } },
+  'asura-kingdom': { name: 'Asura Kingdom', spawnPoint: { x: 0, y: 0, z: 0 } },
+  'magic-city-sharia': { name: 'Magic City Sharia', spawnPoint: { x: 0, y: 0, z: 0 } },
 };
 
 // ============================================
@@ -335,8 +299,6 @@ const QUESTS = [
 function createPlayer(name, characterType, area = 'buena-village') {
   const preset = CHARACTER_PRESETS[characterType] || CHARACTER_PRESETS.rudeus;
   const skills = preset.skills.map(skillId => SKILLS[skillId]);
-  
-  // Get spawn point for area
   const spawnPoint = AREAS[area]?.spawnPoint || { x: 0, y: 0, z: 0 };
   
   return {
@@ -364,6 +326,16 @@ function createPlayer(name, characterType, area = 'buena-village') {
   };
 }
 
+// Helper to get default skill for character type
+function getDefaultSkill(characterType) {
+  const preset = CHARACTER_PRESETS[characterType] || CHARACTER_PRESETS.rudeus;
+  if (preset.skills && preset.skills.length > 0) {
+    return SKILLS[preset.skills[0]];
+  }
+  // Fallback to a basic attack
+  return { id: 'basic-attack', name: 'Basic Attack', type: 'attack', damage: 10, manaCost: 0, cooldown: 1000, range: 2 };
+}
+
 // ============================================
 // 🎮 SOCKET.IO CONNECTION HANDLING
 // ============================================
@@ -373,15 +345,12 @@ io.on('connection', (socket) => {
   // PLAYER JOIN
   socket.on('join', ({ name, characterType, area }) => {
     console.log('Player joined: ' + name + ' as ' + characterType + ' in ' + area);
-    
     const player = createPlayer(name, characterType, area || 'buena-village');
     gameState.players[socket.id] = player;
     
-    // Associate socket with account
     const account = Array.from(accounts.values()).find(a => a.username === name);
     if (account) loggedInSockets.set(socket.id, account);
     
-    // Send initial game state
     socket.emit('init', {
       currentPlayerId: socket.id,
       players: gameState.players,
@@ -391,7 +360,6 @@ io.on('connection', (socket) => {
       area: player.area,
     });
     
-    // Notify all players
     socket.broadcast.emit('player-joined', player);
     io.emit('update', { players: gameState.players });
   });
@@ -400,17 +368,14 @@ io.on('connection', (socket) => {
   socket.on('move', ({ position, animation, direction }) => {
     if (gameState.players[socket.id]) {
       const player = gameState.players[socket.id];
-      
       if (position) {
         const worldSize = 500;
         player.position.x = Math.max(-worldSize, Math.min(worldSize, position.x));
         player.position.y = Math.max(0, Math.min(100, position.y));
         player.position.z = Math.max(-worldSize, Math.min(worldSize, position.z));
       }
-      
       if (animation) player.animation = animation;
       if (direction !== undefined) player.direction = direction;
-      
       io.emit('player-moved', { playerId: socket.id, player: gameState.players[socket.id] });
     }
   });
@@ -420,20 +385,14 @@ io.on('connection', (socket) => {
     if (gameState.players[socket.id]) {
       const player = gameState.players[socket.id];
       const newArea = AREAS[area];
-      
       if (newArea) {
         player.area = area;
         player.position.x = newArea.spawnPoint.x;
         player.position.y = newArea.spawnPoint.y;
         player.position.z = newArea.spawnPoint.z;
-        
         console.log(player.name + ' changed area to ' + area);
-        
-        // Notify all players
         io.emit('area-changed', { playerId: socket.id, area });
         io.emit('update', { players: gameState.players, area });
-        
-        // Send confirmation to player
         socket.emit('area-changed', { area });
       } else {
         socket.emit('error', 'Area not found');
@@ -441,57 +400,80 @@ io.on('connection', (socket) => {
     }
   });
 
-  // PLAYER ACTIONS
+  // PLAYER ACTIONS - FIXED to handle actions without skillId
   socket.on('action', ({ type, skillId, targetId }) => {
     const player = gameState.players[socket.id];
     if (!player) return;
 
     const now = Date.now();
-    const skill = player.skills.find(s => s.id === skillId);
+    let skill = null;
+    
+    // If no skillId provided, use default skill for basic actions
+    if (!skillId) {
+      // For basic attack, use the first skill or a default
+      if (type === 'attack' || type === 'jump') {
+        skill = getDefaultSkill(player.character);
+        skillId = skill.id;
+      } else {
+        socket.emit('error', 'Skill ID required for this action type');
+        return;
+      }
+    } else {
+      skill = player.skills.find(s => s.id === skillId);
+    }
     
     if (!skill) {
-      socket.emit('error', 'Skill not found');
-      return;
+      // Try to get default skill if specific one not found
+      skill = getDefaultSkill(player.character);
+      skillId = skill.id;
     }
 
+    // Check cooldown
     if (player.cooldowns[skillId] && player.cooldowns[skillId] > now) {
       socket.emit('error', 'Skill on cooldown');
       return;
     }
 
-    if (player.mana < skill.manaCost) {
+    // Check mana (skip for jump)
+    if (type !== 'jump' && player.mana < skill.manaCost) {
       socket.emit('error', 'Not enough mana');
       return;
     }
 
-    player.mana -= skill.manaCost;
+    // Consume mana (skip for jump)
+    if (type !== 'jump') {
+      player.mana -= skill.manaCost;
+    }
+    
     player.cooldowns[skillId] = now + skill.cooldown;
-    player.animation = 'attacking';
+    player.animation = type === 'jump' ? 'jumping' : 'attacking';
 
     switch (type) {
       case 'attack':
         if (targetId && gameState.players[targetId]) {
           const target = gameState.players[targetId];
-          const damage = skill.damage || 0;
+          const damage = skill.damage || player.stats.attack || 10;
           target.health -= damage;
           if (target.health < 0) target.health = 0;
           console.log(player.name + ' hit ' + target.name + ' for ' + damage + ' damage!');
-          if (target.health <= 0) io.emit('player-defeated', { attackerId: socket.id, targetId });
+          if (target.health <= 0) {
+            io.emit('player-defeated', { attackerId: socket.id, targetId });
+          }
         }
         break;
       case 'heal':
         if (targetId && gameState.players[targetId]) {
           const target = gameState.players[targetId];
-          const healAmount = skill.healAmount || 0;
+          const healAmount = skill.healAmount || 20;
           target.health = Math.min(target.maxHealth, target.health + healAmount);
           console.log(player.name + ' healed ' + target.name + ' for ' + healAmount + ' HP!');
         }
         break;
       case 'jump':
-        player.animation = 'jumping';
+        // Jump action - handled client-side, just update animation
         break;
       default:
-        console.log(player.name + ' used ' + skill.name);
+        console.log(player.name + ' used ' + (skill ? skill.name : type));
     }
 
     io.emit('player-action', { playerId: socket.id, action: type, skillId, targetId });
@@ -502,9 +484,7 @@ io.on('connection', (socket) => {
   socket.on('chat', ({ message, type = 'global', targetId }) => {
     const player = gameState.players[socket.id];
     if (!player) return;
-
     const chatMessage = { playerId: socket.id, playerName: player.name, message, timestamp: Date.now(), type };
-
     switch (type) {
       case 'party':
         const party = gameState.parties.find(p => p.memberIds.includes(socket.id));
@@ -562,7 +542,14 @@ io.on('connection', (socket) => {
     if (!allComplete) { socket.emit('error', 'Objectives not complete'); return; }
     player.activeQuests.splice(questIndex, 1);
     player.xp += quest.reward.xp;
-    if (player.xp >= player.level * 1000) { player.level++; player.xp = 0; player.maxHealth += 20; player.health = player.maxHealth; player.maxMana += 10; player.mana = player.maxMana; }
+    if (player.xp >= player.level * 1000) { 
+      player.level++; 
+      player.xp = 0; 
+      player.maxHealth += 20; 
+      player.health = player.maxHealth; 
+      player.maxMana += 10; 
+      player.mana = player.maxMana; 
+    }
     quest.status = 'completed';
     socket.emit('quest-completed', { questId, rewards: quest.reward });
     io.emit('update', { players: gameState.players, quests: QUESTS });
@@ -630,8 +617,10 @@ setInterval(() => {
       player.mana += 0.5;
       if (player.mana > player.maxMana) player.mana = player.maxMana;
     }
-    // Reset animation to idle after attack
     if (player.animation === 'attacking' && Math.random() < 0.1) {
+      player.animation = 'idle';
+    }
+    if (player.animation === 'jumping' && Math.random() < 0.2) {
       player.animation = 'idle';
     }
   });
