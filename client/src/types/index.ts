@@ -1,5 +1,3 @@
-import type { GameMap, MapObject, CharacterVisual, UserAccount } from '../utils/constants';
-
 // Game Types
 export interface Player {
   id: string;
@@ -15,10 +13,17 @@ export interface Player {
   xp: number;
   skills: Skill[];
   equipment: Equipment;
-  animation?: string;
+  partyId: string | null;
+  activeQuests: string[];
 }
 
-export type CharacterType = 'rudeus' | 'warrior' | 'mage' | 'rogue' | 'archer' | 'healer';
+export type CharacterType = 
+  | 'rudeus'
+  | 'warrior'
+  | 'mage'
+  | 'rogue'
+  | 'archer'
+  | 'healer';
 
 export interface CharacterPreset {
   type: CharacterType;
@@ -31,10 +36,18 @@ export interface CharacterPreset {
   skills: string[];
   model: string;
   color: number;
-  hairColor?: number;
-  outfit?: string;
-  weapon?: string;
   description?: string;
+  outfit?: string;
+  hairColor?: number;
+  hairStyle?: string;
+  age?: string;
+}
+
+export interface CharacterVisual {
+  head?: { geometry: string; radius?: number; color: number; position: { x: number; y: number; z: number } };
+  hair?: { geometry: string; radius?: number; height?: number; color: number; position: { x: number; y: number; z: number } };
+  body?: { geometry: string; radius?: number; height?: number; color: number; position: { x: number; y: number; z: number } };
+  [key: string]: any;
 }
 
 export interface Skill {
@@ -47,7 +60,6 @@ export interface Skill {
   manaCost: number;
   cooldown: number;
   range: number;
-  animation?: string;
 }
 
 export interface Equipment {
@@ -65,7 +77,6 @@ export interface GameState {
   };
   parties: Party[];
   quests: Quest[];
-  currentMap: string;
 }
 
 export interface Party {
@@ -96,12 +107,12 @@ export interface QuestObjective {
 }
 
 export interface ServerMessage {
-  type: 'init' | 'update' | 'chat' | 'party' | 'quest' | 'error' | 'player-joined' | 'player-left' | 'player-moved' | 'player-action' | 'world-update';
+  type: 'init' | 'update' | 'chat' | 'party' | 'quest' | 'error';
   data: any;
 }
 
 export interface ClientMessage {
-  type: 'join' | 'move' | 'action' | 'chat' | 'party' | 'quest' | 'register' | 'login' | 'save' | 'load';
+  type: 'join' | 'move' | 'action' | 'chat' | 'party' | 'quest';
   data: any;
   playerId?: string;
 }
@@ -114,60 +125,45 @@ export interface PositionUpdate {
   animation?: string;
 }
 
-// Network Types
-export interface SocketEvent {
-  type: string;
-  [key: string]: any;
-}
-
-// UI Types
-export interface MenuState {
-  currentScreen: 'main' | 'login' | 'register' | 'character-select' | 'settings';
-  error?: string;
-  loading?: boolean;
-}
-
-export interface LoginForm {
+// User Account Types
+export interface UserAccount {
+  id: string;
   username: string;
-  password: string;
-}
-
-export interface RegisterForm extends LoginForm {
-  email: string;
+  email?: string;
+  passwordHash?: string; // Only for server-side
+  characterType: CharacterType;
   characterName: string;
-  characterType: CharacterType;
+  level: number;
+  xp: number;
+  lastLogin: number;
+  createdAt: number;
+  savedGames: SavedGame[];
 }
 
-// Save/Load Types
-export interface SaveGameData {
-  playerId: string;
-  playerName: string;
+export interface SavedGame {
+  id: string;
   characterType: CharacterType;
+  characterName: string;
   position: { x: number; y: number; z: number };
-  map: string;
-  timestamp: number;
   level: number;
   xp: number;
   health: number;
   mana: number;
+  skills: string[];
   equipment: Equipment;
-  inventory: string[];
-  questProgress: Record<string, number>;
+  activeQuests: string[];
+  timestamp: number;
 }
 
-// Authentication Types
-export interface AuthState {
-  isAuthenticated: boolean;
-  user?: UserAccount;
-  token?: string;
-  loading: boolean;
-  error?: string;
+export interface LoginCredentials {
+  username: string;
+  password: string;
 }
 
-export interface AuthContextType extends AuthState {
-  login: (username: string, password: string) => Promise<boolean>;
-  register: (form: RegisterForm) => Promise<boolean>;
-  logout: () => void;
-  saveGame: (data: SaveGameData) => Promise<boolean>;
-  loadGame: (playerId: string) => Promise<SaveGameData | null>;
+export interface RegisterData {
+  username: string;
+  password: string;
+  email?: string;
+  characterName: string;
+  characterType: CharacterType;
 }
