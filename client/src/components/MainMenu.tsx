@@ -1,489 +1,178 @@
 import { useState, useEffect } from 'react';
 import type { CharacterType } from '../types';
-import { CHARACTER_PRESETS, CHARACTER_VISUALS } from '../utils/constants';
+import { CHARACTER_PRESETS, DEFAULT_CHARACTER } from '../utils/constants';
 
 interface MainMenuProps {
   onStartGame?: (name: string, characterType: CharacterType, server: string) => void;
   onResume?: () => void;
 }
 
-function CharacterPreview({ charType, isSelected, onClick }: {
-  charType: CharacterType;
-  isSelected: boolean;
-  onClick: () => void;
-}) {
-  const visual = CHARACTER_VISUALS[charType];
-  const preset = CHARACTER_PRESETS[charType];
-  const colorStr = preset.color.toString(16).padStart(6, '0');
-  const hairColorStr = visual.hairColor.toString(16).padStart(6, '0');
+type MenuState = 'main' | 'login' | 'register' | 'character-select' | 'load-game';
 
-  return (
-    <div
-      onClick={onClick}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: '15px',
-        borderRadius: '15px',
-        cursor: 'pointer',
-        transition: 'all 0.3s ease',
-        background: isSelected 
-          ? 'linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 200, 255, 0.2))'
-          : 'rgba(0, 0, 0, 0.3)',
-        border: isSelected ? '2px solid #00ffff' : '2px solid transparent',
-        transform: isSelected ? 'scale(1.05)' : 'scale(1)',
-        boxShadow: isSelected ? '0 0 20px rgba(0, 255, 255, 0.5)' : 'none',
-        width: '140px',
-        margin: '10px',
-      }}
-    >
-      <div style={{
-        width: '100px',
-        height: '100px',
-        borderRadius: '50%',
-        background: `linear-gradient(135deg, #${colorStr}, #${hairColorStr})`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: '10px',
-        border: '3px solid #fff',
-        boxShadow: '0 0 15px rgba(0, 0, 0, 0.5)',
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-        <span style={{
-          fontSize: '3rem',
-          color: '#fff',
-          textShadow: '0 0 10px rgba(0, 0, 0, 0.8)',
-        }}>
-          {getCharacterEmoji(charType)}
-        </span>
-        {isSelected && (
-          <div style={{
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            right: '0',
-            bottom: '0',
-            border: '2px solid #00ffff',
-            borderRadius: '50%',
-          }} />
-        )}
-      </div>
-      
-      <div style={{
-        fontSize: '0.9rem',
-        fontWeight: 'bold',
-        color: '#fff',
-        textAlign: 'center',
-        textShadow: '0 0 5px rgba(0, 0, 0, 0.8)',
-      }}>
-        {visual.name}
-      </div>
-      
-      <div style={{
-        fontSize: '0.75rem',
-        color: '#00ffff',
-        textAlign: 'center',
-        marginTop: '5px',
-      }}>
-        {preset.description?.split('.')[0] || preset.name}
-      </div>
-    </div>
-  );
-}
-
-function LoginForm({ onLogin, onSwitchToRegister, error }: {
-  onLogin: (username: string, password: string) => void;
-  onSwitchToRegister: () => void;
-  error?: string;
-}) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onLogin(username, password);
-  };
-
-  return (
-    <div style={formStyles.container}>
-      <h2 style={formStyles.title}>Login</h2>
-      {error && <p style={formStyles.error}>{error}</p>}
-      <form onSubmit={handleSubmit} style={formStyles.form}>
-        <div style={formStyles.inputGroup}>
-          <label style={formStyles.label}>Username</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter username"
-            style={formStyles.input}
-            required
-          />
-        </div>
-        <div style={formStyles.inputGroup}>
-          <label style={formStyles.label}>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter password"
-            style={formStyles.input}
-            required
-          />
-        </div>
-        <button type="submit" style={formStyles.button}>
-          Login
-        </button>
-      </form>
-      <p style={formStyles.switchText}>
-        Don't have an account?{' '}
-        <span onClick={onSwitchToRegister} style={formStyles.switchLink}>
-          Register
-        </span>
-      </p>
-    </div>
-  );
-}
-
-function RegisterForm({ onRegister, onSwitchToLogin, error }: {
-  onRegister: (form: { username: string; password: string; email: string; characterName: string; characterType: CharacterType }) => void;
-  onSwitchToLogin: () => void;
-  error?: string;
-}) {
+export default function MainMenu({ onStartGame, onResume }: MainMenuProps) {
+  const [menuState, setMenuState] = useState<MenuState>('main');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [characterName, setCharacterName] = useState('');
-  const [characterType, setCharacterType] = useState<CharacterType>('rudeus');
-  const characterTypes: CharacterType[] = ['rudeus', 'warrior', 'mage', 'rogue', 'archer', 'healer'];
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onRegister({ username, password, email, characterName, characterType });
-  };
-
-  return (
-    <div style={formStyles.container}>
-      <h2 style={formStyles.title}>Create Account</h2>
-      {error && <p style={formStyles.error}>{error}</p>}
-      <form onSubmit={handleSubmit} style={formStyles.form}>
-        <div style={formStyles.inputGroup}>
-          <label style={formStyles.label}>Username</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter username"
-            style={formStyles.input}
-            required
-          />
-        </div>
-        <div style={formStyles.inputGroup}>
-          <label style={formStyles.label}>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter email"
-            style={formStyles.input}
-          />
-        </div>
-        <div style={formStyles.inputGroup}>
-          <label style={formStyles.label}>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter password"
-            style={formStyles.input}
-            required
-          />
-        </div>
-        <div style={formStyles.inputGroup}>
-          <label style={formStyles.label}>Character Name</label>
-          <input
-            type="text"
-            value={characterName}
-            onChange={(e) => setCharacterName(e.target.value)}
-            placeholder="Enter character name"
-            style={formStyles.input}
-            required
-          />
-        </div>
-        <label style={formStyles.label}>Select Character</label>
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          maxWidth: '600px',
-          margin: '0 auto',
-        }}>
-          {characterTypes.map((charType) => (
-            <CharacterPreview
-              key={charType}
-              charType={charType}
-              isSelected={characterType === charType}
-              onClick={() => setCharacterType(charType)}
-            />
-          ))}
-        </div>
-        <button type="submit" style={formStyles.button}>
-          Create Account
-        </button>
-      </form>
-      <p style={formStyles.switchText}>
-        Already have an account?{' '}
-        <span onClick={onSwitchToLogin} style={formStyles.switchLink}>
-          Login
-        </span>
-      </p>
-    </div>
-  );
-}
-
-export default function MainMenu({ onStartGame, onResume }: MainMenuProps) {
-  const [screen, setScreen] = useState<'main' | 'login' | 'register'>('main');
+  const [selectedChar, setSelectedChar] = useState<CharacterType>(DEFAULT_CHARACTER);
+  const [serverUrl, setServerUrl] = useState('http://localhost:3001');
   const [error, setError] = useState('');
-  const [users, setUsers] = useState<Record<string, any>>({});
+  const [success, setSuccess] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [savedGames, setSavedGames] = useState<any[]>([]);
 
-  const isStartMode = !!onStartGame;
-
+  // Check for saved games on mount
   useEffect(() => {
-    const savedUsers = localStorage.getItem('manaStormUsers');
-    if (savedUsers) {
-      setUsers(JSON.parse(savedUsers));
+    const saved = localStorage.getItem('manaStormSavedGames');
+    if (saved) {
+      try {
+        setSavedGames(JSON.parse(saved));
+      } catch (e) {
+        console.error('Failed to load saved games', e);
+      }
     }
   }, []);
 
-  const handleLogin = (username: string, password: string) => {
-    const user = users[username];
-    if (user && user.password === password) {
-      localStorage.setItem('manaStormLoggedInUser', username);
-      localStorage.setItem('manaStormCharacterName', user.characterName);
-      localStorage.setItem('manaStormCharacterType', user.characterType);
-      if (onStartGame) {
-        onStartGame(user.characterName, user.characterType, 'http://localhost:3001');
-      }
+  const isStartMode = !!onStartGame;
+  const characterTypes: CharacterType[] = ['rudeus', 'warrior', 'mage', 'rogue', 'archer', 'healer'];
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    localStorage.setItem('manaStormUsername', username);
+    localStorage.setItem('manaStormLoggedIn', 'true');
+    setSuccess('Login successful!');
+    setIsLoading(false);
+    const saved = localStorage.getItem('manaStormSavedGames');
+    if (saved && JSON.parse(saved).length > 0) {
+      setMenuState('load-game');
     } else {
-      setError('Invalid username or password');
+      setMenuState('character-select');
     }
   };
 
-  const handleRegister = (form: { username: string; password: string; email: string; characterName: string; characterType: CharacterType }) => {
-    if (users[form.username]) {
-      setError('Username already exists');
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    localStorage.setItem('manaStormUsername', username);
+    localStorage.setItem('manaStormEmail', email);
+    localStorage.setItem('manaStormLoggedIn', 'true');
+    setSuccess('Registration successful! Please login.');
+    setIsLoading(false);
+    setMenuState('login');
+  };
+
+  const handleStartNewGame = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    if (!characterName.trim()) {
+      setError('Please enter a character name');
       return;
     }
-    const newUser = {
-      username: form.username,
-      password: form.password,
-      email: form.email,
-      characterName: form.characterName,
-      characterType: form.characterType,
-      createdAt: Date.now(),
+    if (characterName.length > 20) {
+      setError('Character name must be 20 characters or less');
+      return;
+    }
+    const newGame = {
+      id: Date.now().toString(),
+      characterType: selectedChar,
+      characterName,
+      position: { x: 0, y: 0, z: 0 },
+      level: 1,
+      xp: 0,
+      health: CHARACTER_PRESETS[selectedChar].baseHealth,
+      mana: CHARACTER_PRESETS[selectedChar].baseMana,
+      skills: CHARACTER_PRESETS[selectedChar].skills,
+      equipment: {},
+      activeQuests: [],
+      timestamp: Date.now(),
     };
-    const updatedUsers = { ...users, [form.username]: newUser };
-    setUsers(updatedUsers);
-    localStorage.setItem('manaStormUsers', JSON.stringify(updatedUsers));
-    setError('');
-    setScreen('main');
-    localStorage.setItem('manaStormLoggedInUser', form.username);
-    localStorage.setItem('manaStormCharacterName', form.characterName);
-    localStorage.setItem('manaStormCharacterType', form.characterType);
+    localStorage.setItem('manaStormCurrentGame', JSON.stringify(newGame));
+    localStorage.setItem('manaStormUsername', username || 'Player');
     if (onStartGame) {
-      onStartGame(form.characterName, form.characterType, 'http://localhost:3001');
+      onStartGame(characterName, selectedChar, serverUrl);
     }
   };
 
-  const handleResume = () => {
-    onResume?.();
-  };
-
-  const savedCharacterName = localStorage.getItem('manaStormCharacterName');
-  const savedCharacterType = localStorage.getItem('manaStormCharacterType') as CharacterType | null;
-
-  const handleContinue = () => {
-    if (savedCharacterName && savedCharacterType && onStartGame) {
-      onStartGame(savedCharacterName, savedCharacterType, 'http://localhost:3001');
+  const handleLoadGame = (game: any) => {
+    localStorage.setItem('manaStormCurrentGame', JSON.stringify(game));
+    if (onStartGame) {
+      onStartGame(game.characterName, game.characterType, serverUrl);
     }
   };
 
+  const handleDeleteGame = (id: string) => {
+    const updatedGames = savedGames.filter(g => g.id !== id);
+    setSavedGames(updatedGames);
+    localStorage.setItem('manaStormSavedGames', JSON.stringify(updatedGames));
+  };
+
+  const getCharacterIcon = (type: CharacterType): string => {
+    const icons: Record<CharacterType, string> = {
+      rudeus: '👦',
+      warrior: '⚔️',
+      mage: '🔮',
+      rogue: '🗡️',
+      archer: '🏹',
+      healer: '💚',
+    };
+    return icons[type] || '❓';
+  };
+
+  const getCharacterDisplayName = (type: CharacterType) => {
+    return CHARACTER_PRESETS[type]?.name || type;
+  };
+
+  const getCharacterDescription = (type: CharacterType) => {
+    return CHARACTER_PRESETS[type]?.description || 'A mysterious adventurer';
+  };
+
+  // Styles object
   const styles = {
     container: {
-      position: 'relative' as const,
-      width: '100%',
-      height: '100vh',
-      overflow: 'hidden',
-      background: 'linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #0a0e27 100%)',
-    },
-    background: {
       position: 'absolute' as const,
-      top: '0',
-      left: '0',
+      top: 0,
+      left: 0,
       width: '100%',
       height: '100%',
-      background: 'radial-gradient(ellipse at center, rgba(0, 255, 255, 0.1) 0%, transparent 70%)',
-    },
-    content: {
-      position: 'relative' as const,
-      zIndex: 10,
       display: 'flex',
       flexDirection: 'column' as const,
       alignItems: 'center',
       justifyContent: 'center',
-      height: '100%',
+      background: 'linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #0a0e27 100%)',
       padding: '2rem',
-      maxWidth: '1200px',
-      margin: '0 auto',
+      zIndex: 100,
+      overflowY: 'auto' as const,
     },
-    titleContainer: {
-      textAlign: 'center' as const,
-      marginBottom: '3rem',
+    panel: {
+      width: '100%',
+      maxWidth: '1000px',
+      background: 'rgba(0, 0, 0, 0.8)',
+      border: '1px solid rgba(0, 255, 255, 0.5)',
+      borderRadius: '16px',
+      padding: '2rem',
+      boxShadow: '0 0 40px rgba(0, 255, 255, 0.2)',
     },
     title: {
-      fontSize: '5rem',
+      fontSize: '4.5rem',
       fontWeight: 'bold' as const,
-      color: '#fff',
-      textShadow: '0 0 30px #00ffff, 0 0 60px #00ffff, 0 0 90px #00ffff',
-      letterSpacing: '0.8rem',
-      margin: '0',
-      fontFamily: "'Arial Black', sans-serif",
-      textTransform: 'uppercase' as const,
+      color: '#00ffff',
+      textShadow: '0 0 30px rgba(255, 255, 255, 0.5)',
+      letterSpacing: '0.5rem',
+      margin: '0 0 0.5rem 0',
+      textAlign: 'center' as const,
     },
     subtitle: {
       fontSize: '1.2rem',
-      color: '#00ffff',
-      marginTop: '0.5rem',
+      color: '#aaaaaa',
+      margin: '0 0 2rem 0',
+      textAlign: 'center' as const,
       letterSpacing: '0.3rem',
-      fontFamily: "'Courier New', monospace",
-    },
-    characterSelectContainer: {
-      background: 'rgba(0, 0, 0, 0.6)',
-      borderRadius: '20px',
-      padding: '2rem',
-      marginBottom: '2rem',
-      border: '1px solid rgba(0, 255, 255, 0.3)',
-      width: '100%',
-      maxWidth: '800px',
-    },
-    sectionTitle: {
-      fontSize: '1.5rem',
-      color: '#00ffff',
-      textAlign: 'center' as const,
-      marginBottom: '1.5rem',
-      fontFamily: "'Courier New', monospace",
-    },
-    characterGrid: {
-      display: 'flex',
-      flexWrap: 'wrap' as const,
-      justifyContent: 'center',
-      gap: '15px',
-      marginBottom: '1.5rem',
-    },
-    nameInputGroup: {
-      marginBottom: '1rem',
-    },
-    label: {
-      display: 'block',
-      color: '#00ffff',
-      marginBottom: '0.5rem',
-      fontSize: '1rem',
-      fontFamily: "'Courier New', monospace",
-    },
-    input: {
-      width: '100%',
-      maxWidth: '400px',
-      padding: '0.8rem',
-      background: 'rgba(0, 0, 0, 0.5)',
-      border: '1px solid #00ffff',
-      borderRadius: '8px',
-      color: '#fff',
-      fontSize: '1rem',
-      outline: 'none',
-      fontFamily: "'Courier New', monospace",
-    },
-    startButton: {
-      padding: '1rem 3rem',
-      background: 'linear-gradient(135deg, #00ffff, #0080ff)',
-      border: 'none',
-      borderRadius: '10px',
-      color: '#000',
-      fontSize: '1.5rem',
-      fontWeight: 'bold' as const,
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      fontFamily: "'Arial Black', sans-serif",
-      textTransform: 'uppercase' as const,
-      letterSpacing: '0.2rem',
-      boxShadow: '0 0 30px rgba(0, 255, 255, 0.5)',
-      marginBottom: '1rem',
-    },
-    authLinks: {
-      display: 'flex',
-      gap: '1rem',
-      marginTop: '1rem',
-    },
-    authText: {
-      color: '#aaa',
-      fontSize: '0.9rem',
-      alignSelf: 'center' as const,
-    },
-    authButton: {
-      padding: '0.5rem 1.5rem',
-      background: 'rgba(0, 255, 255, 0.2)',
-      border: '1px solid #00ffff',
-      borderRadius: '5px',
-      color: '#00ffff',
-      fontSize: '0.9rem',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      fontFamily: "'Courier New', monospace",
-    },
-  };
-
-  const formStyles = {
-    container: {
-      background: 'rgba(0, 0, 0, 0.8)',
-      borderRadius: '15px',
-      padding: '2rem',
-      maxWidth: '450px',
-      margin: '0 auto',
-      border: '1px solid rgba(0, 255, 255, 0.3)',
-    },
-    title: {
-      fontSize: '1.8rem',
-      color: '#00ffff',
-      textAlign: 'center' as const,
-      marginBottom: '1.5rem',
-      fontFamily: "'Arial Black', sans-serif",
-    },
-    form: {
-      display: 'flex',
-      flexDirection: 'column' as const,
-      gap: '1rem',
-    },
-    inputGroup: {
-      display: 'flex',
-      flexDirection: 'column' as const,
-    },
-    label: {
-      color: '#00ffff',
-      marginBottom: '0.5rem',
-      fontSize: '0.9rem',
-      fontFamily: "'Courier New', monospace",
-    },
-    input: {
-      padding: '0.8rem',
-      background: 'rgba(0, 0, 0, 0.5)',
-      border: '1px solid #00ffff',
-      borderRadius: '8px',
-      color: '#fff',
-      fontSize: '1rem',
-      outline: 'none',
-      fontFamily: "'Courier New', monospace",
     },
     button: {
       padding: '1rem',
@@ -491,168 +180,395 @@ export default function MainMenu({ onStartGame, onResume }: MainMenuProps) {
       border: 'none',
       borderRadius: '8px',
       color: '#000',
-      fontSize: '1rem',
+      fontSize: '1.1rem',
       fontWeight: 'bold' as const,
       cursor: 'pointer',
       transition: 'all 0.3s ease',
-      fontFamily: "'Arial Black', sans-serif",
-      textTransform: 'uppercase' as const,
+      margin: '0.5rem',
+      width: '100%',
+    },
+    buttonSecondary: {
+      padding: '1rem',
+      background: 'rgba(255, 0, 255, 0.3)',
+      border: '1px solid #ff00ff',
+      borderRadius: '8px',
+      color: '#fff',
+      fontSize: '1.1rem',
+      fontWeight: 'bold' as const,
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      margin: '0.5rem',
+      width: '100%',
+    },
+    input: {
+      width: '100%',
+      padding: '0.75rem',
+      background: 'rgba(0, 0, 0, 0.5)',
+      border: '1px solid #00ffff',
+      borderRadius: '8px',
+      color: '#fff',
+      fontSize: '1rem',
+      outline: 'none',
+      marginBottom: '1rem',
+    },
+    characterGrid: {
+      display: 'grid' as const,
+      gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+      gap: '1rem',
+      margin: '1.5rem 0',
+    },
+    characterCard: {
+      background: 'rgba(0, 0, 0, 0.7)',
+      border: '2px solid transparent',
+      borderRadius: '12px',
+      padding: '1rem',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      textAlign: 'center' as const,
+    },
+    characterCardSelected: {
+      borderColor: '#00ffff',
+      background: 'rgba(0, 255, 255, 0.1)',
+      transform: 'scale(1.05)',
+      boxShadow: '0 0 20px rgba(0, 255, 255, 0.5)',
+    },
+    characterIcon: {
+      width: '60px',
+      height: '60px',
+      borderRadius: '50%',
+      margin: '0 auto 0.5rem',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '2rem',
+    },
+    characterName: {
+      fontSize: '1rem',
+      color: '#fff',
+      fontWeight: 'bold' as const,
+      margin: '0 0 0.25rem 0',
+    },
+    characterDesc: {
+      fontSize: '0.8rem',
+      color: '#aaaaaa',
+      margin: 0,
     },
     error: {
       color: '#ff4444',
+      margin: '1rem 0',
+      fontSize: '0.9rem',
       textAlign: 'center' as const,
+    },
+    success: {
+      color: '#00ff00',
+      margin: '1rem 0',
+      fontSize: '0.9rem',
+      textAlign: 'center' as const,
+    },
+    savedGameCard: {
+      background: 'rgba(0, 0, 0, 0.7)',
+      border: '1px solid rgba(0, 255, 255, 0.3)',
+      borderRadius: '8px',
+      padding: '1rem',
       marginBottom: '1rem',
-      fontSize: '0.9rem',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center' as const,
     },
-    switchText: {
-      textAlign: 'center' as const,
-      color: '#aaa',
-      marginTop: '1rem',
-      fontSize: '0.9rem',
+    buttonGroup: {
+      display: 'flex',
+      gap: '0.5rem',
     },
-    switchLink: {
-      color: '#00ffff',
-      cursor: 'pointer',
+    buttonSmall: {
+      padding: '0.5rem 1rem',
+      background: 'linear-gradient(135deg, #00ffff, #0080ff)',
+      border: 'none',
+      borderRadius: '6px',
+      color: '#000',
+      fontSize: '0.9rem',
       fontWeight: 'bold' as const,
+      cursor: 'pointer',
+    },
+    buttonDanger: {
+      padding: '0.5rem 1rem',
+      background: 'rgba(255, 68, 68, 0.5)',
+      border: '1px solid #ff4444',
+      borderRadius: '6px',
+      color: '#fff',
+      fontSize: '0.9rem',
+      fontWeight: 'bold' as const,
+      cursor: 'pointer',
     },
   };
 
-  function getCharacterEmoji(charType: CharacterType): string {
-    const emojis: Record<CharacterType, string> = {
-      rudeus: '👦',
-      warrior: '💪',
-      mage: '🔮',
-      rogue: '🗡️',
-      archer: '🏹',
-      healer: '💚',
-    };
-    return emojis[charType] || '❓';
-  }
-
-  switch (screen) {
-    case 'login':
-      return (
-        <div style={styles.container}>
-          <div style={styles.background} />
-          <div style={{ ...styles.content, justifyContent: 'center' }}>
-            <LoginForm
-              onLogin={handleLogin}
-              onSwitchToRegister={() => setScreen('register')}
-              error={error}
-            />
-            <button
-              onClick={() => setScreen('main')}
-              style={{ ...styles.authButton, marginTop: '1rem' }}
-            >
-              Back
-            </button>
-          </div>
+  // Render different menu states
+  const renderMainMenu = () => (
+    <div style={styles.panel}>
+      <h1 style={styles.title}>Mana Storm</h1>
+      <p style={styles.subtitle}>An Anime RPG Adventure</p>
+      
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginTop: '2rem' }}>
+        <button style={styles.button} onClick={() => {
+          const loggedIn = localStorage.getItem('manaStormLoggedIn');
+          if (loggedIn) {
+            const saved = localStorage.getItem('manaStormSavedGames');
+            if (saved && JSON.parse(saved).length > 0) {
+              setMenuState('load-game');
+            } else {
+              setMenuState('character-select');
+            }
+          } else {
+            setMenuState('login');
+          }
+        }}>
+          Start Game
+        </button>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <button style={styles.buttonSecondary} onClick={() => setMenuState('login')}>
+            Login
+          </button>
+          <button style={styles.buttonSecondary} onClick={() => setMenuState('register')}>
+            Register
+          </button>
         </div>
-      );
+      </div>
+    </div>
+  );
 
-    case 'register':
-      return (
-        <div style={styles.container}>
-          <div style={styles.background} />
-          <div style={{ ...styles.content, justifyContent: 'center' }}>
-            <RegisterForm
-              onRegister={handleRegister}
-              onSwitchToLogin={() => setScreen('login')}
-              error={error}
-            />
-            <button
-              onClick={() => setScreen('main')}
-              style={{ ...styles.authButton, marginTop: '1rem' }}
+  const renderLoginMenu = () => (
+    <div style={styles.panel}>
+      <h1 style={styles.title}>Login</h1>
+      
+      {error && <p style={styles.error}>{error}</p>}
+      {success && <p style={styles.success}>{success}</p>}
+      
+      <form onSubmit={handleLogin}>
+        <input
+          style={styles.input}
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username"
+        />
+        <input
+          style={styles.input}
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+        />
+        <button style={styles.button} type="submit" disabled={isLoading}>
+          {isLoading ? 'Logging in...' : 'Login'}
+        </button>
+      </form>
+      
+      <p style={{ color: '#aaaaaa', textAlign: 'center', margin: '1rem 0' }}>
+        Don't have an account?{' '}
+        <span
+          onClick={() => setMenuState('register')}
+          style={{ color: '#00ffff', cursor: 'pointer', textDecoration: 'underline' }}
+        >
+          Register
+        </span>
+      </p>
+      
+      <button style={styles.buttonSecondary} onClick={() => setMenuState('main')}>
+        Back
+      </button>
+    </div>
+  );
+
+  const renderRegisterMenu = () => (
+    <div style={styles.panel}>
+      <h1 style={styles.title}>Create Account</h1>
+      
+      {error && <p style={styles.error}>{error}</p>}
+      {success && <p style={styles.success}>{success}</p>}
+      
+      <form onSubmit={handleRegister}>
+        <input
+          style={styles.input}
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username"
+        />
+        <input
+          style={styles.input}
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email (Optional)"
+        />
+        <input
+          style={styles.input}
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+        />
+        <button style={styles.button} type="submit" disabled={isLoading}>
+          {isLoading ? 'Registering...' : 'Create Account'}
+        </button>
+      </form>
+      
+      <p style={{ color: '#aaaaaa', textAlign: 'center', margin: '1rem 0' }}>
+        Already have an account?{' '}
+        <span
+          onClick={() => setMenuState('login')}
+          style={{ color: '#00ffff', cursor: 'pointer', textDecoration: 'underline' }}
+        >
+          Login
+        </span>
+      </p>
+      
+      <button style={styles.buttonSecondary} onClick={() => setMenuState('main')}>
+        Back
+      </button>
+    </div>
+  );
+
+  const renderCharacterSelectMenu = () => (
+    <div style={styles.panel}>
+      <h1 style={styles.title}>Select Your Character</h1>
+      <p style={styles.subtitle}>Choose your destiny</p>
+      
+      <div style={styles.characterGrid}>
+        {characterTypes.map((type) => {
+          const preset = CHARACTER_PRESETS[type];
+          const isSelected = selectedChar === type;
+          const r = (preset.color >> 16) & 0xff;
+          const g = (preset.color >> 8) & 0xff;
+          const b = preset.color & 0xff;
+          
+          return (
+            <div
+              key={type}
+              onClick={() => setSelectedChar(type)}
+              style={{
+                ...styles.characterCard,
+                ...(isSelected ? styles.characterCardSelected : {}),
+              }}
             >
-              Back
-            </button>
-          </div>
+              <div
+                style={{
+                  ...styles.characterIcon,
+                  backgroundColor: `rgba(${r}, ${g}, ${b}, 0.8)`,
+                }}
+              >
+                {getCharacterIcon(type)}
+              </div>
+              <div style={styles.characterName}>{preset.name}</div>
+              <p style={styles.characterDesc}>{getCharacterDescription(type)}</p>
+            </div>
+          );
+        })}
+      </div>
+      
+      <form onSubmit={handleStartNewGame}>
+        <input
+          style={styles.input}
+          type="text"
+          value={characterName}
+          onChange={(e) => setCharacterName(e.target.value)}
+          placeholder="Character Name"
+          maxLength={20}
+        />
+        <input
+          style={styles.input}
+          type="text"
+          value={serverUrl}
+          onChange={(e) => setServerUrl(e.target.value)}
+          placeholder="Server URL (http://localhost:3001)"
+        />
+        {error && <p style={styles.error}>{error}</p>}
+        <button style={styles.button} type="submit" disabled={isLoading}>
+          {isLoading ? 'Starting Game...' : 'Start New Game'}
+        </button>
+      </form>
+      
+      {savedGames.length > 0 && (
+        <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+          <p style={{ color: '#aaaaaa', marginBottom: '1rem' }}>
+            Or continue from a saved game:
+          </p>
+          <button style={styles.buttonSecondary} onClick={() => setMenuState('load-game')}>
+            Load Saved Game
+          </button>
         </div>
-      );
+      )}
+      
+      <button style={styles.buttonSecondary} onClick={() => setMenuState('main')}>
+        Back
+      </button>
+    </div>
+  );
 
-    default:
-      if (isStartMode) {
-        return (
-          <div style={styles.container}>
-            <div style={styles.background} />
-            <div style={styles.content}>
-              <div style={styles.titleContainer}>
-                <h1 style={styles.title}>MANA STORM</h1>
-                <p style={styles.subtitle}>A Jobless Reincarnation RPG</p>
+  const renderLoadGameMenu = () => (
+    <div style={styles.panel}>
+      <h1 style={styles.title}>Load Game</h1>
+      <p style={styles.subtitle}>Continue your adventure</p>
+      
+      {savedGames.length === 0 ? (
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ color: '#aaaaaa', margin: '2rem 0' }}>No saved games found.</p>
+          <button style={styles.button} onClick={() => setMenuState('character-select')}>
+            Start New Game
+          </button>
+        </div>
+      ) : (
+        <div>
+          {savedGames.map((game) => (
+            <div key={game.id} style={styles.savedGameCard}>
+              <div>
+                <h4 style={{ color: '#fff', margin: '0 0 0.25rem 0' }}>
+                  {game.characterName}
+                </h4>
+                <p style={{ color: '#aaaaaa', fontSize: '0.85rem', margin: '0 0 0.25rem 0' }}>
+                  Level {game.level} {getCharacterDisplayName(game.characterType)}
+                </p>
+                <p style={{ color: '#aaaaaa', fontSize: '0.75rem', margin: 0 }}>
+                  {new Date(game.timestamp).toLocaleDateString()}
+                </p>
               </div>
-              <div style={styles.characterSelectContainer}>
-                <h2 style={styles.sectionTitle}>Select Your Character</h2>
-                <div style={styles.characterGrid}>
-                  {['rudeus', 'warrior', 'mage', 'rogue', 'archer', 'healer'].map((charType) => (
-                    <CharacterPreview
-                      key={charType}
-                      charType={charType as CharacterType}
-                      isSelected={false}
-                      onClick={() => {}}
-                    />
-                  ))}
-                </div>
-                <div style={styles.nameInputGroup}>
-                  <label style={styles.label}>Character Name</label>
-                  <input
-                    type="text"
-                    placeholder="Enter your character name"
-                    maxLength={20}
-                    style={styles.input}
-                  />
-                </div>
-                <div style={styles.nameInputGroup}>
-                  <label style={styles.label}>Server URL</label>
-                  <input
-                    type="text"
-                    placeholder="http://localhost:3001"
-                    style={styles.input}
-                  />
-                </div>
-              </div>
-              <button style={styles.startButton}>
-                Start Game
-              </button>
-              <div style={styles.authLinks}>
-                <button onClick={() => setScreen('login')} style={styles.authButton}>
-                  Login
+              <div style={styles.buttonGroup}>
+                <button style={styles.buttonSmall} onClick={() => handleLoadGame(game)}>
+                  Continue
                 </button>
-                <button onClick={() => setScreen('register')} style={styles.authButton}>
-                  Register
+                <button style={styles.buttonDanger} onClick={() => handleDeleteGame(game.id)}>
+                  Delete
                 </button>
               </div>
             </div>
-          </div>
-        );
-      } else {
-        return (
-          <div style={styles.container}>
-            <div style={styles.background} />
-            <div style={{ ...styles.content, justifyContent: 'center' }}>
-              <div style={styles.titleContainer}>
-                <h1 style={styles.title}>PAUSED</h1>
-              </div>
-              <div style={{ textAlign: 'center' as const, marginBottom: '2rem' }}>
-                {savedCharacterName && (
-                  <p style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '1rem' }}>
-                    {savedCharacterName}
-                  </p>
-                )}
-                {savedCharacterName && savedCharacterType && (
-                  <button onClick={handleContinue} style={styles.startButton}>
-                    Continue Game
-                  </button>
-                )}
-                <button onClick={handleResume} style={{ ...styles.startButton, marginTop: '1rem' }}>
-                  Resume
-                </button>
-                <button onClick={onResume} style={{ ...styles.authButton, marginTop: '1rem' }}>
-                  Back to Menu
-                </button>
-              </div>
-            </div>
-          </div>
-        );
-      }
-  }
+          ))}
+          
+          <button style={styles.button} onClick={() => setMenuState('character-select')}>
+            Start New Game
+          </button>
+        </div>
+      )}
+      
+      <button style={styles.buttonSecondary} onClick={() => setMenuState('main')}>
+        Back
+      </button>
+    </div>
+  );
+
+  // Render the appropriate menu based on state
+  const renderMenu = () => {
+    switch (menuState) {
+      case 'login': return renderLoginMenu();
+      case 'register': return renderRegisterMenu();
+      case 'character-select': return renderCharacterSelectMenu();
+      case 'load-game': return renderLoadGameMenu();
+      default: return renderMainMenu();
+    }
+  };
+
+  return (
+    <div style={styles.container}>
+      {renderMenu()}
+    </div>
+  );
 }
