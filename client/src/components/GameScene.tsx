@@ -3,6 +3,9 @@ import * as THREE from 'three';
 import { io, Socket } from 'socket.io-client';
 import MainMenu from './MainMenu';
 import GameHUD from './ui/GameHUD';
+import Character from './game/Character';
+import LocalPlayerController from './game/LocalPlayerController';
+import GameWorld from './game/GameWorld';
 import type { CharacterType, Player, GameState } from '../types';
 
 interface GameSceneProps {
@@ -21,12 +24,11 @@ export default function GameScene({ playerName, characterType, serverUrl, onBack
   const socketRef = useRef<Socket | null>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
-  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
 
+  // Initialize Three.js scene
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // Initialize Three.js
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x87ceeb);
     scene.fog = new THREE.Fog(0x87ceeb, 1, 1000);
@@ -49,7 +51,6 @@ export default function GameScene({ playerName, characterType, serverUrl, onBack
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.shadowMap.enabled = true;
-    rendererRef.current = renderer;
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
@@ -85,14 +86,18 @@ export default function GameScene({ playerName, characterType, serverUrl, onBack
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
-      renderer.render(scene, camera);
+      if (cameraRef.current && sceneRef.current) {
+        renderer.render(sceneRef.current, cameraRef.current);
+      }
     };
     animate();
 
     // Handle window resize
     const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
+      if (cameraRef.current) {
+        cameraRef.current.aspect = window.innerWidth / window.innerHeight;
+        cameraRef.current.updateProjectionMatrix();
+      }
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
     window.addEventListener('resize', handleResize);
@@ -167,8 +172,22 @@ export default function GameScene({ playerName, characterType, serverUrl, onBack
   return (
     <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
       <canvas ref={canvasRef} style={{ display: 'block' }} />
-      {gameState && currentPlayerId && (
+      {sceneRef.current && gameState && currentPlayerId && (
         <>
+          {Object.entries(players).map(([id, player]) => (
+            <Character
+              key={id}
+              player={player}
+              scene={sceneRef.current!}
+              isLocalPlayer={id === currentPlayerId}
+            />
+          ))}
+          <LocalPlayerController
+            playerId={currentPlayerId}
+            players={players}
+            socket={socketRef.current}
+            camera={cameraRef.current}
+          />
           <GameHUD player={players[currentPlayerId]} onMenuClick={() => setShowMenu(true)} />
         </>
       )}
