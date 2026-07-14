@@ -238,9 +238,9 @@ export const BUENA_VILLAGE = {
       name: 'Village Well',
       type: 'well',
       position: { x: 0, y: 0, z: 10 },
-      radius: 1,
-      height: 2,
+      size: { width: 3, depth: 3, height: 2 },
       color: 0x808080,
+      roofColor: 0x8b4513,
     },
   ],
   trees: [
