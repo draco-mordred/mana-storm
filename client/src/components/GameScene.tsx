@@ -357,7 +357,7 @@ export default function GameScene({ playerName, characterType, serverUrl, onBack
     return (
       <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
         <canvas ref={canvasRef} style={{ display: 'block' }} />
-        <MainMenu onStartGame={handleResumeGame} />
+        <MainMenu onResume={handleResumeGame} />
       </div>
     );
   }
