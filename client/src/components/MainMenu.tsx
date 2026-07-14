@@ -3,21 +3,29 @@ import type { CharacterType } from '../types';
 import { CHARACTER_PRESETS } from '../utils/constants';
 
 interface MainMenuProps {
-  onStartGame: (name: string, characterType: CharacterType, server: string) => void;
+  onStartGame?: (name: string, characterType: CharacterType, server: string) => void;
+  onResume?: () => void;
 }
 
-export default function MainMenu({ onStartGame }: MainMenuProps) {
+export default function MainMenu({ onStartGame, onResume }: MainMenuProps) {
   const [name, setName] = useState('');
   const [selectedChar, setSelectedChar] = useState<CharacterType>('warrior');
   const [serverUrl, setServerUrl] = useState('http://localhost:3001');
   const [error, setError] = useState('');
 
+  const isStartMode = !!onStartGame;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) { setError('Please enter your name'); return; }
-    if (name.length > 20) { setError('Name must be 20 characters or less'); return; }
-    setError('');
-    onStartGame(name, selectedChar, serverUrl);
+    
+    if (isStartMode) {
+      if (!name.trim()) { setError('Please enter your name'); return; }
+      if (name.length > 20) { setError('Name must be 20 characters or less'); return; }
+      setError('');
+      onStartGame?.(name, selectedChar, serverUrl);
+    } else {
+      onResume?.();
+    }
   };
 
   const styles = {
@@ -42,40 +50,88 @@ export default function MainMenu({ onStartGame }: MainMenuProps) {
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>Mana Storm</h1>
-      <p style={styles.subtitle}>A Multiplayer Adventure Game</p>
+      <p style={styles.subtitle}>
+        {isStartMode ? 'A Multiplayer Adventure Game' : 'Game Paused'}
+      </p>
+
       <form onSubmit={handleSubmit} style={styles.form}>
-        <div style={styles.inputGroup}>
-          <label htmlFor="name" style={styles.label}>Your Name</label>
-          <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter your character name" maxLength={20} style={styles.input} />
-        </div>
-        <label style={styles.label}>Select Character</label>
-        <div style={styles.characterGrid}>
-          {characterTypes.map((charType) => {
-            const preset = CHARACTER_PRESETS[charType];
-            const isSelected = selectedChar === charType;
-            const r = (preset.color >> 16) & 0xff;
-            const g = (preset.color >> 8) & 0xff;
-            const b = preset.color & 0xff;
-            return (
-              <div key={charType} style={{ ...styles.characterCard, ...(isSelected ? styles.characterCardSelected : {}) }} onClick={() => setSelectedChar(charType)}>
-                <div style={{ ...styles.characterIcon, backgroundColor: `rgba(${r}, ${g}, ${b}, 0.8)` }}> {getCharacterIcon(charType)} </div>
-                <div style={styles.characterName}>{preset.name}</div>
-              </div>
-            );
-          })}
-        </div>
-        <div style={styles.inputGroup}>
-          <label htmlFor="server" style={styles.label}>Server URL</label>
-          <input id="server" type="text" value={serverUrl} onChange={(e) => setServerUrl(e.target.value)} placeholder="http://localhost:3001" style={styles.input} />
-        </div>
+        {isStartMode && (
+          <>
+            <div style={styles.inputGroup}>
+              <label htmlFor="name" style={styles.label}>Your Name</label>
+              <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter your character name"
+                maxLength={20}
+                style={styles.input}
+              />
+            </div>
+
+            <label style={styles.label}>Select Character</label>
+            <div style={styles.characterGrid}>
+              {characterTypes.map((charType) => {
+                const preset = CHARACTER_PRESETS[charType];
+                const isSelected = selectedChar === charType;
+                const r = (preset.color >> 16) & 0xff;
+                const g = (preset.color >> 8) & 0xff;
+                const b = preset.color & 0xff;
+                return (
+                  <div
+                    key={charType}
+                    style={{
+                      ...styles.characterCard,
+                      ...(isSelected ? styles.characterCardSelected : {}),
+                    }}
+                    onClick={() => setSelectedChar(charType)}
+                  >
+                    <div
+                      style={{
+                        ...styles.characterIcon,
+                        backgroundColor: `rgba(${r}, ${g}, ${b}, 0.8)`,
+                      }}
+                    >
+                      {getCharacterIcon(charType)}
+                    </div>
+                    <div style={styles.characterName}>{preset.name}</div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={styles.inputGroup}>
+              <label htmlFor="server" style={styles.label}>Server URL</label>
+              <input
+                id="server"
+                type="text"
+                value={serverUrl}
+                onChange={(e) => setServerUrl(e.target.value)}
+                placeholder="http://localhost:3001"
+                style={styles.input}
+              />
+            </div>
+          </>
+        )}
+
         {error && <p style={styles.error}>{error}</p>}
-        <button type="submit" style={styles.button}>Start Game</button>
+
+        <button type="submit" style={styles.button}>
+          {isStartMode ? 'Start Game' : 'Resume Game'}
+        </button>
       </form>
     </div>
   );
 }
 
 function getCharacterIcon(type: CharacterType): string {
-  const icons: Record<CharacterType, string> = { warrior: '⚔️', mage: '🔮', rogue: '🗡️', archer: '🏹', healer: '💚' };
+  const icons: Record<CharacterType, string> = {
+    warrior: '⚔️',
+    mage: '🔮',
+    rogue: '🗡️',
+    archer: '🏹',
+    healer: '💚',
+  };
   return icons[type] || '❓';
 }
