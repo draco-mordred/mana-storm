@@ -1,24 +1,53 @@
-import type { Player } from '../../types';
-import { CHARACTER_PRESETS } from '../../utils/constants';
+import type { Player, CharacterType } from '../../types';
+import { CHARACTER_PRESETS, SKILLS } from '../../utils/constants';
 
 interface GameHUDProps {
   player: Player | undefined;
   onMenuClick: () => void;
+  cameraMode?: 'third-person' | 'first-person';
+  onToggleCamera?: () => void;
 }
 
-export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
+export default function GameHUD({ player, onMenuClick, cameraMode, onToggleCamera }: GameHUDProps) {
   if (!player) {
     return null;
   }
 
+  const preset = CHARACTER_PRESETS[player.character as CharacterType] || CHARACTER_PRESETS.rudeus;
   const healthPercent = (player.health / player.maxHealth) * 100;
   const manaPercent = (player.mana / player.maxMana) * 100;
   const xpPercent = (player.xp / (player.level * 1000)) * 100;
   
-  const preset = CHARACTER_PRESETS[player.character];
+  // Calculate stats from preset if not available on player
+  const stats = {
+    attack: preset.baseAttack || 10,
+    defense: preset.baseDefense || 10,
+    speed: preset.baseSpeed || 10,
+  };
+
+  const getCharacterIcon = (type: string): string => {
+    const icons: Record<string, string> = {
+      rudeus: '👦',
+      warrior: '⚔️',
+      mage: '🔮',
+      rogue: '🗡️',
+      archer: '🏹',
+      healer: '💚',
+    };
+    return icons[type] || '❓';
+  };
+
+  const getSkillIcon = (type: string): string => {
+    const icons: Record<string, string> = {
+      attack: '⚔️',
+      defense: '🛡️',
+      heal: '💚',
+      utility: '✨',
+    };
+    return icons[type] || '❓';
+  };
 
   const styles = {
-    // Main HUD container
     hud: {
       position: 'absolute' as const,
       top: '20px',
@@ -33,8 +62,6 @@ export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
       border: '2px solid rgba(0, 255, 255, 0.3)',
       boxShadow: '0 0 20px rgba(0, 255, 255, 0.2)',
     },
-    
-    // Header with character info
     header: {
       display: 'flex' as const,
       alignItems: 'center',
@@ -42,8 +69,6 @@ export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
       paddingBottom: '15px',
       borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
     },
-    
-    // Character icon
     characterIcon: {
       width: '50px',
       height: '50px',
@@ -57,13 +82,9 @@ export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
       border: '2px solid #fff',
       boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
     },
-    
-    // Character info
     characterInfo: {
       flex: 1,
     },
-    
-    // Character name
     name: {
       fontSize: '1.3rem',
       fontWeight: 'bold' as const,
@@ -71,8 +92,6 @@ export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
       margin: '0 0 5px 0',
       textShadow: '0 0 5px rgba(0, 255, 255, 0.5)',
     },
-    
-    // Character class
     characterClass: {
       fontSize: '0.9rem',
       color: '#aaa',
@@ -80,47 +99,33 @@ export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
       alignItems: 'center',
       gap: '5px',
     },
-    
-    // Level display
     level: {
       fontSize: '0.9rem',
       color: '#ffaa00',
       fontWeight: 'bold' as const,
     },
-    
-    // Stats section
     stats: {
       marginTop: '10px',
     },
-    
-    // Stat row
     statRow: {
       display: 'flex' as const,
       justifyContent: 'space-between',
       alignItems: 'center',
       margin: '8px 0',
     },
-    
-    // Stat label
     statLabel: {
       fontSize: '0.85rem',
       color: '#aaa',
     },
-    
-    // Stat value
     statValue: {
       fontSize: '0.85rem',
       color: '#fff',
       fontWeight: 'bold' as const,
     },
-    
-    // Bar container
     barContainer: {
       width: '100%',
       margin: '5px 0',
     },
-    
-    // Bar background
     barBg: {
       height: '18px',
       background: '#333',
@@ -129,31 +134,21 @@ export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
       border: '1px solid #555',
       position: 'relative' as const,
     },
-    
-    // Bar fill
     barFill: {
       height: '100%',
       borderRadius: '9px',
       transition: 'width 0.3s ease',
       position: 'relative' as const,
     },
-    
-    // Health bar
     healthBar: {
       background: 'linear-gradient(90deg, #ff0000, #ff4444, #ff0000)',
     },
-    
-    // Mana bar
     manaBar: {
       background: 'linear-gradient(90deg, #0088ff, #44aaff, #0088ff)',
     },
-    
-    // XP bar
     xpBar: {
       background: 'linear-gradient(90deg, #ffd700, #ffcc00, #ffd700)',
     },
-    
-    // Bar text
     barText: {
       position: 'absolute' as const,
       top: '50%',
@@ -164,16 +159,12 @@ export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
       fontWeight: 'bold' as const,
       textShadow: '0 0 5px rgba(0, 0, 0, 0.8)',
     },
-    
-    // Skills section
     skills: {
       display: 'flex' as const,
       gap: '8px',
       marginTop: '15px',
       flexWrap: 'wrap' as const,
     },
-    
-    // Skill button
     skill: {
       padding: '6px 12px',
       background: 'rgba(0, 255, 255, 0.15)',
@@ -187,8 +178,6 @@ export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
       alignItems: 'center',
       gap: '3px',
     },
-    
-    // Menu button
     menuButton: {
       position: 'absolute' as const,
       top: '10px',
@@ -203,8 +192,6 @@ export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
       fontWeight: 'bold' as const,
       transition: 'all 0.2s',
     },
-    
-    // Mini map placeholder
     miniMap: {
       position: 'absolute' as const,
       bottom: '20px',
@@ -221,8 +208,6 @@ export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
       fontSize: '0.8rem',
       zIndex: 99,
     },
-    
-    // Coordinates display
     coordinates: {
       position: 'absolute' as const,
       bottom: '20px',
@@ -233,6 +218,20 @@ export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
       padding: '5px 10px',
       borderRadius: '5px',
       zIndex: 99,
+    },
+    cameraModeButton: {
+      position: 'absolute' as const,
+      top: '10px',
+      right: '110px',
+      padding: '8px 16px',
+      background: 'rgba(0, 255, 255, 0.2)',
+      border: '1px solid #00ffff',
+      borderRadius: '6px',
+      color: '#00ffff',
+      cursor: 'pointer',
+      fontSize: '0.8rem',
+      fontWeight: 'bold' as const,
+      transition: 'all 0.2s',
     },
   };
 
@@ -252,11 +251,25 @@ export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
         Menu
       </button>
 
+      {/* Camera Mode Toggle Button */}
+      {cameraMode && onToggleCamera && (
+        <button
+          style={styles.cameraModeButton}
+          onClick={onToggleCamera}
+          onMouseEnter={(e) => {
+            (e.target as HTMLButtonElement).style.background = 'rgba(0, 255, 255, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            (e.target as HTMLButtonElement).style.background = 'rgba(0, 255, 255, 0.2)';
+          }}
+        >
+          {cameraMode === 'third-person' ? '3rd Person' : '1st Person'}
+        </button>
+      )}
+
       {/* Header */}
       <div style={styles.header}>
-        <div
-          style={styles.characterIcon}
-        >
+        <div style={styles.characterIcon}>
           {getCharacterIcon(player.character)}
         </div>
         <div style={styles.characterInfo}>
@@ -327,35 +340,38 @@ export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
         {/* Stats */}
         <div style={styles.statRow}>
           <span style={styles.statLabel}>ATK:</span>
-          <span style={styles.statValue}>{player.stats.attack}</span>
+          <span style={styles.statValue}>{stats.attack}</span>
         </div>
         <div style={styles.statRow}>
           <span style={styles.statLabel}>DEF:</span>
-          <span style={styles.statValue}>{player.stats.defense}</span>
+          <span style={styles.statValue}>{stats.defense}</span>
         </div>
         <div style={styles.statRow}>
           <span style={styles.statLabel}>SPD:</span>
-          <span style={styles.statValue}>{player.stats.speed}</span>
+          <span style={styles.statValue}>{stats.speed}</span>
         </div>
       </div>
 
       {/* Skills */}
       <div style={styles.skills}>
-        {player.skills.slice(0, 4).map((skill) => (
-          <div
-            key={skill.id}
-            style={styles.skill}
-            onMouseEnter={(e) => {
-              (e.target as HTMLDivElement).style.background = 'rgba(0, 255, 255, 0.3)';
-            }}
-            onMouseLeave={(e) => {
-              (e.target as HTMLDivElement).style.background = 'rgba(0, 255, 255, 0.15)';
-            }}
-          >
-            {getSkillIcon(skill.type)}
-            <span>{skill.name}</span>
-          </div>
-        ))}
+        {player.skills.slice(0, 4).map((skill: any) => {
+          const skillData = SKILLS[skill.id || skill];
+          return (
+            <div
+              key={skill.id || skill}
+              style={styles.skill}
+              onMouseEnter={(e) => {
+                (e.target as HTMLDivElement).style.background = 'rgba(0, 255, 255, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLDivElement).style.background = 'rgba(0, 255, 255, 0.15)';
+              }}
+            >
+              {getSkillIcon(skillData?.type || 'utility')}
+              <span>{skillData?.name || skill}</span>
+            </div>
+          );
+        })}
       </div>
 
       {/* Mini Map Placeholder */}
@@ -369,29 +385,4 @@ export default function GameHUD({ player, onMenuClick }: GameHUDProps) {
       </div>
     </div>
   );
-}
-
-// ============================================
-// 🎭 ICON HELPERS
-// ============================================
-function getCharacterIcon(type: string): string {
-  const icons: Record<string, string> = {
-    rudeus: '🔮',
-    warrior: '⚔️',
-    mage: '🔮',
-    rogue: '🗡️',
-    archer: '🏹',
-    healer: '💚',
-  };
-  return icons[type] || '❓';
-}
-
-function getSkillIcon(type: string): string {
-  const icons: Record<string, string> = {
-    attack: '⚔️',
-    defense: '🛡️',
-    heal: '💚',
-    utility: '✨',
-  };
-  return icons[type] || '❓';
 }
