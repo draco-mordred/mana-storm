@@ -5,16 +5,11 @@ import type { Player } from '../../types';
 interface LocalPlayerControllerProps {
   playerId: string;
   players: Record<string, Player>;
-  socket: Socket;
-}
-
-interface LocalPlayerControllerProps {
-  playerId: string;
-  players: Record<string, Player>;
   socket: any;
+  camera: THREE.PerspectiveCamera | null;
 }
 
-export default function LocalPlayerController({ playerId, players, socket }: LocalPlayerControllerProps) {
+export default function LocalPlayerController({ playerId, players, socket, camera }: LocalPlayerControllerProps) {
   const keysRef = useRef<Record<string, boolean>>({});
   const pointerLockRef = useRef(false);
 
@@ -76,19 +71,16 @@ export default function LocalPlayerController({ playerId, players, socket }: Loc
   }, [socket, players, playerId]);
 
   useEffect(() => {
-    if (!pointerLockRef.current) return;
+    if (!pointerLockRef.current || !camera) return;
     const handleMouseMove = (e: MouseEvent) => {
-      const camera = cameraRef.current;
-      if (camera) {
-        camera.rotation.order = 'YXZ';
-        camera.rotation.y -= e.movementX * 0.002;
-        camera.rotation.x -= e.movementY * 0.002;
-        camera.rotation.x = Math.max(-Math.PI / 2 + 0.1, Math.min(Math.PI / 2 - 0.1, camera.rotation.x));
-      }
+      camera.rotation.order = 'YXZ';
+      camera.rotation.y -= e.movementX * 0.002;
+      camera.rotation.x -= e.movementY * 0.002;
+      camera.rotation.x = Math.max(-Math.PI / 2 + 0.1, Math.min(Math.PI / 2 - 0.1, camera.rotation.x));
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [camera]);
 
   return null;
 }
