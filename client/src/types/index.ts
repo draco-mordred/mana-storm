@@ -15,6 +15,8 @@ export interface Player {
   equipment: Equipment;
   partyId: string | null;
   activeQuests: string[];
+  direction?: number;
+  animation?: string;
 }
 
 export type CharacterType = 
@@ -77,6 +79,7 @@ export interface GameState {
   };
   parties: Party[];
   quests: Quest[];
+  area?: string;
 }
 
 export interface Party {
@@ -107,12 +110,12 @@ export interface QuestObjective {
 }
 
 export interface ServerMessage {
-  type: 'init' | 'update' | 'chat' | 'party' | 'quest' | 'error';
+  type: 'init' | 'update' | 'chat' | 'party' | 'quest' | 'error' | 'area-changed';
   data: any;
 }
 
 export interface ClientMessage {
-  type: 'join' | 'move' | 'action' | 'chat' | 'party' | 'quest';
+  type: 'join' | 'move' | 'action' | 'chat' | 'party' | 'quest' | 'change-area';
   data: any;
   playerId?: string;
 }
@@ -123,6 +126,57 @@ export interface PositionUpdate {
   z: number;
   rotation?: { x: number; y: number; z: number };
   animation?: string;
+  direction?: number;
+}
+
+// NPC Types
+export interface NPC {
+  id: string;
+  name: string;
+  characterType: CharacterType;
+  position: { x: number; y: number; z: number };
+  area: string;
+  dialogue?: string[];
+  quests?: string[];
+  type: 'shopkeeper' | 'quest-giver' | 'villager' | 'guard';
+}
+
+// Monster Types
+export interface Monster {
+  id: string;
+  name: string;
+  type: 'slime' | 'goblin' | 'wolf' | 'dragon' | 'skeleton' | 'demon';
+  position: { x: number; y: number; z: number };
+  area: string;
+  color: number;
+  health: number;
+  attack: number;
+  defense: number;
+  xpReward: number;
+  aggressive: boolean;
+}
+
+// Quest Marker Types
+export interface QuestMarker {
+  id: string;
+  name: string;
+  position: { x: number; y: number; z: number };
+  area: string;
+  type: 'main' | 'side';
+  completed: boolean;
+  questId?: string;
+}
+
+// Area Types
+export interface Area {
+  name: string;
+  description: string;
+  spawnPoint: { x: number; y: number; z: number };
+  buildings?: any[];
+  trees?: any[];
+  paths?: any[];
+  fences?: any[];
+  gates?: any[];
 }
 
 // User Account Types
@@ -130,7 +184,7 @@ export interface UserAccount {
   id: string;
   username: string;
   email?: string;
-  passwordHash?: string; // Only for server-side
+  passwordHash?: string;
   characterType: CharacterType;
   characterName: string;
   level: number;
@@ -153,6 +207,7 @@ export interface SavedGame {
   equipment: Equipment;
   activeQuests: string[];
   timestamp: number;
+  area?: string;
 }
 
 export interface LoginCredentials {
