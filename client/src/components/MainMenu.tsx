@@ -227,7 +227,7 @@ export default function MainMenu({ onStartGame, onResume }: MainMenuProps) {
       textAlign: 'center' as const,
     },
     characterCardSelected: {
-      borderColor: '#00ffff',
+      border: '2px solid #00ffff',
       background: 'rgba(0, 255, 255, 0.1)',
       transform: 'scale(1.05)',
       boxShadow: '0 0 20px rgba(0, 255, 255, 0.5)',
