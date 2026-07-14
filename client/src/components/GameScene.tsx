@@ -104,7 +104,10 @@ export default function GameScene({ playerName, characterType, serverUrl, onBack
     // 🏡 BUENA VILLAGE BUILDINGS
     // ============================================
     BUENA_VILLAGE.buildings.forEach((building) => {
-      createBuilding(building, scene);
+      // Skip buildings that don't have size property (they may be handled separately)
+      if (building.size) {
+        createBuilding(building, scene);
+      }
     });
 
     // ============================================
@@ -138,7 +141,10 @@ export default function GameScene({ playerName, characterType, serverUrl, onBack
     // ============================================
     // 💧 WELL (Village Center)
     // ============================================
-    createWell(BUENA_VILLAGE.buildings.find(b => b.id === 'village-center'), scene);
+    const wellBuilding = BUENA_VILLAGE.buildings.find(b => b.id === 'well');
+    if (wellBuilding) {
+      createWell(wellBuilding, scene);
+    }
 
     // ============================================
     // 🌿 DECORATIONS (Barrels, crates, etc.)
@@ -189,13 +195,20 @@ export default function GameScene({ playerName, characterType, serverUrl, onBack
   // Helper function to create buildings
   const createBuilding = (building: any, scene: THREE.Scene) => {
     const { position, size, color, roofColor, type } = building;
+    
+    // Defensive check for size
+    if (!size || !size.width || !size.height || !size.depth) {
+      console.warn('Building missing size property:', building.id);
+      return null;
+    }
+    
     const group = new THREE.Group();
     group.position.set(position.x, 0, position.z);
     
     // Walls
     const wallGeometry = new THREE.BoxGeometry(size.width, size.height, size.depth);
     const wallMaterial = new THREE.MeshStandardMaterial({
-      color: color,
+      color: color || 0x8b4513,
       roughness: 0.7,
       metalness: 0.2,
     });
@@ -207,7 +220,7 @@ export default function GameScene({ playerName, characterType, serverUrl, onBack
     // Roof (simple pyramid)
     const roofGeometry = new THREE.ConeGeometry(size.width * 0.7, size.height * 0.5, 4);
     const roofMaterial = new THREE.MeshStandardMaterial({
-      color: roofColor,
+      color: roofColor || 0x654321,
       roughness: 0.8,
       metalness: 0.1,
     });
@@ -298,7 +311,7 @@ export default function GameScene({ playerName, characterType, serverUrl, onBack
     // Create path as a box
     const pathGeometry = new THREE.BoxGeometry(length, 0.05, width);
     const pathMaterial = new THREE.MeshStandardMaterial({
-      color: color,
+      color: color || 0xd2b48c,
       roughness: 0.9,
       metalness: 0.1,
     });
@@ -325,7 +338,7 @@ export default function GameScene({ playerName, characterType, serverUrl, onBack
     // Create fence as a box
     const fenceGeometry = new THREE.BoxGeometry(length, height, 0.1);
     const fenceMaterial = new THREE.MeshStandardMaterial({
-      color: color,
+      color: color || 0x8b4513,
       roughness: 0.7,
       metalness: 0.2,
     });
@@ -344,7 +357,7 @@ export default function GameScene({ playerName, characterType, serverUrl, onBack
     
     // Gate posts
     const postGeometry = new THREE.BoxGeometry(0.3, height, 0.3);
-    const postMaterial = new THREE.MeshStandardMaterial({ color: color });
+    const postMaterial = new THREE.MeshStandardMaterial({ color: color || 0x8b4513 });
     
     const leftPost = new THREE.Mesh(postGeometry, postMaterial);
     leftPost.position.set(position.x - width / 2, height / 2, position.z);
@@ -376,7 +389,7 @@ export default function GameScene({ playerName, characterType, serverUrl, onBack
     
     // Well base (circular)
     const baseGeometry = new THREE.CylinderGeometry(1.5, 1.5, 0.5, 16);
-    const baseMaterial = new THREE.MeshStandardMaterial({ color: 0x808080 });
+    const baseMaterial = new THREE.MeshStandardMaterial({ color: building.color || 0x808080 });
     const base = new THREE.Mesh(baseGeometry, baseMaterial);
     base.castShadow = true;
     group.add(base);
@@ -391,7 +404,7 @@ export default function GameScene({ playerName, characterType, serverUrl, onBack
     
     // Well roof (conical)
     const roofGeometry = new THREE.ConeGeometry(1.5, 0.5, 16);
-    const roofMaterial = new THREE.MeshStandardMaterial({ color: 0x8b4513 });
+    const roofMaterial = new THREE.MeshStandardMaterial({ color: building.roofColor || 0x8b4513 });
     const roof = new THREE.Mesh(roofGeometry, roofMaterial);
     roof.position.y = 2.5;
     roof.rotation.y = Math.PI / 4;
