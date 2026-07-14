@@ -1,0 +1,49 @@
+
+> mana-storm-client@1.0.0 build
+> tsc && vite build
+
+src/App.tsx(42,11): error TS2322: Type '{ playerName: string; characterType: CharacterType; serverUrl: string; onBackToMenu: () => void; }' is not assignable to type 'IntrinsicAttributes & GameSceneProps'.
+  Property 'characterType' does not exist on type 'IntrinsicAttributes & GameSceneProps'.
+src/components/game/BuenaVillage.tsx(3,15): error TS6196: 'GameMap' is declared but never used.
+src/components/game/BuenaVillage.tsx(267,21): error TS6133: 'color' is declared but its value is never read.
+src/components/game/Character.tsx(189,33): error TS2304: Cannot find name 'player'.
+src/components/game/Character.tsx(236,33): error TS2304: Cannot find name 'player'.
+src/components/GameScene.tsx(4,10): error TS6133: 'Mesh' is declared but its value is never read.
+src/components/GameScene.tsx(4,23): error TS6133: 'Vector3' is declared but its value is never read.
+src/components/GameScene.tsx(8,1): error TS6192: All imports in import declaration are unused.
+src/components/GameScene.tsx(9,29): error TS6133: 'SKILLS' is declared but its value is never read.
+src/components/GameScene.tsx(22,73): error TS2339: Property 'opera' does not exist on type 'Window & typeof globalThis'.
+src/components/GameScene.tsx(67,70): error TS2353: Object literal may only specify known properties, and 'flatShading' does not exist in type 'MeshToonMaterialParameters'.
+src/components/GameScene.tsx(124,11): error TS2322: Type 'MeshToonMaterial' is not assignable to type 'ReactNode'.
+  Type 'MeshToonMaterial' is missing the following properties from type 'ReactPortal': children, props, key
+src/components/GameScene.tsx(128,11): error TS2322: Type 'MeshToonMaterial' is not assignable to type 'ReactNode'.
+  Type 'MeshToonMaterial' is missing the following properties from type 'ReactPortal': children, props, key
+src/components/GameScene.tsx(161,11): error TS2322: Type 'MeshToonMaterial' is not assignable to type 'ReactNode'.
+  Type 'MeshToonMaterial' is missing the following properties from type 'ReactPortal': children, props, key
+src/components/GameScene.tsx(166,80): error TS2322: Type 'MeshToonMaterial' is not assignable to type 'ReactNode'.
+  Type 'MeshToonMaterial' is missing the following properties from type 'ReactPortal': children, props, key
+src/components/GameScene.tsx(169,80): error TS2322: Type 'MeshToonMaterial' is not assignable to type 'ReactNode'.
+  Type 'MeshToonMaterial' is missing the following properties from type 'ReactPortal': children, props, key
+src/components/GameScene.tsx(173,81): error TS2322: Type 'MeshToonMaterial' is not assignable to type 'ReactNode'.
+  Type 'MeshToonMaterial' is missing the following properties from type 'ReactPortal': children, props, key
+src/components/GameScene.tsx(176,81): error TS2322: Type 'MeshToonMaterial' is not assignable to type 'ReactNode'.
+  Type 'MeshToonMaterial' is missing the following properties from type 'ReactPortal': children, props, key
+src/components/GameScene.tsx(212,13): error TS2345: Argument of type '() => () => Socket<DefaultEventsMap, DefaultEventsMap>' is not assignable to parameter of type 'EffectCallback'.
+  Type '() => Socket<DefaultEventsMap, DefaultEventsMap>' is not assignable to type 'void | Destructor'.
+    Type '() => Socket<DefaultEventsMap, DefaultEventsMap>' is not assignable to type 'Destructor'.
+      Type 'Socket<DefaultEventsMap, DefaultEventsMap>' is not assignable to type 'void | { [UNDEFINED_VOID_ONLY]: never; }'.
+src/components/GameScene.tsx(312,23): error TS2686: 'THREE' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+src/components/GameScene.tsx(313,30): error TS2686: 'THREE' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+src/components/GameScene.tsx(333,10): error TS2304: Cannot find name 'Suspense'.
+src/components/GameScene.tsx(396,11): error TS2304: Cannot find name 'Suspense'.
+src/components/MainMenu.tsx(12,49): error TS6133: 'onResume' is declared but its value is never read.
+src/components/MainMenu.tsx(37,9): error TS6133: 'isStartMode' is declared but its value is never read.
+src/hooks/useGameSocket.ts(3,15): error TS6196: 'ServerMessage' is declared but never used.
+src/hooks/useGameSocket.ts(5,32): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/hooks/useGameSocket.ts(14,13): error TS2345: Argument of type '() => () => Socket<DefaultEventsMap, DefaultEventsMap>' is not assignable to parameter of type 'EffectCallback'.
+  Type '() => Socket<DefaultEventsMap, DefaultEventsMap>' is not assignable to type 'void | Destructor'.
+    Type '() => Socket<DefaultEventsMap, DefaultEventsMap>' is not assignable to type 'Destructor'.
+      Type 'Socket<DefaultEventsMap, DefaultEventsMap>' is not assignable to type 'void | { [UNDEFINED_VOID_ONLY]: never; }'.
+src/hooks/useGameState.ts(2,15): error TS6196: 'Player' is declared but never used.
+src/hooks/useGameState.ts(2,39): error TS6196: 'GameState' is declared but never used.
+src/hooks/useGameState.ts(4,30): error TS6133: 'currentPlayerId' is declared but its value is never read.

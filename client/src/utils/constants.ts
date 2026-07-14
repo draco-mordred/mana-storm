@@ -2,6 +2,46 @@
 
 import type { CharacterPreset, Skill, CharacterType } from '../types';
 
+export type GameMap = {
+  name: string;
+  description: string;
+  spawnPoint: { x: number; y: number; z: number };
+  size: { width: number; height: number };
+  groundColor: number;
+  skyColor: number;
+  fogColor: number;
+  ambientLight: number;
+  directionalLight: number;
+  objects: MapObject[];
+};
+
+export interface MapObject {
+  id: string;
+  name: string;
+  type: string;
+  position: { x: number; y: number; z: number };
+  rotation?: { x: number; y: number; z: number };
+  scale?: { x: number; y: number; z: number };
+  size?: { width: number; height: number; depth: number };
+  color?: number;
+  roofColor?: number;
+  emissive?: number;
+  emissiveIntensity?: number;
+}
+
+export const DEFAULT_CHARACTER: CharacterType = 'rudeus';
+
+export const ANIME_COLORS = {
+  rudeusBlue: 0x4a90d9,
+  warriorBlack: 0x222233,
+  mageBlue: 0x0066ff,
+  rogueGreen: 0x003322,
+  archerGold: 0xdaa520,
+  healerCyan: 0x00ffff,
+  skin: 0xffccaa,
+  accent: 0x00aaff,
+};
+
 // ============================================
 // 🎭 CHARACTER PRESETS (Honkai Sci-Fi Style)
 // ============================================
@@ -70,8 +110,7 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     color: 0x003322,
     description: 'A stealth operative with quantum cloaking technology',
     outfit: 'stealth_suit',
-    hairC
-olor: 0x228b22,
+    hairColor: 0x228b22,
     hairStyle: 'short',
     age: 'adult',
   },
@@ -122,8 +161,7 @@ export const SKILLS: Record<string, Skill> = {
   'teleport': { id: 'teleport', name: 'Quantum Shift', description: 'Instantly teleport to a nearby location', type: 'utility', manaCost: 30, cooldown: 15000, range: 25 },
   
   // Warrior Skills
-  'plasma-slash': { id: 'plasma-slash', name: 'Plasma Slash', description: 'A powerful energy-infu
-sed melee strike', type: 'attack', damage: 30, manaCost: 15, cooldown: 2000, range: 2.5 },
+  'plasma-slash': { id: 'plasma-slash', name: 'Plasma Slash', description: 'A powerful energy-infused melee strike', type: 'attack', damage: 30, manaCost: 15, cooldown: 2000, range: 2.5 },
   'energy-shield': { id: 'energy-shield', name: 'Energy Shield', description: 'Creates a protective energy barrier', type: 'defense', manaCost: 20, cooldown: 6000, range: 1 },
   'ion-cannon': { id: 'ion-cannon', name: 'Ion Cannon', description: 'Fires a devastating ion beam', type: 'attack', damage: 50, manaCost: 35, cooldown: 8000, range: 20 },
   'overcharge': { id: 'overcharge', name: 'Overcharge', description: 'Boosts attack power temporarily', type: 'utility', manaCost: 25, cooldown: 12000, range: 1 },
@@ -138,8 +176,7 @@ sed melee strike', type: 'attack', damage: 30, manaCost: 15, cooldown: 2000, ran
   'hologram-cloak': { id: 'hologram-cloak', name: 'Hologram Cloak', description: 'Creates a holographic decoy', type: 'utility', manaCost: 20, cooldown: 10000, range: 1 },
   'neural-disruptor': { id: 'neural-disruptor', name: 'Neural Disruptor', description: 'Disables enemy targeting systems', type: 'attack', damage: 25, manaCost: 20, cooldown: 6000, range: 10 },
   'phase-dagger': { id: 'phase-dagger', name: 'Phase Dagger', description: 'A dagger that phases through defenses', type: 'attack', damage: 40, manaCost: 15, cooldown: 3000, range: 2 },
-  'quantum-blink': { id: 'quantum-blink', name: 'Quantum Blink', description: 'Shor
-t-range teleportation', type: 'utility', manaCost: 25, cooldown: 8000, range: 10 },
+  'quantum-blink': { id: 'quantum-blink', name: 'Quantum Blink', description: 'Short-range teleportation', type: 'utility', manaCost: 25, cooldown: 8000, range: 10 },
   
   // Archer Skills
   'photon-arrow': { id: 'photon-arrow', name: 'Photon Arrow', description: 'Fires a high-energy photon arrow', type: 'attack', damage: 35, manaCost: 20, cooldown: 2500, range: 30 },
@@ -171,8 +208,7 @@ export const GAME_CONSTANTS = {
 };
 
 // ============================================
-// 🎨 WORLD 
-SETTINGS (Honkai Sci-Fi Style)
+// 🎨 WORLD SETTINGS (Honkai Sci-Fi Style)
 // ============================================
 export const WORLD_SETTINGS = {
   groundColor: 0x0a0a1a,
@@ -209,6 +245,13 @@ export const BUENA_VILLAGE = {
   name: 'Buena Village',
   description: 'A peaceful village retrofitted with advanced technology',
   spawnPoint: { x: 0, y: 0, z: 0 },
+  size: { width: 80, height: 80 },
+  groundColor: 0x0d1f2d,
+  skyColor: 0x07121f,
+  fogColor: 0x0b1324,
+  ambientLight: 0x2b2b4a,
+  directionalLight: 0x6d7bff,
+  objects: [],
   buildings: [
     {
       id: 'rudeus-house',
@@ -282,8 +325,7 @@ export const BUENA_VILLAGE = {
     { start: { x: 10, z: -5 }, end: { x: 0, z: 10 }, width: 2, color: 0x1a1a2e, emissive: 0x004466, emissiveIntensity: 0.1 },
     { start: { x: -10, z: -5 }, end: { x: 0, z: 10 }, width: 2, color: 0x1a1a2e, emissive: 0x004466, emissiveIntensity: 0.1 },
   ],
-  fences
-: [
+  fences: [
     { start: { x: 25, z: 25 }, end: { x: -25, z: 25 }, height: 1.5, color: 0x333344, emissive: 0x0066aa, emissiveIntensity: 0.1 },
     { start: { x: -25, z: 25 }, end: { x: -25, z: -25 }, height: 1.5, color: 0x333344, emissive: 0x0066aa, emissiveIntensity: 0.1 },
     { start: { x: -25, z: -25 }, end: { x: 25, z: -25 }, height: 1.5, color: 0x333344, emissive: 0x0066aa, emissiveIntensity: 0.1 },
@@ -305,11 +347,12 @@ export const BUENA_VILLAGE = {
   ],
 };
 
+export const BUena_VILLAGE = BUENA_VILLAGE;
+
 // ============================================
 // 🏰 ASURA KINGDOM MAP DATA (Sci-Fi)
 // ============================================
-export const 
-ASURA_KINGDOM = {
+export const ASURA_KINGDOM = {
   name: 'Asura Kingdom',
   description: 'A high-tech kingdom with towering spires and energy shields',
   spawnPoint: { x: 0, y: 0, z: 0 },
@@ -396,8 +439,7 @@ ASURA_KINGDOM = {
     { type: 'hologram', position: { x: 0, y: 10, z: 0 }, color: 0xff00aa, size: 3, text: 'ASURA KINGDOM', area: 'asura-kingdom' },
     { type: 'energy-shield', position: { x: 0, y: 0, z: 0 }, radius: 60, height: 30, color: 0x00aaff, area: 'asura-kingdom' },
     { type: 'floating-platform', position: { x: 20, y: 2, z: 15 }, size: { width: 10, depth: 10, height: 0.5 }, color: 0x222233, emissive: 0x0088ff, area: 'asura-kingdom' },
-    { type: 'energy-c
-rystal', position: { x: 15, y: 1, z: -20 }, color: 0x00ffff, size: 2, glow: true, area: 'asura-kingdom' },
+    { type: 'energy-crystal', position: { x: 15, y: 1, z: -20 }, color: 0x00ffff, size: 2, glow: true, area: 'asura-kingdom' },
     { type: 'neon-tube', start: { x: -40, y: 5, z: 0 }, end: { x: 40, y: 5, z: 0 }, color: 0xff00aa, width: 0.2, area: 'asura-kingdom' },
   ],
 };
@@ -488,8 +530,7 @@ export const MAGIC_CITY_SHARIA = {
   fences: [],
   gates: [
     { position: { x: 0, z: 70 }, width: 5, height: 4, color: 0x444466, emissive: 0x8888ff, emissiveIntensity: 0.25 },
-    { position: { x: 70, z: 0 }, width: 5, height: 
-4, color: 0x444466, emissive: 0x8888ff, emissiveIntensity: 0.25 },
+    { position: { x: 70, z: 0 }, width: 5, height: 4, color: 0x444466, emissive: 0x8888ff, emissiveIntensity: 0.25 },
   ],
   sciFiDecorations: [
     { type: 'hologram', position: { x: 0, y: 10, z: 0 }, color: 0x00ffff, size: 3, text: 'MAGIC CITY', area: 'magic-city-sharia' },
@@ -605,8 +646,7 @@ export const NPCS = [
     characterType: 'rogue',
     position: { x: 0, y: 0, z: 35 },
     area: 'magic-city-sharia',
-    dialogue: ['Rare tech and magic a
-rtifacts!', 'Come see my wares from across the stars!'],
+    dialogue: ['Rare tech and magic artifacts!', 'Come see my wares from across the stars!'],
     type: 'shopkeeper',
   },
 ];
@@ -794,8 +834,7 @@ export const QUEST_MARKERS = [
     name: 'Complete Combat Training',
     position: { x: 0, y: 0, z: -40 },
     area: 'asura-kingdom',
-    type: 's
-ide',
+    type: 'side',
     completed: false,
     questId: 'complete-training',
   },
@@ -846,8 +885,7 @@ export const CHARACTER_VISUALS = {
     // Sci-fi additions
     cybernetics: {
       leftArm: { geometry: 'box', width: 0.1, height: 0.4, depth: 0.1, color: 0x00aaff, emissive: 0x44ccff, position: { x: -0.3, y: 0.6, z: 0 } },
-      rightArm: { geome
-try: 'box', width: 0.1, height: 0.4, depth: 0.1, color: 0x00aaff, emissive: 0x44ccff, position: { x: 0.3, y: 0.6, z: 0 } },
+      rightArm: { geometry: 'box', width: 0.1, height: 0.4, depth: 0.1, color: 0x00aaff, emissive: 0x44ccff, position: { x: 0.3, y: 0.6, z: 0 } },
     },
   },
   warrior: {
@@ -858,6 +896,25 @@ try: 'box', width: 0.1, height: 0.4, depth: 0.1, color: 0x00aaff, emissive: 0x44
       chest: { geometry: 'box', width: 0.5, height: 0.4, depth: 0.3, color: 0x333344, position: { x: 0, y: 0.6, z: 0 } }, 
       shoulders: { geometry: 'box', width: 0.4, height: 0.2, depth: 0.3, color: 0x333344, position: { x: 0, y: 0.85, z: 0 } } 
     },
-    
-
-... [Content truncated]
+  },
+  mage: {
+    head: { geometry: 'sphere', radius: 0.25, color: 0xffccaa, position: { x: 0, y: 1.05, z: 0 } },
+    hair: { geometry: 'capsule', radius: 0.3, height: 0.35, color: 0xffffff, position: { x: 0, y: 1.25, z: 0 } },
+    body: { geometry: 'capsule', radius: 0.32, height: 0.8, color: 0x0066ff, position: { x: 0, y: 0.4, z: 0 } },
+  },
+  rogue: {
+    head: { geometry: 'sphere', radius: 0.25, color: 0xffccaa, position: { x: 0, y: 1.05, z: 0 } },
+    hair: { geometry: 'capsule', radius: 0.3, height: 0.25, color: 0x228b22, position: { x: 0, y: 1.2, z: 0 } },
+    body: { geometry: 'capsule', radius: 0.3, height: 0.75, color: 0x003322, position: { x: 0, y: 0.4, z: 0 } },
+  },
+  archer: {
+    head: { geometry: 'sphere', radius: 0.25, color: 0xffccaa, position: { x: 0, y: 1.05, z: 0 } },
+    hair: { geometry: 'capsule', radius: 0.3, height: 0.25, color: 0xdaa520, position: { x: 0, y: 1.2, z: 0 } },
+    body: { geometry: 'capsule', radius: 0.32, height: 0.78, color: 0x330066, position: { x: 0, y: 0.4, z: 0 } },
+  },
+  healer: {
+    head: { geometry: 'sphere', radius: 0.25, color: 0xffccaa, position: { x: 0, y: 1.05, z: 0 } },
+    hair: { geometry: 'capsule', radius: 0.3, height: 0.35, color: 0xffd700, position: { x: 0, y: 1.25, z: 0 } },
+    body: { geometry: 'capsule', radius: 0.32, height: 0.8, color: 0x00ffff, position: { x: 0, y: 0.4, z: 0 } },
+  },
+};
