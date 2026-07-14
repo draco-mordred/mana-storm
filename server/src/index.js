@@ -20,7 +20,7 @@ app.use(express.json());
 // 👤 ACCOUNT SYSTEM (Simple in-memory storage)
 // ============================================
 const accounts = new Map();
-const loggedInSockets = new Map(); // socket.id -> account
+const loggedInSockets = new Map();
 
 // Create account
 app.post('/api/register', (req, res) => {
@@ -38,7 +38,7 @@ app.post('/api/register', (req, res) => {
     const account = {
       id: uuidv4(),
       username,
-      password, // In production, store hash only!
+      password,
       email: email || null,
       characterName: characterName || username,
       characterType: characterType || 'rudeus',
@@ -79,7 +79,6 @@ app.post('/api/login', (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
-    // Update last login
     account.lastLogin = Date.now();
     
     res.json({
@@ -108,7 +107,6 @@ app.post('/api/save-game', (req, res) => {
       return res.status(404).json({ error: 'Account not found' });
     }
     
-    // Add or update saved game
     const existingIndex = account.savedGames.findIndex(g => g.id === gameData.id);
     
     if (existingIndex !== -1) {
@@ -161,10 +159,9 @@ app.delete('/api/delete-game/:username/:gameId', (req, res) => {
 });
 
 // ============================================
-// 🎭 CHARACTER PRESETS (Mana Storm)
+// 🎭 CHARACTER PRESETS
 // ============================================
 const CHARACTER_PRESETS = {
-  // Rudeus Greyrat - Default character
   rudeus: {
     type: 'rudeus',
     name: 'Rudeus Greyrat',
@@ -243,37 +240,44 @@ const CHARACTER_PRESETS = {
 // 🎯 SKILLS DATABASE
 // ============================================
 const SKILLS = {
-  // Rudeus Skills
   'fireball': { id: 'fireball', name: 'Fireball', type: 'attack', damage: 40, manaCost: 25, cooldown: 3000, range: 15 },
   'ice-shield': { id: 'ice-shield', name: 'Ice Shield', type: 'defense', manaCost: 20, cooldown: 8000, range: 1 },
   'heal': { id: 'heal', name: 'Heal', type: 'heal', healAmount: 40, manaCost: 25, cooldown: 3000, range: 10 },
   'teleport': { id: 'teleport', name: 'Teleport', type: 'utility', manaCost: 30, cooldown: 15000, range: 20 },
-  
-  // Warrior Skills
   'sword-slash': { id: 'sword-slash', name: 'Sword Slash', type: 'attack', damage: 25, manaCost: 10, cooldown: 2000, range: 2 },
   'shield-block': { id: 'shield-block', name: 'Shield Block', type: 'defense', manaCost: 15, cooldown: 5000, range: 1 },
   'war-cry': { id: 'war-cry', name: 'War Cry', type: 'utility', manaCost: 20, cooldown: 10000, range: 10 },
   'ground-stomp': { id: 'ground-stomp', name: 'Ground Stomp', type: 'utility', manaCost: 25, cooldown: 12000, range: 8 },
-  
-  // Mage Skills
   'lightning-bolt': { id: 'lightning-bolt', name: 'Lightning Bolt', type: 'attack', damage: 50, manaCost: 35, cooldown: 4000, range: 20 },
-  
-  // Rogue Skills
   'backstab': { id: 'backstab', name: 'Backstab', type: 'attack', damage: 50, manaCost: 20, cooldown: 5000, range: 1 },
   'stealth': { id: 'stealth', name: 'Stealth', type: 'utility', manaCost: 15, cooldown: 12000, range: 1 },
   'poison-dagger': { id: 'poison-dagger', name: 'Poison Dagger', type: 'attack', damage: 15, manaCost: 10, cooldown: 2000, range: 10 },
   'smoke-bomb': { id: 'smoke-bomb', name: 'Smoke Bomb', type: 'utility', manaCost: 20, cooldown: 15000, range: 5 },
-  
-  // Archer Skills
   'arrow-rain': { id: 'arrow-rain', name: 'Arrow Rain', type: 'attack', damage: 20, manaCost: 25, cooldown: 4000, range: 20 },
   'snipe': { id: 'snipe', name: 'Snipe', type: 'attack', damage: 60, manaCost: 35, cooldown: 8000, range: 30 },
   'trap': { id: 'trap', name: 'Trap', type: 'utility', manaCost: 20, cooldown: 10000, range: 5 },
   'piercing-shot': { id: 'piercing-shot', name: 'Piercing Shot', type: 'attack', damage: 35, manaCost: 30, cooldown: 6000, range: 25 },
-  
-  // Healer Skills
   'revive': { id: 'revive', name: 'Revive', type: 'heal', healAmount: 100, manaCost: 50, cooldown: 30000, range: 5 },
   'bless': { id: 'bless', name: 'Bless', type: 'utility', manaCost: 30, cooldown: 15000, range: 10 },
   'cleanse': { id: 'cleanse', name: 'Cleanse', type: 'utility', manaCost: 25, cooldown: 10000, range: 8 },
+};
+
+// ============================================
+// 🌍 AREA DEFINITIONS
+// ============================================
+const AREAS = {
+  'buena-village': {
+    name: 'Buena Village',
+    spawnPoint: { x: 0, y: 0, z: 0 },
+  },
+  'asura-kingdom': {
+    name: 'Asura Kingdom',
+    spawnPoint: { x: 0, y: 0, z: 0 },
+  },
+  'magic-city-sharia': {
+    name: 'Magic City Sharia',
+    spawnPoint: { x: 0, y: 0, z: 0 },
+  },
 };
 
 // ============================================
@@ -320,27 +324,26 @@ function leaveParty(partyId, playerId) {
 // 📜 QUEST SYSTEM
 // ============================================
 const QUESTS = [
-  { id: 'quest-1', title: 'Defeat 10 Monsters', description: 'Clear the monster infestation in the Forest of Whispers', objectives: [{ type: 'kill', target: 'goblin', required: 10, current: 0 }], reward: { gold: 500, xp: 1000 }, status: 'available' },
-  { id: 'quest-2', title: 'Collect Rare Herbs', description: 'Gather medicinal herbs for the village healer', objectives: [{ type: 'collect', target: 'mana-herb', required: 5, current: 0 }, { type: 'collect', target: 'healing-root', required: 3, current: 0 }], reward: { gold: 300, xp: 800 }, status: 'available' },
-  { id: 'quest-3', title: 'Escort the Merchant', description: 'Protect the merchant from bandits on the road to Capital City', objectives: [{ type: 'reach', target: 'capital-city', required: 1, current: 0 }], reward: { gold: 800, xp: 1500, items: ['merchant-token'] }, status: 'available' },
+  { id: 'quest-1', title: 'Defeat 10 Monsters', description: 'Clear the monster infestation', objectives: [{ type: 'kill', target: 'goblin', required: 10, current: 0 }], reward: { gold: 500, xp: 1000 }, status: 'available' },
+  { id: 'quest-2', title: 'Collect Rare Herbs', description: 'Gather medicinal herbs', objectives: [{ type: 'collect', target: 'mana-herb', required: 5, current: 0 }, { type: 'collect', target: 'healing-root', required: 3, current: 0 }], reward: { gold: 300, xp: 800 }, status: 'available' },
+  { id: 'quest-3', title: 'Escort the Merchant', description: 'Protect the merchant', objectives: [{ type: 'reach', target: 'capital-city', required: 1, current: 0 }], reward: { gold: 800, xp: 1500, items: ['merchant-token'] }, status: 'available' },
 ];
 
 // ============================================
 // 👤 CREATE PLAYER
 // ============================================
-function createPlayer(name, characterType) {
+function createPlayer(name, characterType, area = 'buena-village') {
   const preset = CHARACTER_PRESETS[characterType] || CHARACTER_PRESETS.rudeus;
   const skills = preset.skills.map(skillId => SKILLS[skillId]);
   
-  // Spawn at Buena Village center
-  const spawnX = 0;
-  const spawnZ = 0;
+  // Get spawn point for area
+  const spawnPoint = AREAS[area]?.spawnPoint || { x: 0, y: 0, z: 0 };
   
   return {
     id: uuidv4(),
     name: name || 'Player_' + Date.now(),
     character: characterType,
-    position: { x: spawnX, y: 0, z: spawnZ },
+    position: { x: spawnPoint.x, y: 0, z: spawnPoint.z },
     rotation: { x: 0, y: 0, z: 0 },
     health: preset.baseHealth,
     maxHealth: preset.baseHealth,
@@ -355,6 +358,9 @@ function createPlayer(name, characterType) {
     stats: { attack: preset.baseAttack, defense: preset.baseDefense, speed: preset.baseSpeed },
     lastAction: 0,
     cooldowns: {},
+    animation: 'idle',
+    direction: 0,
+    area: area,
   };
 }
 
@@ -364,46 +370,37 @@ function createPlayer(name, characterType) {
 io.on('connection', (socket) => {
   console.log('Player connected: ' + socket.id);
 
-  // ==========================================
-  // 🎯 PLAYER JOIN
-  // ==========================================
-  socket.on('join', ({ name, characterType }) => {
-    console.log('Player joined: ' + name + ' as ' + characterType);
+  // PLAYER JOIN
+  socket.on('join', ({ name, characterType, area }) => {
+    console.log('Player joined: ' + name + ' as ' + characterType + ' in ' + area);
     
-    // Create player
-    const player = createPlayer(name, characterType);
+    const player = createPlayer(name, characterType, area || 'buena-village');
     gameState.players[socket.id] = player;
     
-    // Associate socket with account if logged in
+    // Associate socket with account
     const account = Array.from(accounts.values()).find(a => a.username === name);
-    if (account) {
-      loggedInSockets.set(socket.id, account);
-    }
+    if (account) loggedInSockets.set(socket.id, account);
     
-    // Send initial game state to new player
+    // Send initial game state
     socket.emit('init', {
       currentPlayerId: socket.id,
       players: gameState.players,
       parties: gameState.parties,
-      quests: gameState.quests,
+      quests: QUESTS,
       world: gameState.world,
+      area: player.area,
     });
     
-    // Notify all players about new player
+    // Notify all players
     socket.broadcast.emit('player-joined', player);
-    
-    // Send update to all players
     io.emit('update', { players: gameState.players });
   });
 
-  // ==========================================
-  // 🏃 PLAYER MOVEMENT
-  // ==========================================
-  socket.on('move', ({ position, animation }) => {
+  // PLAYER MOVEMENT
+  socket.on('move', ({ position, animation, direction }) => {
     if (gameState.players[socket.id]) {
       const player = gameState.players[socket.id];
       
-      // Update position with validation
       if (position) {
         const worldSize = 500;
         player.position.x = Math.max(-worldSize, Math.min(worldSize, position.x));
@@ -411,19 +408,40 @@ io.on('connection', (socket) => {
         player.position.z = Math.max(-worldSize, Math.min(worldSize, position.z));
       }
       
-      // Update animation
-      if (animation) {
-        player.animation = animation;
-      }
+      if (animation) player.animation = animation;
+      if (direction !== undefined) player.direction = direction;
       
-      // Broadcast movement to all players
       io.emit('player-moved', { playerId: socket.id, player: gameState.players[socket.id] });
     }
   });
 
-  // ==========================================
-  // ⚔️ PLAYER ACTIONS
-  // ==========================================
+  // CHANGE AREA
+  socket.on('change-area', ({ area }) => {
+    if (gameState.players[socket.id]) {
+      const player = gameState.players[socket.id];
+      const newArea = AREAS[area];
+      
+      if (newArea) {
+        player.area = area;
+        player.position.x = newArea.spawnPoint.x;
+        player.position.y = newArea.spawnPoint.y;
+        player.position.z = newArea.spawnPoint.z;
+        
+        console.log(player.name + ' changed area to ' + area);
+        
+        // Notify all players
+        io.emit('area-changed', { playerId: socket.id, area });
+        io.emit('update', { players: gameState.players, area });
+        
+        // Send confirmation to player
+        socket.emit('area-changed', { area });
+      } else {
+        socket.emit('error', 'Area not found');
+      }
+    }
+  });
+
+  // PLAYER ACTIONS
   socket.on('action', ({ type, skillId, targetId }) => {
     const player = gameState.players[socket.id];
     if (!player) return;
@@ -436,71 +454,51 @@ io.on('connection', (socket) => {
       return;
     }
 
-    // Check cooldown
     if (player.cooldowns[skillId] && player.cooldowns[skillId] > now) {
       socket.emit('error', 'Skill on cooldown');
       return;
     }
 
-    // Check mana
     if (player.mana < skill.manaCost) {
       socket.emit('error', 'Not enough mana');
       return;
     }
 
-    // Consume mana
     player.mana -= skill.manaCost;
-    
-    // Set cooldown
     player.cooldowns[skillId] = now + skill.cooldown;
-    
-    // Process action based on type
+    player.animation = 'attacking';
+
     switch (type) {
       case 'attack':
         if (targetId && gameState.players[targetId]) {
           const target = gameState.players[targetId];
           const damage = skill.damage || 0;
-          
           target.health -= damage;
           if (target.health < 0) target.health = 0;
-          
           console.log(player.name + ' hit ' + target.name + ' for ' + damage + ' damage!');
-          
-          // Check if target died
-          if (target.health <= 0) {
-            io.emit('player-defeated', { attackerId: socket.id, targetId });
-          }
+          if (target.health <= 0) io.emit('player-defeated', { attackerId: socket.id, targetId });
         }
         break;
-
       case 'heal':
         if (targetId && gameState.players[targetId]) {
           const target = gameState.players[targetId];
           const healAmount = skill.healAmount || 0;
-          
           target.health = Math.min(target.maxHealth, target.health + healAmount);
           console.log(player.name + ' healed ' + target.name + ' for ' + healAmount + ' HP!');
         }
         break;
-
       case 'jump':
-        // Jump action - handled client-side
+        player.animation = 'jumping';
         break;
-
       default:
         console.log(player.name + ' used ' + skill.name);
     }
 
-    // Broadcast action to all players
     io.emit('player-action', { playerId: socket.id, action: type, skillId, targetId });
-    
-    // Send state update
     io.emit('update', { players: gameState.players });
   });
 
-  // ==========================================
-  // 💬 CHAT MESSAGES
-  // ==========================================
+  // CHAT MESSAGES
   socket.on('chat', ({ message, type = 'global', targetId }) => {
     const player = gameState.players[socket.id];
     if (!player) return;
@@ -509,25 +507,17 @@ io.on('connection', (socket) => {
 
     switch (type) {
       case 'party':
-        // Send to party members only
         const party = gameState.parties.find(p => p.memberIds.includes(socket.id));
-        if (party) {
-          party.memberIds.forEach(memberId => {
-            io.to(memberId).emit('chat', chatMessage);
-          });
-        }
+        if (party) party.memberIds.forEach(memberId => io.to(memberId).emit('chat', chatMessage));
         break;
       case 'whisper':
-        // Private message
         if (targetId) { socket.to(targetId).emit('chat', chatMessage); socket.emit('chat', chatMessage); }
         break;
       default: io.emit('chat', chatMessage);
     }
   });
 
-  // ==========================================
-  // 👥 PARTY SYSTEM HANDLERS
-  // ==========================================
+  // PARTY SYSTEM HANDLERS
   socket.on('party:create', ({ name }) => {
     const player = gameState.players[socket.id];
     if (!player || player.partyId) { socket.emit('error', 'Already in party'); return; }
@@ -549,9 +539,7 @@ io.on('connection', (socket) => {
     if (leaveParty(player.partyId, socket.id)) { player.partyId = null; socket.emit('party-left'); io.emit('update', { parties: gameState.parties, players: gameState.players }); }
   });
 
-  // ==========================================
-  // 📜 QUEST SYSTEM HANDLERS
-  // ==========================================
+  // QUEST SYSTEM HANDLERS
   socket.on('quest:accept', ({ questId }) => {
     const player = gameState.players[socket.id];
     if (!player) return;
@@ -580,22 +568,14 @@ io.on('connection', (socket) => {
     io.emit('update', { players: gameState.players, quests: QUESTS });
   });
 
-  // ==========================================
-  // ❌ PLAYER DISCONNECT
-  // ==========================================
+  // PLAYER DISCONNECT
   socket.on('disconnect', () => {
     console.log('Player disconnected: ' + socket.id);
-    
-    // Remove player from game state
     const player = gameState.players[socket.id];
     if (player) {
-      // Remove from party
       if (player.partyId) leaveParty(player.partyId, socket.id);
-      
       delete gameState.players[socket.id];
       loggedInSockets.delete(socket.id);
-      
-      // Notify all players
       io.emit('player-left', socket.id);
       io.emit('update', { players: gameState.players, parties: gameState.parties });
     }
@@ -610,9 +590,10 @@ const PORT = process.env.PORT || 3001;
 app.get('/', (req, res) => {
   res.json({
     name: 'Mana Storm Game Server',
-    version: '1.0.0',
+    version: '2.0.0',
     status: 'running',
     players: Object.keys(gameState.players).length,
+    areas: Object.keys(AREAS).length,
     uptime: process.uptime(),
   });
 });
@@ -621,7 +602,7 @@ app.get('/status', (req, res) => {
   res.json({
     players: Object.keys(gameState.players).length,
     parties: gameState.parties.length,
-    quests: gameState.quests.length,
+    quests: QUESTS.length,
     worldTime: gameState.world.time,
   });
 });
@@ -632,8 +613,8 @@ app.get('/status', (req, res) => {
 httpServer.listen(PORT, () => {
   console.log('╔═══════════════════════════════════════════════════════════╗');
   console.log('║                                                           ║');
-  console.log('║   🎮 Mana Storm Game Server                              ║');
-  console.log('║   🎯 Features: Multiplayer, Skills, Parties, Quests      ║');
+  console.log('║   🎮 Mana Storm Game Server v2.0                          ║');
+  console.log('║   🎯 Features: Multiplayer, Areas, Camera, Animations      ║');
   console.log('║   👤 Account System: Register, Login, Save Games        ║');
   console.log('║                                                           ║');
   console.log('║   📍 Server running on: http://localhost:' + PORT + '           ║');
@@ -641,34 +622,29 @@ httpServer.listen(PORT, () => {
   console.log('╚═══════════════════════════════════════════════════════════╝');
 });
 
-// ============================================
-// 🎒 GAME LOOP (Optional: for AI, world updates, etc.)
-// ============================================
+// GAME LOOP
 setInterval(() => {
-  // Update world time
   gameState.world.time += 0.1;
-  
-  // Regenerate mana for all players
   Object.values(gameState.players).forEach(player => {
     if (player.mana < player.maxMana) {
       player.mana += 0.5;
       if (player.mana > player.maxMana) player.mana = player.maxMana;
     }
+    // Reset animation to idle after attack
+    if (player.animation === 'attacking' && Math.random() < 0.1) {
+      player.animation = 'idle';
+    }
   });
-  
-  // Broadcast periodic updates
   io.emit('world-update', gameState.world);
 }, 1000);
 
-// ============================================
-// 🛡️ ERROR HANDLING
-// ============================================
+// ERROR HANDLING
 process.on('uncaughtException', (err) => {
   console.error('❌ Uncaught Exception:', err);
 });
 
 process.on('unhandledRejection', (reason) => {
-  console.error('❌ Unhandandled Rejection:', reason);
+  console.error('❌ Unhandled Rejection:', reason);
 });
 
 module.exports = { app, httpServer, io, gameState, accounts };
