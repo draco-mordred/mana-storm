@@ -1,5 +1,3 @@
-url: https://raw.githubusercontent.com/draco-mordred/mana-storm/main/client/src/components/GameScene.tsx
-
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { ContactShadows, Html } from '@react-three/drei';
@@ -339,7 +337,7 @@ ontrols.attackButton) socket.emit('playerAction', { type: 'input', inputType: 'a
         <FogSetup />
         <LightingSetup />
         <CameraSetup />
-        <React.Suspense fallback={null}>
+        <Suspense fallback={null}>
           {/* Ground */}
           <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
             <planeGeometry args={[GAME_CONSTANTS.WORLD_SIZE, GAME_CONSTANTS.WORLD_SIZE]} />
@@ -404,7 +402,7 @@ or} intensity={0.5} distance={20} />
           {playersArray.map((p: any) => (
             <HonkaiCharacter key={p.id} player={p} gradientTexture={gradientTexture} />
           ))}
-        </React.Suspense>
+        </Suspense>
         <PostProcessingEffects />
         <ContactShadows frames={1} position={[0, -0.01, 0]} width={GAME_CONSTANTS.WORLD_SIZE} height={GAME_CONSTANTS.WORLD_SIZE} scale={10} resolution={512} far={45} />
       </Canvas>
