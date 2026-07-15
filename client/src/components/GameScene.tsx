@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { ContactShadows, Html } from '@react-three/drei';
-import { Mesh, Group, Vector3, MeshToonMaterial, Texture, NearestFilter, RGBAFormat, UnsignedByteType, DataTexture, Fog, Color } from 'three';
+import { Mesh, Group, Vector3, MeshToonMaterial, Texture, NearestFilter, RGBAFormat, UnsignedByteType, DataTexture } from 'three';
 import { io, Socket } from 'socket.io-client';
 import { Bloom, EffectComposer, ToneMapping } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
@@ -316,8 +316,8 @@ ontrols.attackButton) socket.emit('playerAction', { type: 'input', inputType: 'a
   function FogSetup() {
     const { scene } = useThree();
     useEffect(() => {
-      scene.fog = new Fog(WORLD_SETTINGS.fogColor, 1, GAME_CONSTANTS.WORLD_SIZE * 0.8);
-      scene.background = new Color(WORLD_SETTINGS.skyColor);
+      scene.fog = new THREE.Fog(WORLD_SETTINGS.fogColor, 1, GAME_CONSTANTS.WORLD_SIZE * 0.8);
+      scene.background = new THREE.Color(WORLD_SETTINGS.skyColor);
     }, [scene]);
     return null;
   }
