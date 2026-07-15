@@ -1,3 +1,5 @@
+url: https://raw.githubusercontent.com/draco-mordred/mana-storm/main/client/src/components/GameScene.tsx
+
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { ContactShadows, Html } from '@react-three/drei';
@@ -220,8 +222,7 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
       newSocket.emit('join', { playerName, characterType: 'rudeus', area: 'Buena Village' });
     });
     newSocket.on('gameState', (state: any) => setGameState(state));
-    newSocket.on('disconnect', () => setGameState(p 
-=> ({ ...p, isConnected: false })));
+    newSocket.on('disconnect', () => setGameState(p => ({ ...p, isConnected: false })));
     return () => newSocket.disconnect();
   }, [serverUrl, playerName]);
 
