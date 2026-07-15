@@ -38,8 +38,7 @@ function useMobileControls(canvasRef: React.RefObject<HTMLCanvasElement>) {
         if (x < 0) setTouchControls(p => ({ ...p, moveJoystick: { active: true, x, y } }));
         else if (y > 0.3) setTouchControls(p => ({ ...p, jumpButton: true }));
         else if (y > -0.3) setTouchControls(p => ({ ...p, attackButton: true }));
-        
-else setTouchControls(p => ({ ...p, skillButton: true }));
+        else setTouchControls(p => ({ ...p, skillButton: true }));
       }
     };
     const handleTouchMove = (e: TouchEvent) => {
