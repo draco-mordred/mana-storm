@@ -1,15 +1,21 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { ContactShadows, Html } from '@react-three/drei';
 import { Mesh, Group, Vector3, MeshToonMaterial, Texture, NearestFilter, RGBAFormat, UnsignedByteType, DataTexture, Fog, Color } from 'three';
+import { TextureLoader } from 'three/src/textures/TextureLoader';
 import { io, Socket } from 'socket.io-client';
-import { Bloom, EffectComposer, ToneMapping } from '@react-three/postprocessing';
+import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 import type { CharacterPreset, Skill, Player } from '../types';
 import { CHARACTER_PRESETS, SKILLS, GAME_CONSTANTS, WORLD_SETTINGS, TOON_GRADIENT, BUENA_VILLAGE, ASURA_KINGDOM, MAGIC_CITY_SHARIA } from '../utils/constants';
 
+// Import background images
+import homeMenuBg from '../assets/images/home-menu-bg.jpg';
+import storySceneBg from '../assets/images/story-scene-bg.jpg';
+import manaStormLogo from '../assets/images/mana-storm-logo.png';
+
 // Mobile touch controls hook
-function useMobileControls(canvasRef: React.RefObject<HTMLCanvasElement>) {
+function useMobileControls(canvasRef) {
   const [touchControls, setTouchControls] = useState({
     moveJoystick: { active: false, x: 0, y: 0 },
     attackButton: false,
@@ -26,7 +32,7 @@ function useMobileControls(canvasRef: React.RefObject<HTMLCanvasElement>) {
   useEffect(() => {
     if (!canvasRef.current) return;
     const canvas = canvasRef.current;
-    const handleTouchStart = (e: TouchEvent) => {
+    const handleTouchStart = (e) => {
       e.preventDefault();
       const rect = canvas.getBoundingClientRect();
       for (let i = 0; i < e.touches.length; i++) {
@@ -39,7 +45,7 @@ function useMobileControls(canvasRef: React.RefObject<HTMLCanvasElement>) {
         else setTouchControls(p => ({ ...p, skillButton: true }));
       }
     };
-    const handleTouchMove = (e: TouchEvent) => {
+    const handleTouchMove = (e) => {
       e.preventDefault();
       const rect = canvas.getBoundingClientRect();
       const t = e.touches[0];
@@ -63,11 +69,11 @@ function useMobileControls(canvasRef: React.RefObject<HTMLCanvasElement>) {
 }
 
 // Toon shading material
-function createToonMaterial(color: number, gradientTexture: Texture): MeshToonMaterial {
+function createToonMaterial(color, gradientTexture) {
   return new MeshToonMaterial({ color, gradientMap: gradientTexture, flatShading: false });
 }
 
-function createGradientTexture(): Texture {
+function createGradientTexture() {
   const size = 64;
   const data = new Uint8Array(size * 4);
   for (let i = 0; i < size; i++) {
@@ -86,9 +92,20 @@ function createGradientTexture(): Texture {
   return texture;
 }
 
+// Background component with image
+function BackgroundImage({ imageUrl }) {
+  const texture = useLoader(TextureLoader, imageUrl);
+  return (
+    <mesh>
+      <planeGeometry args={[50, 50]} />
+      <meshBasicMaterial map={texture} transparent />
+    </mesh>
+  );
+}
+
 // Honkai Character Component
-function HonkaiCharacter({ player, gradientTexture }: { player: any; gradientTexture: Texture }) {
-  const groupRef = useRef<Group>(null);
+function HonkaiCharacter({ player, gradientTexture }) {
+  const groupRef = useRef(null);
   const preset = CHARACTER_PRESETS[player.characterType] || CHARACTER_PRESETS.rudeus;
   const healthPercent = (player.health / player.maxHealth) * 100;
   const healthBarColor = healthPercent > 50 ? '#10b981' : healthPercent > 25 ? '#f59e0b' : '#ef4444';
@@ -134,24 +151,6 @@ function HonkaiCharacter({ player, gradientTexture }: { player: any; gradientTex
           <sphereGeometry args={[0.03, 16, 16]} />
           <meshToonMaterial color={0xffffff} gradientMap={gradientTexture} emissive={0x00aaff} emissiveIntensity={0.3} />
         </mesh>
-        {preset.type !== 'rudeus' && (
-          <mesh position={[-0.07, 0.05, 0.16]} castShadow>
-            <boxGeometry args={[0.04, 0.04, 0.01]} />
-            <meshStandardMaterial color={0x00aaff} emissive={0x00aaff} emissiveIntensity={0.5} metalness={0.8} />
-          </mesh>
-        )}
-        {preset.type === 'rudeus' && (
-          <group position={[0.15, -0.2, -0.1]} rotation={[0, 0, -0.3]}>
-            <mesh castShadow receiveShadow>
-              <boxGeometry args={[0.03, 0.8, 0.03]} />
-              <meshStandardMaterial color={0x4a90d9} emissive={0x00aaff} emissiveIntensity={0.2} metalness={0.6} />
-            </mesh>
-            <mesh position={[0, 0.4, 0]} castShadow receiveShadow>
-              <sphereGeometry args={[0.08, 16, 16]} />
-              <meshStandardMaterial color={0x00aaff} emissive={0x00aaff} emissiveIntensity={0.5} metalness={0.8} />
-            </mesh>
-          </group>
-        )}
       </group>
       <group position={[0, 1.3, 0]}>
         <mesh castShadow receiveShadow>
@@ -178,10 +177,47 @@ function HonkaiCharacter({ player, gradientTexture }: { player: any; gradientTex
       </Html>
       <Html position={[0, 2.05, 0]} center>
         <div style={{ width: '80px', height: '6px', background: 'rgba(0,0,0,0.7)', border: '1px solid #333', borderRadius: '3px' }}>
-          <div style={{ width: `${healthPercent}%`, height: '100%', background: healthBarColor, borderRadius: '2px', transition: 'width 0.2s ease' }} />
+          <div style={{ width: healthPercent + '%', height: '100%', background: healthBarColor, borderRadius: '2px', transition: 'width 0.2s ease' }} />
         </div>
       </Html>
     </group>
+  );
+}
+
+// Menu Component
+function MainMenu({ onStartGame }) {
+  return (
+    <div style={{
+      width: '100vw',
+      height: '100vh',
+      position: 'relative',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundImage: 'url(' + homeMenuBg + ')',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }}>
+      <img src={manaStormLogo} alt="Mana Storm" style={{
+        width: '60%',
+        maxWidth: '600px',
+        marginBottom: '40px'
+      }} />
+      <button onClick={onStartGame} style={{
+        padding: '15px 40px',
+        fontSize: '24px',
+        background: 'rgba(0, 170, 255, 0.8)',
+        color: '#ffffff',
+        border: '2px solid #00aaff',
+        borderRadius: '10px',
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        boxShadow: '0 0 20px rgba(0, 170, 255, 0.5)'
+      }}>
+        START GAME
+      </button>
+    </div>
   );
 }
 
@@ -192,14 +228,20 @@ interface GameSceneProps {
 }
 
 export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [gameState, setGameState] = useState<{ players: any; currentArea: any; localPlayerId: string; isConnected: boolean }>(
-    { players: {}, currentArea: BUENA_VILLAGE, localPlayerId: '', isConnected: false }
-  );
-  const [cameraMode, setCameraMode] = useState<'third-person' | 'first-person'>('third-person');
+  const canvasRef = useRef(null);
+  const [socket, setSocket] = useState(null);
+  const [gameState, setGameState] = useState({
+    players: {},
+    currentArea: BUENA_VILLAGE,
+    localPlayerId: '',
+    isConnected: false
+  });
+  const [cameraMode, setCameraMode] = useState('third-person');
+  const [inMenu, setInMenu] = useState(true);
   const gradientTexture = useMemo(() => createGradientTexture(), []);
   const { touchControls, isMobile } = useMobileControls(canvasRef);
+
+  const startGame = () => setInMenu(false);
 
   useEffect(() => {
     const newSocket = io(serverUrl);
@@ -207,33 +249,60 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
     newSocket.on('connect', () => {
       newSocket.emit('join', { playerName, characterType: 'rudeus', area: 'Buena Village' });
     });
-    newSocket.on('gameState', (state: any) => setGameState(state));
+    newSocket.on('gameState', (state) => setGameState(state));
     newSocket.on('disconnect', () => setGameState(p => ({ ...p, isConnected: false })));
     return () => newSocket.disconnect();
   }, [serverUrl, playerName]);
 
   useEffect(() => {
     if (!socket || !gameState.localPlayerId) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const action: any = { type: 'input', inputType: e.code, playerId: gameState.localPlayerId };
+    const handleKeyDown = (e) => {
+      const action = { type: 'input', inputType: e.code, playerId: gameState.localPlayerId };
       switch (e.code) {
-        case 'KeyW': case 'ArrowUp': action.direction = { x: 0, y: 0, z: -1 }; break;
-        case 'KeyS': case 'ArrowDown': action.direction = { x: 0, y: 0, z: 1 }; break;
-        case 'KeyA': case 'ArrowLeft': action.direction = { x: -1, y: 0, z: 0 }; break;
-        case 'KeyD': case 'ArrowRight': action.direction = { x: 1, y: 0, z: 0 }; break;
-        case 'Space': action.action = 'jump'; break;
-        case 'KeyF': action.action = 'attack'; break;
-        case 'Digit1': action.action = 'skill1'; break;
-        case 'Tab': case 'KeyV': setCameraMode(p => p === 'third-person' ? 'first-person' : 'third-person'); return;
+        case 'KeyW':
+        case 'ArrowUp':
+          action.direction = { x: 0, y: 0, z: -1 };
+          break;
+        case 'KeyS':
+        case 'ArrowDown':
+          action.direction = { x: 0, y: 0, z: 1 };
+          break;
+        case 'KeyA':
+        case 'ArrowLeft':
+          action.direction = { x: -1, y: 0, z: 0 };
+          break;
+        case 'KeyD':
+        case 'ArrowRight':
+          action.direction = { x: 1, y: 0, z: 0 };
+          break;
+        case 'Space':
+          action.action = 'jump';
+          break;
+        case 'KeyF':
+          action.action = 'attack';
+          break;
+        case 'Digit1':
+          action.action = 'skill1';
+          break;
+        case 'Tab':
+        case 'KeyV':
+          setCameraMode(p => (p === 'third-person' ? 'first-person' : 'third-person'));
+          return;
+        case 'Escape':
+          setInMenu(true);
+          return;
       }
       if (action.direction || action.action) socket.emit('playerAction', action);
     };
-    const handleKeyUp = (e: KeyboardEvent) => {
+    const handleKeyUp = (e) => {
       socket.emit('playerAction', { type: 'inputEnd', inputType: e.code, playerId: gameState.localPlayerId });
     };
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
-    return () => { window.removeEventListener('keydown', handleKeyDown); window.removeEventListener('keyup', handleKeyUp); };
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
   }, [socket, gameState.localPlayerId]);
 
   useEffect(() => {
@@ -241,13 +310,18 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
     const interval = setInterval(() => {
       if (touchControls.moveJoystick.active) {
         socket.emit('playerAction', {
-          type: 'input', inputType: 'touchMove', playerId: gameState.localPlayerId,
+          type: 'input',
+          inputType: 'touchMove',
+          playerId: gameState.localPlayerId,
           direction: { x: touchControls.moveJoystick.x * 2, y: 0, z: touchControls.moveJoystick.y * 2 }
         });
       }
-      if (touchControls.attackButton) socket.emit('playerAction', { type: 'input', inputType: 'attack', playerId: gameState.localPlayerId, action: 'attack' });
-      if (touchControls.skillButton) socket.emit('playerAction', { type: 'input', inputType: 'skill', playerId: gameState.localPlayerId, action: 'skill1' });
-      if (touchControls.jumpButton) socket.emit('playerAction', { type: 'input', inputType: 'jump', playerId: gameState.localPlayerId, action: 'jump' });
+      if (touchControls.attackButton)
+        socket.emit('playerAction', { type: 'input', inputType: 'attack', playerId: gameState.localPlayerId, action: 'attack' });
+      if (touchControls.skillButton)
+        socket.emit('playerAction', { type: 'input', inputType: 'skill', playerId: gameState.localPlayerId, action: 'skill1' });
+      if (touchControls.jumpButton)
+        socket.emit('playerAction', { type: 'input', inputType: 'jump', playerId: gameState.localPlayerId, action: 'jump' });
     }, 100);
     return () => clearInterval(interval);
   }, [socket, gameState.localPlayerId, touchControls, isMobile]);
@@ -300,12 +374,16 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
     return null;
   }
 
-  const handleAreaChange = (areaName: string) => {
+  const handleAreaChange = (areaName) => {
     if (socket) socket.emit('changeArea', { playerId: gameState.localPlayerId, area: areaName });
   };
 
   const playersArray = Object.values(gameState.players);
   const currentArea = gameState.currentArea || BUENA_VILLAGE;
+
+  if (inMenu) {
+    return <MainMenu onStartGame={startGame} />;
+  }
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
@@ -314,11 +392,12 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
         <LightingSetup />
         <CameraSetup />
         <React.Suspense fallback={null}>
+          <BackgroundImage imageUrl={storySceneBg} />
           <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
             <planeGeometry args={[GAME_CONSTANTS.WORLD_SIZE, GAME_CONSTANTS.WORLD_SIZE]} />
             <meshToonMaterial color={WORLD_SETTINGS.groundColor} gradientMap={gradientTexture} />
           </mesh>
-          {currentArea.buildings && currentArea.buildings.map((b: any) => (
+          {currentArea.buildings && currentArea.buildings.map((b) => (
             <group key={b.id} position={[b.position.x, b.position.y || 0, b.position.z]}>
               <mesh castShadow receiveShadow>
                 <boxGeometry args={[b.size.width, b.size.height, b.size.depth]} />
@@ -329,7 +408,7 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
               </Html>
             </group>
           ))}
-          {currentArea.trees && currentArea.trees.map((t: any, i: number) => (
+          {currentArea.trees && currentArea.trees.map((t, i) => (
             <group key={i} position={[t.position.x, t.position.y || 0, t.position.z]}>
               <mesh castShadow receiveShadow>
                 <cylinderGeometry args={[t.radius * 0.3, t.radius * 0.2, t.height * 0.3, 8]} />
@@ -342,12 +421,12 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
               {t.emissive && <pointLight position={[0, t.height * 0.5, 0]} color={t.emissive} intensity={0.5} distance={t.height * 2} />}
             </group>
           ))}
-          {currentArea.sciFiDecorations && currentArea.sciFiDecorations.map((d: any, i: number) => {
+          {currentArea.sciFiDecorations && currentArea.sciFiDecorations.map((d, i) => {
             if (d.type === 'hologram') {
               return (
                 <group key={i} position={[d.position.x, d.position.y, d.position.z]}>
                   <Html center>
-                    <div style={{ color: `rgb(${((d.color >> 16) & 0xff)}, ${((d.color >> 8) & 0xff)}, ${d.color & 0xff})`, fontSize: `${d.size * 10}px`, fontWeight: 'bold', textShadow: '0 0 10px rgba(0, 255, 255, 0.8)' }}>
+                    <div style={{ color: 'rgb(' + ((d.color >> 16) & 0xff) + ', ' + ((d.color >> 8) & 0xff) + ', ' + (d.color & 0xff) + ')', fontSize: (d.size * 10) + 'px', fontWeight: 'bold', textShadow: '0 0 10px rgba(0, 255, 255, 0.8)' }}>
                       {d.text}
                     </div>
                   </Html>
@@ -368,7 +447,7 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
             }
             return null;
           })}
-          {playersArray.map((p: any) => (
+          {playersArray.map((p) => (
             <HonkaiCharacter key={p.id} player={p} gradientTexture={gradientTexture} />
           ))}
         </React.Suspense>
@@ -385,7 +464,7 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
         </button>
       </div>
       <div style={{ position: 'absolute', top: '20px', right: '20px', display: 'flex', gap: '10px', zIndex: 1000 }}>
-        {[BUENA_VILLAGE, ASURA_KINGDOM, MAGIC_CITY_SHARIA].map((area: any) => (
+        {[BUENA_VILLAGE, ASURA_KINGDOM, MAGIC_CITY_SHARIA].map((area) => (
           <button key={area.name} onClick={() => handleAreaChange(area.name)} style={{
             padding: '8px 12px',
             background: currentArea.name === area.name ? 'rgba(0,170,255,0.6)' : 'rgba(0,0,0,0.6)',
