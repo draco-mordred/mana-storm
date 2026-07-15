@@ -1,4 +1,4 @@
-url: https://raw.githubusercontent.com/draco-mordred/mana-storm/main/client/src/components/GameScene.tsx
+// url: https://raw.githubusercontent.com/draco-mordred/mana-storm/main/client/src/components/GameScene.tsx
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
