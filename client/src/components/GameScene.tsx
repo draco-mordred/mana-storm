@@ -83,8 +83,7 @@ function createGradientTexture(): Texture {
   const texture = new DataTexture(data, size, 1, RGBAFormat, UnsignedByteType);
   texture.minFilter = NearestFilter;
   texture.magFilter = NearestFilter;
-  texture.needsUpdat
-e = true;
+  texture.needsUpdate = true;
   return texture;
 }
 
@@ -131,8 +130,7 @@ function HonkaiCharacter({ player, gradientTexture }: { player: any; gradientTex
         </mesh>
         <mesh position={[0.07, 0.05, 0.15]} castShadow>
           <sphereGeometry args={[0.03, 16, 16]} />
-          <meshToonMaterial color
-={0xffffff} gradientMap={gradientTexture} emissive={0x00aaff} emissiveIntensity={0.3} />
+          <meshToonMaterial color={0xffffff} gradientMap={gradientTexture} emissive={0x00aaff} emissiveIntensity={0.3} />
         </mesh>
         <mesh position={[-0.07, 0.05, 0.15]} castShadow>
           <sphereGeometry args={[0.03, 16, 16]} />
@@ -260,8 +258,7 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
           direction: { x: touchControls.moveJoystick.x * 2, y: 0, z: touchControls.moveJoystick.y * 2 }
         });
       }
-      if (touchC
-ontrols.attackButton) socket.emit('playerAction', { type: 'input', inputType: 'attack', playerId: gameState.localPlayerId, action: 'attack' });
+      if (touchControls.attackButton) socket.emit('playerAction', { type: 'input', inputType: 'attack', playerId: gameState.localPlayerId, action: 'attack' });
       if (touchControls.skillButton) socket.emit('playerAction', { type: 'input', inputType: 'skill', playerId: gameState.localPlayerId, action: 'skill1' });
       if (touchControls.jumpButton) socket.emit('playerAction', { type: 'input', inputType: 'jump', playerId: gameState.localPlayerId, action: 'jump' });
     }, 100);
@@ -348,8 +345,7 @@ ontrols.attackButton) socket.emit('playerAction', { type: 'input', inputType: 'a
             <group key={b.id} position={[b.position.x, b.position.y || 0, b.position.z]}>
               <mesh castShadow receiveShadow>
                 <boxGeometry args={[b.size.width, b.size.height, b.size.depth]} />
-                <meshStandardMaterial col
-or={b.color} emissive={b.emissive} emissiveIntensity={b.emissiveIntensity || 0.1} metalness={0.3} />
+                <meshStandardMaterial color={b.color} emissive={b.emissive} emissiveIntensity={b.emissiveIntensity || 0.1} metalness={0.3} />
               </mesh>
               <Html position={[0, b.size.height / 2 + 0.5, 0]} center>
                 <div style={{ background: 'rgba(0,0,0,0.6)', color: '#00ffff', padding: '2px 6px', borderRadius: '3px', fontSize: '10px' }}>{b.name}</div>
@@ -380,8 +376,7 @@ or={b.color} emissive={b.emissive} emissiveIntensity={b.emissiveIntensity || 0.1
                       {d.text}
                     </div>
                   </Html>
-                  <pointLight position={[0, 0, 0]} color={d.col
-or} intensity={0.5} distance={20} />
+                  <pointLight position={[0, 0, 0]} color={d.color} intensity={0.5} distance={20} />
                 </group>
               );
             }
@@ -416,8 +411,7 @@ or} intensity={0.5} distance={20} />
           {cameraMode === 'third-person' ? '1st Person' : '3rd Person'}
         </button>
       </div>
-      <div style={{ position: 'absolute', top: '20px'
-, right: '20px', display: 'flex', gap: '10px', zIndex: 1000 }}>
+      <div style={{ position: 'absolute', top: '20px', right: '20px', display: 'flex', gap: '10px', zIndex: 1000 }}>
         {[BUENA_VILLAGE, ASURA_KINGDOM, MAGIC_CITY_SHARIA].map((area: any) => (
           <button key={area.name} onClick={() => handleAreaChange(area.name)} style={{
             padding: '8px 12px',
@@ -444,8 +438,7 @@ or} intensity={0.5} distance={20} />
           <div style={{ position: 'absolute', bottom: '20px', right: '20px', display: 'flex', flexDirection: 'column', gap: '10px', zIndex: 1000 }}>
             <button style={{ width: '50px', height: '50px', background: 'rgba(255,0,0,0.4)', border: '2px solid #ff0000', borderRadius: '50%', color: 'white', pointerEvents: 'none' }}>ATK</button>
             <button style={{ width: '50px', height: '50px', background: 'rgba(0,170,255,0.4)', border: '2px solid #00aaff', borderRadius: '50%', color: 'white', pointerEvents: 'none' }}>SKILL</button>
-            <button style={{ width: '50px', height: '50px', background: 'rgba(0,255,0,0.4)', border: 
-'2px solid #00ff00', borderRadius: '50%', color: 'white', pointerEvents: 'none' }}>JUMP</button>
+            <button style={{ width: '50px', height: '50px', background: 'rgba(0,255,0,0.4)', border: '2px solid #00ff00', borderRadius: '50%', color: 'white', pointerEvents: 'none' }}>JUMP</button>
           </div>
         </>
       )}
