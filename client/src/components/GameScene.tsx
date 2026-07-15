@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { ContactShadows, Html } from '@react-three/drei';
-import { Mesh, Group, Vector3, MeshToonMaterial, Texture, NearestFilter, RGBAFormat, UnsignedByteType, DataTexture } from 'three';
+import { Mesh, Group, Vector3, MeshToonMaterial, Texture, NearestFilter, RGBAFormat, UnsignedByteType, DataTexture, Fog, Color } from 'three';
 import { io, Socket } from 'socket.io-client';
 import { Bloom, EffectComposer, ToneMapping } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
@@ -36,7 +36,8 @@ function useMobileControls(canvasRef: React.RefObject<HTMLCanvasElement>) {
         if (x < 0) setTouchControls(p => ({ ...p, moveJoystick: { active: true, x, y } }));
         else if (y > 0.3) setTouchControls(p => ({ ...p, jumpButton: true }));
         else if (y > -0.3) setTouchControls(p => ({ ...p, attackButton: true }));
-        else setTouchControls(p => ({ ...p, skillButton: true }));
+        
+else setTouchControls(p => ({ ...p, skillButton: true }));
       }
     };
     const handleTouchMove = (e: TouchEvent) => {
@@ -82,7 +83,8 @@ function createGradientTexture(): Texture {
   const texture = new DataTexture(data, size, 1, RGBAFormat, UnsignedByteType);
   texture.minFilter = NearestFilter;
   texture.magFilter = NearestFilter;
-  texture.needsUpdate = true;
+  texture.needsUpdat
+e = true;
   return texture;
 }
 
@@ -117,6 +119,7 @@ function HonkaiCharacter({ player, gradientTexture }: { player: any; gradientTex
 
   return (
     <group ref={groupRef}>
+      {/* Head */}
       <group position={[0, 1.7, 0]}>
         <mesh castShadow receiveShadow>
           <boxGeometry args={[0.3, 0.35, 0.3]} />
@@ -128,7 +131,8 @@ function HonkaiCharacter({ player, gradientTexture }: { player: any; gradientTex
         </mesh>
         <mesh position={[0.07, 0.05, 0.15]} castShadow>
           <sphereGeometry args={[0.03, 16, 16]} />
-          <meshToonMaterial color={0xffffff} gradientMap={gradientTexture} emissive={0x00aaff} emissiveIntensity={0.3} />
+          <meshToonMaterial color
+={0xffffff} gradientMap={gradientTexture} emissive={0x00aaff} emissiveIntensity={0.3} />
         </mesh>
         <mesh position={[-0.07, 0.05, 0.15]} castShadow>
           <sphereGeometry args={[0.03, 16, 16]} />
@@ -153,29 +157,35 @@ function HonkaiCharacter({ player, gradientTexture }: { player: any; gradientTex
           </group>
         )}
       </group>
+      {/* Body */}
       <group position={[0, 1.3, 0]}>
         <mesh castShadow receiveShadow>
           <boxGeometry args={[0.45, 0.5, 0.25]} />
           {outfitMaterial}
         </mesh>
       </group>
+      {/* Arms */}
       <group position={[-0.3, 1.25, 0]}>
         <mesh castShadow receiveShadow><boxGeometry args={[0.12, 0.4, 0.12]} />{outfitMaterial}</mesh>
       </group>
       <group position={[0.3, 1.25, 0]}>
         <mesh castShadow receiveShadow><boxGeometry args={[0.12, 0.4, 0.12]} />{outfitMaterial}</mesh>
       </group>
+      {/* Legs */}
       <group position={[-0.12, 0.65, 0]}>
         <mesh castShadow receiveShadow><boxGeometry args={[0.13, 0.55, 0.13]} />{outfitMaterial}</mesh>
+
       </group>
       <group position={[0.12, 0.65, 0]}>
         <mesh castShadow receiveShadow><boxGeometry args={[0.13, 0.55, 0.13]} />{outfitMaterial}</mesh>
       </group>
+      {/* Name Tag */}
       <Html position={[0, 2.2, 0]} center>
         <div style={{ background: 'rgba(0,0,0,0.7)', color: '#00ffff', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', border: '1px solid #00aaff' }}>
           {player.name}
         </div>
       </Html>
+      {/* Health Bar */}
       <Html position={[0, 2.05, 0]} center>
         <div style={{ width: '80px', height: '6px', background: 'rgba(0,0,0,0.7)', border: '1px solid #333', borderRadius: '3px' }}>
           <div style={{ width: `${healthPercent}%`, height: '100%', background: healthBarColor, borderRadius: '2px', transition: 'width 0.2s ease' }} />
@@ -185,6 +195,7 @@ function HonkaiCharacter({ player, gradientTexture }: { player: any; gradientTex
   );
 }
 
+// Main Game Scene
 interface GameSceneProps {
   onBackToMenu: () => void;
   playerName: string;
@@ -201,6 +212,7 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
   const gradientTexture = useMemo(() => createGradientTexture(), []);
   const { touchControls, isMobile } = useMobileControls(canvasRef);
 
+  // Connect to server
   useEffect(() => {
     const newSocket = io(serverUrl);
     setSocket(newSocket);
@@ -208,10 +220,12 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
       newSocket.emit('join', { playerName, characterType: 'rudeus', area: 'Buena Village' });
     });
     newSocket.on('gameState', (state: any) => setGameState(state));
-    newSocket.on('disconnect', () => setGameState(p => ({ ...p, isConnected: false })));
+    newSocket.on('disconnect', () => setGameState(p 
+=> ({ ...p, isConnected: false })));
     return () => newSocket.disconnect();
   }, [serverUrl, playerName]);
 
+  // Handle input
   useEffect(() => {
     if (!socket || !gameState.localPlayerId) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -236,6 +250,7 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
     return () => { window.removeEventListener('keydown', handleKeyDown); window.removeEventListener('keyup', handleKeyUp); };
   }, [socket, gameState.localPlayerId]);
 
+  // Mobile touch input
   useEffect(() => {
     if (!socket || !gameState.localPlayerId || !isMobile) return;
     const interval = setInterval(() => {
@@ -245,13 +260,15 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
           direction: { x: touchControls.moveJoystick.x * 2, y: 0, z: touchControls.moveJoystick.y * 2 }
         });
       }
-      if (touchControls.attackButton) socket.emit('playerAction', { type: 'input', inputType: 'attack', playerId: gameState.localPlayerId, action: 'attack' });
+      if (touchC
+ontrols.attackButton) socket.emit('playerAction', { type: 'input', inputType: 'attack', playerId: gameState.localPlayerId, action: 'attack' });
       if (touchControls.skillButton) socket.emit('playerAction', { type: 'input', inputType: 'skill', playerId: gameState.localPlayerId, action: 'skill1' });
       if (touchControls.jumpButton) socket.emit('playerAction', { type: 'input', inputType: 'jump', playerId: gameState.localPlayerId, action: 'jump' });
     }, 100);
     return () => clearInterval(interval);
   }, [socket, gameState.localPlayerId, touchControls, isMobile]);
 
+  // Camera setup
   function CameraSetup() {
     const { camera } = useThree();
     const localPlayer = gameState.players[gameState.localPlayerId];
@@ -272,6 +289,7 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
     return null;
   }
 
+  // Lighting
   function LightingSetup() {
     return (
       <>
@@ -281,29 +299,35 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
         <pointLight position={[20, 10, 20]} color={0xff00aa} intensity={0.2} distance={50} />
       </>
     );
+
   }
 
+  // Post-processing
   function PostProcessingEffects() {
     return (
       <EffectComposer>
         <Bloom blendFunction={BlendFunction.ADD} intensity={WORLD_SETTINGS.bloomIntensity} kernelSize={5} luminanceThreshold={0} luminanceSmoothing={0.9} height={300} />
+        <ToneMapping blendMode={BlendFunction.NORMAL} adaptationLevel={0.5} adaptationSpeed={0.1} middleGrey={0.5} maxLuminance={16.0} />
       </EffectComposer>
     );
   }
 
+  // Fog
   function FogSetup() {
     const { scene } = useThree();
     useEffect(() => {
-      scene.fog = new THREE.Fog(WORLD_SETTINGS.fogColor, 1, GAME_CONSTANTS.WORLD_SIZE * 0.8);
-      scene.background = new THREE.Color(WORLD_SETTINGS.skyColor);
+      scene.fog = new Fog(WORLD_SETTINGS.fogColor, 1, GAME_CONSTANTS.WORLD_SIZE * 0.8);
+      scene.background = new Color(WORLD_SETTINGS.skyColor);
     }, [scene]);
     return null;
   }
 
+  // Area navigation
   const handleAreaChange = (areaName: string) => {
     if (socket) socket.emit('changeArea', { playerId: gameState.localPlayerId, area: areaName });
   };
 
+  // Render scene
   const playersArray = Object.values(gameState.players);
   const currentArea = gameState.currentArea || BUENA_VILLAGE;
 
@@ -313,22 +337,26 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
         <FogSetup />
         <LightingSetup />
         <CameraSetup />
-        <React.Suspense fallback={null}>
+        <Suspense fallback={null}>
+          {/* Ground */}
           <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
             <planeGeometry args={[GAME_CONSTANTS.WORLD_SIZE, GAME_CONSTANTS.WORLD_SIZE]} />
             <meshToonMaterial color={WORLD_SETTINGS.groundColor} gradientMap={gradientTexture} />
           </mesh>
+          {/* Buildings from current area */}
           {currentArea.buildings && currentArea.buildings.map((b: any) => (
             <group key={b.id} position={[b.position.x, b.position.y || 0, b.position.z]}>
               <mesh castShadow receiveShadow>
                 <boxGeometry args={[b.size.width, b.size.height, b.size.depth]} />
-                <meshStandardMaterial color={b.color} emissive={b.emissive} emissiveIntensity={b.emissiveIntensity || 0.1} metalness={0.3} />
+                <meshStandardMaterial col
+or={b.color} emissive={b.emissive} emissiveIntensity={b.emissiveIntensity || 0.1} metalness={0.3} />
               </mesh>
               <Html position={[0, b.size.height / 2 + 0.5, 0]} center>
                 <div style={{ background: 'rgba(0,0,0,0.6)', color: '#00ffff', padding: '2px 6px', borderRadius: '3px', fontSize: '10px' }}>{b.name}</div>
               </Html>
             </group>
           ))}
+          {/* Trees */}
           {currentArea.trees && currentArea.trees.map((t: any, i: number) => (
             <group key={i} position={[t.position.x, t.position.y || 0, t.position.z]}>
               <mesh castShadow receiveShadow>
@@ -342,6 +370,7 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
               {t.emissive && <pointLight position={[0, t.height * 0.5, 0]} color={t.emissive} intensity={0.5} distance={t.height * 2} />}
             </group>
           ))}
+          {/* Sci-Fi decorations */}
           {currentArea.sciFiDecorations && currentArea.sciFiDecorations.map((d: any, i: number) => {
             if (d.type === 'hologram') {
               return (
@@ -351,7 +380,8 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
                       {d.text}
                     </div>
                   </Html>
-                  <pointLight position={[0, 0, 0]} color={d.color} intensity={0.5} distance={20} />
+                  <pointLight position={[0, 0, 0]} color={d.col
+or} intensity={0.5} distance={20} />
                 </group>
               );
             }
@@ -368,14 +398,16 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
             }
             return null;
           })}
+          {/* Players */}
           {playersArray.map((p: any) => (
             <HonkaiCharacter key={p.id} player={p} gradientTexture={gradientTexture} />
           ))}
-        </React.Suspense>
+        </Suspense>
         <PostProcessingEffects />
         <ContactShadows frames={1} position={[0, -0.01, 0]} width={GAME_CONSTANTS.WORLD_SIZE} height={GAME_CONSTANTS.WORLD_SIZE} scale={10} resolution={512} far={45} />
       </Canvas>
 
+      {/* UI Overlays */}
       <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 1000 }}>
         <button onClick={onBackToMenu} style={{ padding: '8px 12px', background: 'rgba(255,0,0,0.4)', color: '#ff0000', border: '1px solid #ff0000', borderRadius: '4px', cursor: 'pointer' }}>Menu</button>
       </div>
@@ -384,7 +416,8 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
           {cameraMode === 'third-person' ? '1st Person' : '3rd Person'}
         </button>
       </div>
-      <div style={{ position: 'absolute', top: '20px', right: '20px', display: 'flex', gap: '10px', zIndex: 1000 }}>
+      <div style={{ position: 'absolute', top: '20px'
+, right: '20px', display: 'flex', gap: '10px', zIndex: 1000 }}>
         {[BUENA_VILLAGE, ASURA_KINGDOM, MAGIC_CITY_SHARIA].map((area: any) => (
           <button key={area.name} onClick={() => handleAreaChange(area.name)} style={{
             padding: '8px 12px',
@@ -402,6 +435,7 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
         {currentArea?.name || 'Loading...'}
       </div>
 
+      {/* Mobile Controls */}
       {isMobile && (
         <>
           <div style={{ position: 'absolute', bottom: '20px', left: '20px', width: '100px', height: '100px', background: 'rgba(0,0,0,0.3)', borderRadius: '50%', border: '2px solid #00aaff', zIndex: 1000 }}>
@@ -410,7 +444,8 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
           <div style={{ position: 'absolute', bottom: '20px', right: '20px', display: 'flex', flexDirection: 'column', gap: '10px', zIndex: 1000 }}>
             <button style={{ width: '50px', height: '50px', background: 'rgba(255,0,0,0.4)', border: '2px solid #ff0000', borderRadius: '50%', color: 'white', pointerEvents: 'none' }}>ATK</button>
             <button style={{ width: '50px', height: '50px', background: 'rgba(0,170,255,0.4)', border: '2px solid #00aaff', borderRadius: '50%', color: 'white', pointerEvents: 'none' }}>SKILL</button>
-            <button style={{ width: '50px', height: '50px', background: 'rgba(0,255,0,0.4)', border: '2px solid #00ff00', borderRadius: '50%', color: 'white', pointerEvents: 'none' }}>JUMP</button>
+            <button style={{ width: '50px', height: '50px', background: 'rgba(0,255,0,0.4)', border: 
+'2px solid #00ff00', borderRadius: '50%', color: 'white', pointerEvents: 'none' }}>JUMP</button>
           </div>
         </>
       )}
