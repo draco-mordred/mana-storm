@@ -1,17 +1,5 @@
-
-  // Draco Abie Skills (Marksman - Wind/Lightning)
-  'gale-arrow': { id: 'gale-arrow', name: 'Gale Arrow', description: 'Fires an arrow imbued with wind magic, piercing through enemies', type: 'attack', damage: 35, manaCost: 20, cooldown: 2500, range: 30 },
-  'thunder-fang': { id: 'thunder-fang', name: 'Thunder Fang', description: 'Unleashes a lightning-infused arrow that chains between targets', type: 'attack', damage: 40, manaCost: 25, cooldown: 4000, range: 25 },
-  'sky-piercer': { id: 'sky-piercer', name: 'Sky Piercer', description: 'Fires a high-velocity arrow that rains down from the sky', type: 'attack', damage: 50, manaCost: 30, cooldown: 6000, range: 35 },
-  'tempest-volley': { id: 'tempest-volley', name: 'Tempest Volley', description: 'Rapidly fires multiple wind arrows in a cone', type: 'attack', damage: 25, manaCost: 30, cooldown: 5000, range: 20 },
-  'cyclone-shot': { id: 'cyclone-shot', name: 'Cyclone Shot', description: 'Creates a swirling wind vortex that damages enemies in area', type: 'attack', damage: 35, manaCost: 25, cooldown: 4500, range: 15 },
-  'storm-rain': { id: 'storm-rain', name: 'Storm Rain', description: 'Calls down a rain of arrows from the storm clouds', type: 'attack', damage: 20, manaCost: 20, cooldown: 3000, range: 25 },
-  'falcon-dive': { id: 'falcon-dive', name: 'Falcon Dive', description: 'Leaps backward while firing a precise shot', type: 'utility', manaCost: 15, cooldown: 8000, range: 25 },
-  'gale-dance': { id: 'gale-dance', name: 'Gale Dance', description: 'Quickly dodges to the side with wind assistance', type: 'utility', manaCost: 20, cooldown: 6000, range: 1 },
-  'lightning-cross': { id: 'lightning-cross', name: 'Lightning Cross', description: 'Fires two lightning arrows in a cross pattern', type: 'attack', damage: 45, manaCost: 35, cooldown: 7000, range: 30 },
-  'phantom-step': { id: 'phantom-step', name: 'Phantom Step', description: 'Briefly becomes intangible and moves quickly', type: 'utility', manaCost: 25, cooldown: 10000, range: 10 },
-  'storm-waltz': { id: 'storm-waltz', name: 'Storm Waltz', description: 'Performs a spinning attack with daggers', type: 'attack', damage: 30, manaCost: 20, cooldown: 3500, range: 3 },
-  // url: https://raw.githubusercontent.com/draco-mordred/mana-storm/main/client/src/utils/constants.ts
+// Draco Abie added
+// url: https://raw.githubusercontent.com/draco-mordred/mana-storm/main/client/src/utils/constants.ts
 
 import type { CharacterPreset, Skill, CharacterType } from '../types';
 
@@ -162,28 +150,6 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     hairStyle: 
 'long',
     age: 'adult',
-  },
-  dracoAbie: {
-    type: 'dracoAbie',
-    name: 'Draco Abie',
-    baseHealth: 95,
-    baseMana: 140,
-    baseAttack: 30,
-    baseDefense: 12,
-    baseSpeed: 15,
-    skills: ['gale-arrow', 'thunder-fang', 'sky-piercer', 'tempest-volley', 'cyclone-shot', 'storm-rain', 'falcon-dive', 'gale-dance', 'lightning-cross', 'phantom-step', 'storm-waltz'],
-    model: 'dracoAbie',
-    color: 0x8b4513,
-    description: 'Elite Marksman and Mana Ranger, twin sister of Draco Noir. Master of wind and lightning magic.',
-    outfit: 'ranger_coat',
-    hairColor: 0x8b4513,
-    hairStyle: 'short',
-    age: 'young_adult',
-    manaAffinity: { wind: 5, lightning: 5, water: 4 },
-    equipment: { primary: 'stormcaller_bow', secondary: ['zephyr_dagger', 'tempest_dagger'] },
-    class: 'marksman',
-    nickname: 'Gale Huntress',
-    twinBrother: 'dracoNoir'
   },
 };
 
