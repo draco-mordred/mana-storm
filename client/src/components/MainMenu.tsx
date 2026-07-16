@@ -35,7 +35,7 @@ export default function MainMenu({ onStartGame, onResume }: MainMenuProps) {
   }, []);
 
   const isStartMode = !!onStartGame;
-  const characterTypes: CharacterType[] = ['rudeus', 'dracoAbie', 'warrior', 'mage', 'rogue', 'archer', 'healer'];
+  const characterTypes: CharacterType[] = ['rudeus', 'warrior', 'mage', 'rogue', 'archer', 'healer', 'dracoAbie'];
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,13 +116,13 @@ tate('load-game');
   const getCharacterIcon =
  (type: CharacterType): string => {
     const icons: Record<CharacterType, string> = {
-      dracoAbie: '🏹',
       rudeus: '👦',
       warrior: '⚔️',
       mage: '🔮',
       rogue: '🗡️',
       archer: '🏹',
       healer: '💚',
+      dracoAbie: '🏹',
     };
     return icons[type] || '❓';
   };
