@@ -1,17 +1,6 @@
+url: https://raw.githubusercontent.com/draco-mordred/mana-storm/main/client/src/utils/constants.ts
 
-  // Draco Abie Skills (Marksman - Wind/Lightning)
-  'gale-arrow': { id: 'gale-arrow', name: 'Gale Arrow', description: 'Fires an arrow imbued with wind magic, piercing through enemies', type: 'attack', damage: 35, manaCost: 20, cooldown: 2500, range: 30 },
-  'thunder-fang': { id: 'thunder-fang', name: 'Thunder Fang', description: 'Unleashes a lightning-infused arrow that chains between targets', type: 'attack', damage: 40, manaCost: 25, cooldown: 4000, range: 25 },
-  'sky-piercer': { id: 'sky-piercer', name: 'Sky Piercer', description: 'Fires a high-velocity arrow that rains down from the sky', type: 'attack', damage: 50, manaCost: 30, cooldown: 6000, range: 35 },
-  'tempest-volley': { id: 'tempest-volley', name: 'Tempest Volley', description: 'Rapidly fires multiple wind arrows in a cone', type: 'attack', damage: 25, manaCost: 30, cooldown: 5000, range: 20 },
-  'cyclone-shot': { id: 'cyclone-shot', name: 'Cyclone Shot', description: 'Creates a swirling wind vortex that damages enemies in area', type: 'attack', damage: 35, manaCost: 25, cooldown: 4500, range: 15 },
-  'storm-rain': { id: 'storm-rain', name: 'Storm Rain', description: 'Calls down a rain of arrows from the storm clouds', type: 'attack', damage: 20, manaCost: 20, cooldown: 3000, range: 25 },
-  'falcon-dive': { id: 'falcon-dive', name: 'Falcon Dive', description: 'Leaps backward while firing a precise shot', type: 'utility', manaCost: 15, cooldown: 8000, range: 25 },
-  'gale-dance': { id: 'gale-dance', name: 'Gale Dance', description: 'Quickly dodges to the side with wind assistance', type: 'utility', manaCost: 20, cooldown: 6000, range: 1 },
-  'lightning-cross': { id: 'lightning-cross', name: 'Lightning Cross', description: 'Fires two lightning arrows in a cross pattern', type: 'attack', damage: 45, manaCost: 35, cooldown: 7000, range: 30 },
-  'phantom-step': { id: 'phantom-step', name: 'Phantom Step', description: 'Briefly becomes intangible and moves quickly', type: 'utility', manaCost: 25, cooldown: 10000, range: 10 },
-  'storm-waltz': { id: 'storm-waltz', name: 'Storm Waltz', description: 'Performs a spinning attack with daggers', type: 'attack', damage: 30, manaCost: 20, cooldown: 3500, range: 3 },
-  // url: https://raw.githubusercontent.com/draco-mordred/mana-storm/main/client/src/utils/constants.ts
+// url: https://raw.githubusercontent.com/draco-mordred/mana-storm/main/client/src/utils/constants.ts
 
 import type { CharacterPreset, Skill, CharacterType } from '../types';
 
@@ -53,6 +42,9 @@ export const ANIME_COLORS = {
   healerCyan: 0x00ffff,
   skin: 0xffccaa,
   accent: 0x00aaff,
+  abieBrown: 0x8B4513,
+  abieLeather: 0xA0522D,
+
 };
 
 // ============================================
@@ -161,29 +153,27 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     hairColor: 0xffd700,
     hairStyle: 
 'long',
-    age: 'adult',
-  },
-  dracoAbie: {
-    type: 'dracoAbie',
-    name: 'Draco Abie',
-    baseHealth: 95,
-    baseMana: 140,
+    age: 'adult'
+  abie: {
+    type: 'abie',
+    name: 'Draco Abielle',
+    baseHealth: 100,
+    baseMana: 120,
     baseAttack: 30,
     baseDefense: 12,
     baseSpeed: 15,
-    skills: ['gale-arrow', 'thunder-fang', 'sky-piercer', 'tempest-volley', 'cyclone-shot', 'storm-rain', 'falcon-dive', 'gale-dance', 'lightning-cross', 'phantom-step', 'storm-waltz'],
-    model: 'dracoAbie',
-    color: 0x8b4513,
-    description: 'Elite Marksman and Mana Ranger, twin sister of Draco Noir. Master of wind and lightning magic.',
-    outfit: 'ranger_coat',
-    hairColor: 0x8b4513,
+    skills: ['gale-arrow', 'thunder-fang', 'sky-piercer', 'tempest-volley', 'cyclone-shot', 'storm-rain', 'falcon-dive', 'gale-dance', 'lightning-cross', 'phantom-step'],
+    model: 'abie',
+    color: 0x8B4513,
+    description: 'High-mobility marksman with Wind, Lightning, and Water mana affinities. Twin brother of Draco Noir.',
+    outfit: 'marksman_gear',
+    hairColor: 0x8B4513,
     hairStyle: 'short',
-    age: 'young_adult',
-    manaAffinity: { wind: 5, lightning: 5, water: 4 },
-    equipment: { primary: 'stormcaller_bow', secondary: ['zephyr_dagger', 'tempest_dagger'] },
-    class: 'marksman',
-    nickname: 'Gale Huntress',
-    twinBrother: 'dracoNoir'
+    age: 'adult',
+    class: 'Marksman',
+    manaAffinity: ['wind', 'lightning', 'water'],
+  },
+,
   },
 };
 
@@ -228,6 +218,18 @@ on: 'Heals over time with nanobots', type: 'heal', healAmount: 60, manaCost: 30,
   'stasis-field': { id: 'stasis-field', name: 'Stasis Field', description: 'Puts allies in protective stasis', type: 'defense', manaCost: 35, cooldown: 15000, range: 12 },
   'neural-boost': { id: 'neural-boost', name: 'Neural Boost', description: 'Enhances ally reflexes and speed', type: 'utility', manaCost: 25, cooldown: 10000, range: 15 },
   'bio-purge': { id: 'bio-purge', name: 'Bio Purge', description: 'Removes toxins and debuffs', type: 'utility', manaCost: 20, cooldown: 8000, range: 12 },
+  // Draco Abie Skills
+  'gale-arrow': { id: 'gale-arrow', name: 'Gale Arrow', description: 'Wind compresses around an arrow, tripling speed and armor penetration', type: 'attack', damage: 45, manaCost: 20, cooldown: 3000, range: 35 },
+  'thunder-fang': { id: 'thunder-fang', name: 'Thunder Fang', description: 'Lightning envelops an arrow before release, exploding on impact', type: 'attack', damage: 50, manaCost: 25, cooldown: 4000, range: 30 },
+  'sky-piercer': { id: 'sky-piercer', name: 'Sky Piercer', description: 'An arrow accelerated beyond the speed of sound, producing a sonic shockwave', type: 'attack', damage: 65, manaCost: 35, cooldown: 8000, range: 40 },
+  'tempest-volley': { id: 'tempest-volley', name: 'Tempest Volley', description: 'Hundreds of mana arrows rain across the battlefield', type: 'attack', damage: 35, manaCost: 40, cooldown: 12000, range: 30 },
+  'cyclone-shot': { id: 'cyclone-shot', name: 'Cyclone Shot', description: 'Creates a miniature tornado on impact', type: 'attack', damage: 40, manaCost: 30, cooldown: 6000, range: 25 },
+  'storm-rain': { id: 'storm-rain', name: 'Storm Rain', description: 'Fires dozens of arrows into the sky, redirected onto targets from impossible angles', type: 'attack', damage: 55, manaCost: 45, cooldown: 15000, range: 40 },
+  'falcon-dive': { id: 'falcon-dive', name: 'Falcon Dive', description: 'Launches herself with Wind magic while firing continuously', type: 'utility', manaCost: 30, cooldown: 10000, range: 20 },
+  'gale-dance': { id: 'gale-dance', name: 'Gale Dance', description: 'Extremely rapid slashes enhanced by Wind', type: 'attack', damage: 25, manaCost: 15, cooldown: 2000, range: 2 },
+  'lightning-cross': { id: 'lightning-cross', name: 'Lightning Cross', description: 'Two crossing strikes infused with lightning', type: 'attack', damage: 35, manaCost: 20, cooldown: 4000, range: 2 },
+  'phantom-step': { id: 'phantom-step', name: 'Phantom Step', description: 'Uses compressed wind for instantaneous repositioning', type: 'utility', manaCost: 20, cooldown: 5000, range: 10 },
+
 };
 
 // ============================================
@@ -586,6 +588,31 @@ adius: 0.8, color: 0x00ffff, emissive: 0x44ffff },
     { type: 'energy-shield', position: { x: 0, y:
  0, z: -60 }, radius: 15, height: 45, color: 0x4400aa, area: 'magic-city-sharia' },
   ],
+  abie: {
+    head: { geometry: 'sphere', radius: 0.25, color: 0xffccaa, position: { x: 0, y: 1.05, z: 0 } },
+    hair: { geometry: 'capsule', radius: 0.3, height: 0.35, color: 0x8B4513, position: { x: 0, y: 1.2, z: 0 } },
+    body: { geometry: 'capsule', radius: 0.3, height: 0.8, color: 0xffffff, position: { x: 0, y: 0.4, z: 0 } },
+    sleeves: {
+      left: { geometry: 'capsule', radius: 0.15, height: 0.6, color: 0xffffff, position: { x: -0.35, y: 0.7, z: 0 }, rotation: { x: 0, y: 0, z: Math.PI / 2 } },
+      right: { geometry: 'capsule', radius: 0.15, height: 0.6, color: 0xffffff, position: { x: 0.35, y: 0.7, z: 0 }, rotation: { x: 0, y: 0, z: Math.PI / 2 } }
+    },
+    legs: {
+      left: { geometry: 'capsule', radius: 0.18, height: 0.7, color: 0xA0522D, position: { x: -0.18, y: -0.2, z: 0 } },
+      right: { geometry: 'capsule', radius: 0.18, height: 0.7, color: 0xA0522D, position: { x: 0.18, y: -0.2, z: 0 } }
+    },
+    skirt: { geometry: 'cylinder', radiusTop: 0.4, radiusBottom: 0.5, height: 0.5, color: 0x006400, position: { x: 0, y: -0.1, z: 0 } },
+    corset: { geometry: 'capsule', radius: 0.35, height: 0.4, color: 0x8B4513, position: { x: 0, y: 0.55, z: 0 } },
+    boots: {
+      left: { geometry: 'capsule', radius: 0.15, height: 0.3, color: 0x2F2F2F, position: { x: -0.18, y: -0.8, z: 0 } },
+      right: { geometry: 'capsule', radius: 0.15, height: 0.3, color: 0x2F2F2F, position: { x: 0.18, y: -0.8, z: 0 } }
+    },
+    shoulderHarness: {
+      left: { geometry: 'capsule', radius: 0.1, height: 0.3, color: 0x8B4513, position: { x: -0.3, y: 0.9, z: 0 }, rotation: { x: 0, y: 0, z: Math.PI / 4 } },
+      right: { geometry: 'capsule', radius: 0.1, height: 0.3, color: 0x8B4513, position: { x: 0.3, y: 0.9, z: 0 }, rotation: { x: 0, y: 0, z: -Math.PI / 4 } }
+    },
+    utilityBelt: { geometry: 'capsule', radius: 0.25, height: 0.1, color: 0x8B4513, position: { x: 0, y: 0.1, z: 0 } },
+  },
+
 };
 
 // ============================================
