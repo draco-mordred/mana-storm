@@ -1,4 +1,46 @@
+// url: https://raw.githubusercontent.com/draco-mordred/mana-storm/main/client/src/utils/constants.ts
+
 import type { CharacterPreset, Skill, CharacterType } from '../types';
+
+export type GameMap = {
+  name: string;
+  description: string;
+  spawnPoint: { x: number; y: number; z: number };
+  size: { width: number; height: number };
+  groundColor: number;
+  skyColor: number;
+  fogColor: number;
+  ambientLight: number;
+  directionalLight: number;
+  objects: MapObject[];
+};
+
+export interface MapObject {
+  id: string;
+  name: string;
+  type: string;
+  position: { x: number; y: number; z: number };
+  rotation?: { x: number; y: number; z: number };
+  scale?: { x: number; y: number; z: number };
+  size?: { width: number; height: number; depth: number };
+  color?: number;
+  roofColor?: number;
+  emissive?: number;
+  emissiveIntensity?: number;
+}
+
+export const DEFAULT_CHARACTER: CharacterType = 'rudeus';
+
+export const ANIME_COLORS = {
+  rudeusBlue: 0x4a90d9,
+  warriorBlack: 0x222233,
+  mageBlue: 0x0066ff,
+  rogueGreen: 0x003322,
+  archerGold: 0xdaa520,
+  healerCyan: 0x00ffff,
+  skin: 0xffccaa,
+  accent: 0x00aaff,
+};
 
 // ============================================
 // 🎭 CHARACTER PRESETS (Honkai Sci-Fi Style)
@@ -20,7 +62,27 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     hairColor: 0x4a90d9,
     hairStyle: 'medium',
     age: 'teen',
-  },
+  ,
+  abie: {
+    type: 'marksman',
+    name: 'Draco Abielle',
+    baseHealth: 110,
+    baseMana: 130,
+    baseAttack: 35,
+    baseDefense: 12,
+    baseSpeed: 15,
+    skills: ['gale-arrow', 'thunder-fang', 'sky-piercer', 'tempest-volley', 'cyclone-shot', 'storm-rain', 'falcon-dive'],
+    model: 'abie',
+    color: 0x8B4513,
+    description: 'Elite Marksman and Mana Ranger. Twin sister of Draco Noir. Master of Wind and Lightning magic.',
+    outfit: 'marksman_gear',
+    hairColor: 0x8B4513,
+    hairStyle: 'short',
+    age: 'young_adult',
+    class: 'Marksman',
+    manaAffinities: ['wind', 'lightning', 'water'],
+    weapon: 'Stormcaller Bow'
+  }},
   warrior: {
     type: 'warrior',
     name: 'Cyber Knight',
@@ -29,7 +91,8 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     baseAttack: 25,
     baseDefense: 25,
     baseSpeed: 8,
-    skills: ['plasma-slash', 'energy-shield', 'ion-cannon', 'overcharge'],
+    skills: ['plasma-slash', 'energy-shield', 'ion-cannon', 'overcharge'
+],
     model: 'warrior',
     color: 0x222233,
     description: 'A cybernetically enhanced warrior with energy weapons',
@@ -103,35 +166,9 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     description: 'A bio-engineered support specialist with healing nanites',
     outfit: 'medical_armor',
     hairColor: 0xffd700,
-    hairStyle: 'long',
+    hairStyle: 
+'long',
     age: 'adult',
-  },
-  abie: {
-    type: 'abie',
-    name: 'Draco Abielle',
-    baseHealth: 98,
-    baseMana: 165,
-    baseAttack: 32,
-    baseDefense: 18,
-    baseSpeed: 14,
-    skills: [
-      'gale-arrow', 'thunder-fang', 'sky-piercer', 'tempest-volley',
-      'cyclone-shot', 'storm-rain', 'gale-dance', 'lightning-cross',
-      'phantom-step', 'storm-waltz', 'tempest-dominion',
-      'heavens-thunder', 'horizon-breaker'
-    ],
-    model: 'abie',
-    color: 0x008080,
-    description: 'Marksman with mastery over wind, lightning, and water mana. Twin sister of Draco Noir.',
-    outfit: 'marksman_gear',
-    hairColor: 0x8B4513,
-    hairStyle: 'short',
-    age: 'young_adult',
-    class: 'Marksman',
-    race: 'Human',
-    manaAffinities: ['Wind', 'Lightning', 'Water'],
-    primaryWeapon: 'Stormcaller',
-    secondaryWeapons: ['Zephyr', 'Tempest'],
   },
 };
 
@@ -139,43 +176,43 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
 // ⚔️ SKILLS DATABASE (Honkai Sci-Fi Style)
 // ============================================
 export const SKILLS: Record<string, Skill> = {
+  // Rudeus Skills
   'fireball': { id: 'fireball', name: 'Plasma Fireball', description: 'Launches a ball of ionized plasma', type: 'attack', damage: 45, manaCost: 25, cooldown: 3000, range: 18 },
   'ice-shield': { id: 'ice-shield', name: 'Cryo Barrier', description: 'Creates a protective cryogenic shield', type: 'defense', manaCost: 20, cooldown: 8000, range: 1 },
   'heal': { id: 'heal', name: 'Nano Heal', description: 'Deploys healing nanobots to a target', type: 'heal', healAmount: 45, manaCost: 25, cooldown: 3000, range: 12 },
   'teleport': { id: 'teleport', name: 'Quantum Shift', description: 'Instantly teleport to a nearby location', type: 'utility', manaCost: 30, cooldown: 15000, range: 25 },
+  
+  // Warrior Skills
   'plasma-slash': { id: 'plasma-slash', name: 'Plasma Slash', description: 'A powerful energy-infused melee strike', type: 'attack', damage: 30, manaCost: 15, cooldown: 2000, range: 2.5 },
   'energy-shield': { id: 'energy-shield', name: 'Energy Shield', description: 'Creates a protective energy barrier', type: 'defense', manaCost: 20, cooldown: 6000, range: 1 },
   'ion-cannon': { id: 'ion-cannon', name: 'Ion Cannon', description: 'Fires a devastating ion beam', type: 'attack', damage: 50, manaCost: 35, cooldown: 8000, range: 20 },
   'overcharge': { id: 'overcharge', name: 'Overcharge', description: 'Boosts attack power temporarily', type: 'utility', manaCost: 25, cooldown: 12000, range: 1 },
+  
+  // Mage Skills
   'quantum-blast': { id: 'quantum-blast', name: 'Quantum Blast', description: 'Releases unstable quantum energy', type: 'attack', damage: 55, manaCost: 30, cooldown: 4000, range: 22 },
-  'void-shield': { id: 'void-shield', name: 'Void Shield', description: 'Creates a shield that absorbs energy attacks', type: 'defense', manaCost: 25, cooldown: 7000, range: 1 },
+  'void-shield': { id: 'void-shield', name: 'Void Shield', description: 'Creates a shield that absorbs energy attacks', type: 'defense', man
+aCost: 25, cooldown: 7000, range: 1 },
   'gravity-well': { id: 'gravity-well', name: 'Gravity Well', description: 'Creates a gravity field that pulls enemies in', type: 'utility', manaCost: 40, cooldown: 10000, range: 15 },
   'phase-shift': { id: 'phase-shift', name: 'Phase Shift', description: 'Become intangible for a short period', type: 'utility', manaCost: 35, cooldown: 18000, range: 1 },
+  
+  // Rogue Skills
   'hologram-cloak': { id: 'hologram-cloak', name: 'Hologram Cloak', description: 'Creates a holographic decoy', type: 'utility', manaCost: 20, cooldown: 10000, range: 1 },
   'neural-disruptor': { id: 'neural-disruptor', name: 'Neural Disruptor', description: 'Disables enemy targeting systems', type: 'attack', damage: 25, manaCost: 20, cooldown: 6000, range: 10 },
   'phase-dagger': { id: 'phase-dagger', name: 'Phase Dagger', description: 'A dagger that phases through defenses', type: 'attack', damage: 40, manaCost: 15, cooldown: 3000, range: 2 },
   'quantum-blink': { id: 'quantum-blink', name: 'Quantum Blink', description: 'Short-range teleportation', type: 'utility', manaCost: 25, cooldown: 8000, range: 10 },
+  
+  // Archer Skills
   'photon-arrow': { id: 'photon-arrow', name: 'Photon Arrow', description: 'Fires a high-energy photon arrow', type: 'attack', damage: 35, manaCost: 20, cooldown: 2500, range: 30 },
   'black-hole-trap': { id: 'black-hole-trap', name: 'Black Hole Trap', description: 'Creates a gravity trap', type: 'utility', manaCost: 30, cooldown: 12000, range: 8 },
   'precision-strike': { id: 'precision-strike', name: 'Precision Strike', description: 'A perfectly aimed critical shot', type: 'attack', damage: 70, manaCost: 40, cooldown: 10000, range: 35 },
   'orbital-barrage': { id: 'orbital-barrage', name: 'Orbital Barrage', description: 'Calls down an orbital strike', type: 'attack', damage: 45, manaCost: 35, cooldown: 15000, range: 25 },
-  'nano-regeneration': { id: 'nano-regeneration', name: 'Nano Regeneration', description: 'Heals over time with nanobots', type: 'heal', healAmount: 60, manaCost: 30, cooldown: 5000, range: 15 },
+  
+  // Healer Skills
+  'nano-regeneration': { id: 'nano-regeneration', name: 'Nano Regeneration', descripti
+on: 'Heals over time with nanobots', type: 'heal', healAmount: 60, manaCost: 30, cooldown: 5000, range: 15 },
   'stasis-field': { id: 'stasis-field', name: 'Stasis Field', description: 'Puts allies in protective stasis', type: 'defense', manaCost: 35, cooldown: 15000, range: 12 },
   'neural-boost': { id: 'neural-boost', name: 'Neural Boost', description: 'Enhances ally reflexes and speed', type: 'utility', manaCost: 25, cooldown: 10000, range: 15 },
   'bio-purge': { id: 'bio-purge', name: 'Bio Purge', description: 'Removes toxins and debuffs', type: 'utility', manaCost: 20, cooldown: 8000, range: 12 },
-  'gale-arrow': { id: 'gale-arrow', name: 'Gale Arrow', description: 'Fires an arrow infused with wind mana, pushing enemies back', type: 'attack', damage: 35, manaCost: 20, cooldown: 2500, range: 25, element: 'Wind', effect: 'knockback' },
-  'sky-piercer': { id: 'sky-piercer', name: 'Sky Piercer', description: 'Launches a high-velocity arrow that pierces through multiple enemies', type: 'attack', damage: 45, manaCost: 30, cooldown: 5000, range: 30, element: 'Wind', effect: 'piercing' },
-  'cyclone-shot': { id: 'cyclone-shot', name: 'Cyclone Shot', description: 'Creates a swirling wind vortex that damages enemies in area', type: 'attack', damage: 40, manaCost: 25, cooldown: 4000, range: 15, element: 'Wind', effect: 'aoe' },
-  'storm-rain': { id: 'storm-rain', name: 'Storm Rain', description: 'Fires a volley of wind-infused arrows that rain down on targets', type: 'attack', damage: 30, manaCost: 35, cooldown: 6000, range: 20, element: 'Wind', effect: 'multi-hit' },
-  'thunder-fang': { id: 'thunder-fang', name: 'Thunder Fang', description: 'Strikes with lightning-infused blades, electrifying the target', type: 'attack', damage: 38, manaCost: 22, cooldown: 3000, range: 2.5, element: 'Lightning', effect: 'stun' },
-  'lightning-cross': { id: 'lightning-cross', name: 'Lightning Cross', description: 'Performs a cross-shaped slash with dual blades, releasing lightning energy', type: 'attack', damage: 50, manaCost: 35, cooldown: 5500, range: 3, element: 'Lightning', effect: 'aoe' },
-  'heavens-thunder': { id: 'heavens-thunder', name: 'Heaven's Thunder', description: 'Calls down a massive lightning strike from the heavens', type: 'attack', damage: 75, manaCost: 50, cooldown: 12000, range: 20, element: 'Lightning', effect: 'stun' },
-  'tempest-volley': { id: 'tempest-volley', name: 'Tempest Volley', description: 'Fires a rapid volley of arrows infused with wind and lightning', type: 'attack', damage: 28, manaCost: 30, cooldown: 4500, range: 25, element: 'Wind/Lightning', effect: 'multi-hit' },
-  'tempest-dominion': { id: 'tempest-dominion', name: 'Tempest Dominion', description: 'Unleashes a storm of wind and lightning, damaging all enemies in a large area', type: 'attack', damage: 60, manaCost: 60, cooldown: 15000, range: 25, element: 'Wind/Lightning', effect: 'aoe' },
-  'phantom-step': { id: 'phantom-step', name: 'Phantom Step', description: 'Quickly dashes a short distance, leaving an afterimage', type: 'utility', manaCost: 15, cooldown: 4000, range: 8, effect: 'dash' },
-  'gale-dance': { id: 'gale-dance', name: 'Gale Dance', description: 'Performs a spinning attack with dual blades, creating a wind vortex', type: 'attack', damage: 35, manaCost: 25, cooldown: 4000, range: 3, element: 'Wind', effect: 'aoe' },
-  'storm-waltz': { id: 'storm-waltz', name: 'Storm Waltz', description: 'A graceful combo attack alternating between bow and blades', type: 'attack', damage: 42, manaCost: 30, cooldown: 5000, range: 5, effect: 'combo' },
-  'horizon-breaker': { id: 'horizon-breaker', name: 'Horizon Breaker', description: 'Fires a powerful arrow that creates a shockwave across the battlefield', type: 'attack', damage: 80, manaCost: 70, cooldown: 20000, range: 40, element: 'Wind/Lightning/Water', effect: 'line' },
 };
 
 // ============================================
@@ -204,6 +241,7 @@ export const WORLD_SETTINGS = {
   fogDensity: 0.001,
   ambientLight: 0x1a1a33,
   directionalLight: 0x404066,
+  // Sci-fi lighting
   animeShading: false,
   toonShading: true,
   bloomIntensity: 1.5,
@@ -228,9 +266,17 @@ export const TOON_GRADIENT = {
 // 🏡 BUENA VILLAGE MAP DATA (Sci-Fi Retrofit)
 // ============================================
 export const BUENA_VILLAGE = {
-  name: 'Buena Village',
+  name: 'Buen
+a Village',
   description: 'A peaceful village retrofitted with advanced technology',
   spawnPoint: { x: 0, y: 0, z: 0 },
+  size: { width: 80, height: 80 },
+  groundColor: 0x0d1f2d,
+  skyColor: 0x07121f,
+  fogColor: 0x0b1324,
+  ambientLight: 0x2b2b4a,
+  directionalLight: 0x6d7bff,
+  objects: [],
   buildings: [
     {
       id: 'rudeus-house',
@@ -268,6 +314,7 @@ export const BUENA_VILLAGE = {
     {
       id: 'village-center',
       name: 'Central Plaza',
+
       type: 'square',
       position: { x: 0, y: 0, z: 10 },
       size: { width: 20, depth: 20, height: 0.5 },
@@ -290,7 +337,8 @@ export const BUENA_VILLAGE = {
   trees: [
     { position: { x: 15, y: 0, z: 0 }, type: 'cyber-tree', height: 6, radius: 1, color: 0x004422, emissive: 0x008844 },
     { position: { x: -15, y: 0, z: 0 }, type: 'cyber-tree', height: 6, radius: 1, color: 0x004422, emissive: 0x008844 },
-    { position: { x: 0, y: 0, z: 20 }, type: 'cyber-tree', height: 6, radius: 1, color: 0x004422, emissive: 0x008844 },
+    { position: { x: 0, y: 0, z: 20 }, type: '
+cyber-tree', height: 6, radius: 1, color: 0x004422, emissive: 0x008844 },
     { position: { x: 20, y: 0, z: 15 }, type: 'crystal-tree', height: 8, radius: 1.2, color: 0x442266, emissive: 0x8844cc },
     { position: { x: -20, y: 0, z: 15 }, type: 'crystal-tree', height: 8, radius: 1.2, color: 0x442266, emissive: 0x8844cc },
     { position: { x: 18, y: 0, z: -10 }, type: 'cyber-tree', height: 6, radius: 1, color: 0x004422, emissive: 0x008844 },
@@ -311,8 +359,10 @@ export const BUENA_VILLAGE = {
   ],
   gates: [
     { position: { x: 0, z: 25 }, width: 4, height: 3, color: 0x444455, emissive: 0x00aaff, emissiveIntensity: 0.2 },
-    { position: { x: 25, z: 0 }, width: 4, height: 3, color: 0x444455, emissive: 0x00aaff, emissiveIntensity: 0.2 },
+    { position: { x: 25, z: 0 }, width: 4, height: 3, color: 0x444455, emissive: 0x00aaff, emissiveIntensit
+y: 0.2 },
   ],
+  // Sci-Fi decorations
   sciFiDecorations: [
     { type: 'hologram', position: { x: 0, y: 5, z: 0 }, color: 0x00ffff, size: 2, text: 'BUENA VILLAGE', area: 'buena-village' },
     { type: 'energy-crystal', position: { x: 5, y: 1, z: 5 }, color: 0x00aaff, size: 1.5, glow: true, area: 'buena-village' },
@@ -323,3 +373,547 @@ export const BUENA_VILLAGE = {
     { type: 'floating-platform', position: { x: -8, y: 0.5, z: -8 }, size: { width: 4, depth: 4, height: 0.3 }, color: 0x222233, emissive: 0x0066aa, area: 'buena-village' },
   ],
 };
+
+export const BUena_VILLAGE = BUENA_VILLAGE;
+
+// ============================================
+// 🏰 ASURA KINGDOM MAP DATA (Sci-Fi)
+// ============================================
+export const ASURA_KINGDOM = {
+  name: 'Asura Kingdom',
+  description: 'A high-tech kingdom with towering spires and energy shields',
+  spawnPoint: { x: 0, y: 0, z: 0 },
+  buildings: [
+    {
+      id: 'asura-castle',
+      name: 'Quantum Citadel',
+      type: 'castle',
+      position: { x: 0, y: 0, z: 0 },
+      size: { width: 50, depth: 40, height: 30 },
+      color: 0x1a1a2e,
+      roofColor: 0x004488,
+      emissive: 0x00aaff,
+      emissiveIntensity: 0.2,
+    },
+    {
+      id: 'noble-mansion-1',
+      name: 'Noble Estate',
+      type: 'mansion',
+      position: { x: 30, y: 0, z: 20 },
+      size: { width: 15, depth: 12, height: 8 },
+      color: 0x222233,
+      roofColor: 0x0066aa,
+      emissive: 0x4488cc,
+      emissiveInte
+nsity: 0.15,
+    },
+    {
+      id: 'noble-mansion-2',
+      name: 'Noble Estate',
+      type: 'mansion',
+      position: { x: -30, y: 0, z: 20 },
+      size: { width: 15, depth: 12, height: 8 },
+      color: 0x222233,
+      roofColor: 0x0066aa,
+      emissive: 0x4488cc,
+      emissiveIntensity: 0.15,
+    },
+    {
+      id: 'training-grounds',
+      name: 'Combat Simulator',
+      type: 'arena',
+      position: { x: 0, y: 0, z: -40 },
+      size: { width: 60, depth: 60, height: 1 },
+      color: 0x333344,
+      emissive: 0x004488,
+      emissiveIntensity: 0.1,
+    },
+    {
+      id: 'temple',
+      name: 'Data Temple',
+      type: 'temple',
+      position: { x: 0, y: 0, z: 40 },
+      size: { width: 25, depth: 25, height: 15 },
+      color: 0x222244,
+      roofColor: 0xff4400,
+      emissive: 0xff6600,
+      emissiveIntensity: 0.2,
+    },
+  ],
+  trees: [
+    { position: { x: 40, y: 0, z: 0 }, type: 'crystal-tree', height: 10, radius: 1.5, color: 0x442266, emissive: 0x8844cc },
+    { position: { x: -40, y: 0, z: 0 }, type: 'crystal-tree', height: 10, radius: 1.5, color: 0x442266, emissive: 0x8844cc },
+    { position: { x: 0, y: 0, z: 50 }, type: 'crystal-tree', height: 10, radius: 1.5, color: 0x442266, emissive: 0x8844cc },
+    { position: { x: 50, y: 0,
+ z: 30 }, type: 'energy-spire', height: 12, radius: 0.8, color: 0x00aaff, emissive: 0x44ccff },
+    { position: { x: -50, y: 0, z: 30 }, type: 'energy-spire', height: 12, radius: 0.8, color: 0x00aaff, emissive: 0x44ccff },
+    { position: { x: 30, y: 0, z: -30 }, type: 'crystal-tree', height: 10, radius: 1.5, color: 0x442266, emissive: 0x8844cc },
+    { position: { x: -30, y: 0, z: -30 }, type: 'crystal-tree', height: 10, radius: 1.5, color: 0x442266, emissive: 0x8844cc },
+  ],
+  paths: [
+    { start: { x: 0, z: 0 }, end: { x: 30, z: 20 }, width: 3, color: 0x111122, emissive: 0x0066aa, emissiveIntensity: 0.15 },
+    { start: { x: 0, z: 0 }, end: { x: -30, z: 20 }, width: 3, color: 0x111122, emissive: 0x0066aa, emissi
+veIntensity: 0.15 },
+    { start: { x: 0, z: 0 }, end: { x: 0, z: 40 }, width: 3, color: 0x111122, emissive: 0x0066aa, emissiveIntensity: 0.15 },
+    { start: { x: 0, z: 0 }, end: { x: 0, z: -40 }, width: 3, color: 0x111122, emissive: 0x0066aa, emissiveIntensity: 0.15 },
+    { start: { x: 30, z: 20 }, end: { x: 50, z: 30 }, width: 2, color: 0x111122, emissive: 0x0066aa, emissiveIntensity: 0.1 },
+    { start: { x: -30, z: 20 }, end: { x: -50, z: 30 }, width: 2, color: 0x111122, emissive: 0x0066aa, emissiveIntensity: 0.1 },
+  ],
+  fences: [],
+  gates: [
+    { position: { x: 0, z: 60 }, width: 5, height: 4, color: 0x333355, emissive: 0x00aaff, emissiveIntensity: 0.25 },
+    { position: { x: 60, z: 0 }, width: 5, height: 4, color: 0x333355, emissive: 0x00aaff, emissiveIntensity: 0.25 },
+  ],
+  sciFiDecorations: [
+    { type: 'hologram', position: { x: 0, y: 10, z: 0 }, color: 0xff00aa, size: 3, text: 'ASURA KINGDOM', area: 'asura-kingdom' },
+    { type: 'energy-shield', position: { x: 0, y: 0, z: 0 }, radius: 60, height: 30, color: 0x00aaff, area: 'asura-kingdom' },
+    { type: 'floating-platform', position: { x: 20, y: 2, z: 15 }, size: { width: 10, depth: 10, height: 0.5 }, color: 0x222233, emissive: 0x0088ff, area: 'asura-kingdom' },
+    { type: 'energy-crystal', position: { x: 15, y: 1, z: -20 }, color: 0x00ffff, size: 2, glow: true, area: 'asura-kingdom' },
+    { type: 'neon-tube', start: { x: -40, y: 5, z: 0 }, end: { x: 40, y: 5, z: 0 }, color: 0xff00aa, width: 0.2, area: 'asura-kingdom' },
+  ],
+};
+
+// ============================================
+// 🏙️ MAGIC CITY SHARIA MAP DATA (Sci-Fi)
+// ============================================
+export const MAGIC_CITY_SHARIA = {
+  name: 'Magic City Sharia',
+  description: 'A futuristic city of advanced magic and technology',
+  spawnPoint: { x: 0, y: 0, z: 0 },
+  buildings: [
+    {
+      id: 'magic-academy',
+      name: 'Quantum Academy',
+      type: 'academy',
+      position: { x: 0, y: 0, z: -30 },
+      size: { width: 40
+, depth: 30, height: 20 },
+      color: 0x004488,
+      roofColor: 0x0066cc,
+      emissive: 0x44aacc,
+      emissiveIntensity: 0.25,
+    },
+    {
+      id: 'magic-guild',
+      name: 'Arcane Syndicate',
+      type: 'guild',
+      position: { x: 25, y: 0, z: 0 },
+      size: { width: 20, depth: 15, height: 10 },
+      color: 0x442266,
+      roofColor: 0x663399,
+      emissive: 0xaa44ff,
+      emissiveIntensity: 0.2,
+    },
+    {
+      id: 'library',
+      name: 'Data Archive',
+      type: 'library',
+      position: { x: -25, y: 0, z: 0 },
+      size: { width: 20, depth: 15, height: 12 },
+      color: 0x333344,
+      roofColor: 0x008844,
+      emissive: 0x00cc66,
+      emissiveIntensity: 0.15,
+    },
+    {
+      id: 'market',
+      name: 'Tech Bazaar',
+      type: 'market',
+      position: { x: 0, y: 0, z: 30 },
+      size: { width: 30, depth: 20, height: 8 },
+      color: 0x443322,
+      roofColor: 0x8b4513,
+      emissive: 0xffaa44,
+      emissiveIntensity: 0.15,
+    },
+    {
+      id: 'magic-tower',
+      name: 'Singularity Tower',
+      type: 'tower',
+      position: { x: 0, y: 0, z: -60 },
+      size: { width: 10, depth: 10, height: 40 },
+      color: 0xffffff,
+      roofColor: 0x000088,
+      emissive: 0x4444ff,
+      emissiveIntensity: 0.3,
+    },
+
+  ],
+  trees: [
+    { position: { x: 35, y: 0, z: -20 }, type: 'energy-spire', height: 12, radius: 0.8, color: 0x00aaff, emissive: 0x44ccff },
+    { position: { x: -35, y: 0, z: -20 }, type: 'energy-spire', height: 12, radius: 0.8, color: 0x00aaff, emissive: 0x44ccff },
+    { position: { x: 0, y: 0, z: 40 }, type: 'energy-spire', height: 12, radius: 0.8, color: 0xff00aa, emissive: 0xff44cc },
+    { position: { x: 40, y: 0, z: 10 }, type: 'crystal-tree', height: 10, radius: 1.2, color: 0x662288, emissive: 0xcc44aa },
+    { position: { x: -40, y: 0, z: 10 }, type: 'crystal-tree', height: 10, radius: 1.2, color: 0x662288, emissive: 0xcc44aa },
+    { position: { x: 15, y: 0, z: -70 }, type: 'energy-spire', height: 12, r
+adius: 0.8, color: 0x00ffff, emissive: 0x44ffff },
+    { position: { x: -15, y: 0, z: -70 }, type: 'energy-spire', height: 12, radius: 0.8, color: 0x00ffff, emissive: 0x44ffff },
+  ],
+  paths: [
+    { start: { x: 0, z: 0 }, end: { x: 25, z: 0 }, width: 3, color: 0x1a1a2e, emissive: 0x4466aa, emissiveIntensity: 0.2 },
+    { start: { x: 0, z: 0 }, end: { x: -25, z: 0 }, width: 3, color: 0x1a1a2e, emissive: 0x4466aa, emissiveIntensity: 0.2 },
+    { start: { x: 0, z: 0 }, end: { x: 0, z: 30 }, width: 3, color: 0x1a1a2e, emissive: 0x4466aa, emissiveIntensity: 0.2 },
+    { start: { x: 0, z: 0 }, end: { x: 0, z: -30 }, width: 3, color: 0x1a1a2e, emissive: 0x4466aa, emissiveIntensity: 0.2 },
+    { start: { x: 25, z: 0 }, end: { x: 0, z: -30 }, width: 2, color: 0x1a1a2e, emissive: 0x4466aa, emissiveIntensity: 0.15 },
+    { start: { x: -25, z: 0 }, end: { x: 0, z: -30 }, width: 2, color: 0x1a1a2e, emissive: 0x4466aa, emissiveIntensity: 0.15 },
+    { start: { x: 0, z: -30 }, end: { x: 0, z: -60 }, width: 2, color: 0x1a1a2e, emissive: 0x4466aa, emissiveIntensity: 0.15 },
+  ],
+  fences: [],
+  gates: [
+    { position: { x: 0, z: 70 }, width: 5, height: 4, color: 0x444466, emissive: 0x8888ff, emissiveIntensity: 0.25 },
+    { position: { x: 70, z: 0 }, width: 5, height: 4, color: 0x444466, emissive: 0x8888ff, emissiveIntensity: 0.25 },
+  ],
+  sciFiDecorations: [
+    { type: 'hologram', position: { x: 0, y: 10, z: 0 }, color: 0x00ffff, size: 3, text: 'MAGIC CITY', area: 'magic-city-sharia' },
+    { type: 'floating-platform', position: { x: 20, y: 3, z: -15 }, size: { width: 8, depth: 8, height: 0.3 }, color: 0x222244, emissive: 0x4466cc, area: 'magic-city-sharia' },
+    { type: 'energy-crystal', position: { x: 0, y: 2, z: -50 }, color: 0xff00ff, size: 3, glow: true, area: 'magic-city-sharia' },
+    { type: 'neon-tube', start: { x: -30, y: 4, z: 0 }, end: { x: 30, y: 4, z: 0 }, color: 0xff00ff, width: 0.2, area: 'magic-city-sharia' },
+    { type: 'energy-shield', position: { x: 0, y:
+ 0, z: -60 }, radius: 15, height: 45, color: 0x4400aa, area: 'magic-city-sharia' },
+  ],
+};
+
+// ============================================
+// 👥 NPCS (Sci-Fi Style)
+// ============================================
+export const NPCS = [
+  // Buena Village NPCs
+  {
+    id: 'zenith',
+    name: 'Zenith Greyrat',
+    characterType: 'healer',
+    position: { x: 0, y: 0, z: -12 },
+    area: 'buena-village',
+    dialogue: ['Welcome to Buena Village, traveler!', 'Our village has embraced the new technologies.'],
+    type: 'villager',
+  },
+  {
+    id: 'paul',
+    name: 'Paul Greyrat',
+    characterType: 'warrior',
+    position: { x: -8, y: 0, z: -3 },
+    area: 'buena-village',
+    dialogue: ['The world has changed since the old days.', 'Technology and magic now walk hand in hand.'],
+    type: 'villager',
+  },
+  {
+    id: 'lilia',
+    name: 'Lilia',
+    characterType: 'healer',
+    position: { x: 12, y: 0, z: 8 },
+    area: 'buena-village',
+    dialogue: ['The energy well in the center powers our village.', "It's a gift from the Asura Kingdom."],
+    type: 'villager',
+  },
+  {
+    id: 'buena-tech',
+    name: 'Tech Merchant',
+    characterType: 'rogue',
+    position: { x: -12, y: 0, z: 8 },
+    area: 'buena-village',
+    dialogue: ['Latest cybernetic enhancements!',
+ 'Nano-tech, energy weapons, and more!'],
+    type: 'shopkeeper',
+  },
+  // Asura Kingdom NPCs
+  {
+    id: 'asura-guard',
+    name: 'Sentinel Droid',
+    characterType: 'warrior',
+    position: { x: 15, y: 0, z: 0 },
+    area: 'asura-kingdom',
+    dialogue: ['Access granted.', 'The Quantum Citadel is ahead.'],
+    type: 'guard',
+  },
+  {
+    id: 'asura-scientist',
+    name: 'Dr. Asura',
+    characterType: 'mage',
+    position: { x: 0, y: 0, z: 10 },
+    area: 'asura-kingdom',
+    dialogue: ['Our energy shield protects the kingdom.', 'Quantum technology is the future.'],
+    type: 'villager',
+  },
+  {
+    id: 'training-droid',
+    name: 'Combat Trainer',
+    characterType: 'warrior',
+    position: { x: 0, y: 0, z: -
+35 },
+    area: 'asura-kingdom',
+    dialogue: ['Test your skills in the Combat Simulator.', 'Only the strongest can join our ranks.'],
+    type: 'villager',
+  },
+  // Magic City Sharia NPCs
+  {
+    id: 'magic-professor',
+    name: 'Professor Sharia',
+    characterType: 'mage',
+    position: { x: 0, y: 0, z: -25 },
+    area: 'magic-city-sharia',
+    dialogue: ['The Quantum Academy teaches the latest in magic-tech fusion.', 'Knowledge is power in the new age.'],
+    type: 'villager',
+  },
+  {
+    id: 'guild-leader',
+    name: 'Guild Master',
+    characterType: 'warrior',
+    position: { x: 25, y: 0, z: 5 },
+    area: 'magic-city-sharia',
+    dialogue: ['The Arcane Syndicate needs brave souls.', 'High-paying contracts available!'],
+    type: 'quest-giver',
+    quests: ['magic-city-quest-1'],
+  },
+  {
+    id: 'archivist',
+    name: 'Data Archivist',
+    characterType: 'healer',
+    position: { x: -22, y: 0, z: 5 },
+    area: 'magic-city-sharia',
+    dialogue: ['All knowledge is stored in the Data Archive.', 'From ancient spells to quantum algorithms.'],
+    type: 'villager',
+  },
+  {
+    id: 'merchant',
+    name: 'Tech Trader',
+    characterType: 'rogue',
+    position: { x: 0, y: 0, z: 35 },
+    area: 'magic-city-sharia',
+    dialogue: ['Rare tech and magic artifacts!', 'Come see my wares from across the stars!'],
+    type: 'shopkeeper',
+  },
+];
+
+// ============================================
+// 👹 MONSTERS (Sci-Fi Style)
+// ============================================
+export const MONSTERS = [
+  // Buena Village area
+  {
+    id: 'drone-1',
+    name: 'Rogue Drone',
+    type: 'drone',
+    position: { x: 25, y: 0, z: 25 },
+    area: 'buena-village',
+    color: 0x444466,
+    health: 60,
+    attack: 15,
+    defense: 10,
+    xpReward: 30,
+    aggressive: true,
+  },
+  {
+    id: 'cyber-wolf',
+    name: 'Cyber Wolf',
+    type: 'wolf',
+    position: { x: 30, y: 0, z: -10 },
+    area: 'buena-village',
+    color: 0x333355,
+    health: 70,
+    attack: 18,
+    defense: 12,
+    xpRe
+ward: 35,
+    aggressive: true,
+  },
+  {
+    id: 'nano-swarm',
+    name: 'Nano Swarm',
+    type: 'slime',
+    position: { x: -30, y: 0, z: -10 },
+    area: 'buena-village',
+    color: 0x00aaff,
+    health: 40,
+    attack: 12,
+    defense: 5,
+    xpReward: 25,
+    aggressive: false,
+  },
+  // Asura Kingdom area
+  {
+    id: 'sentinel-bot',
+    name: 'Sentinel Bot',
+    type: 'skeleton',
+    position: { x: 40, y: 0, z: 10 },
+    area: 'asura-kingdom',
+    color: 0x666688,
+    health: 80,
+    attack: 20,
+    defense: 15,
+    xpReward: 45,
+    aggressive: true,
+  },
+  {
+    id: 'laser-turret',
+    name: 'Laser Turret',
+    type: 'skeleton',
+    position: { x: -40, y: 0, z: 10 },
+    area: 'asura-kingdom',
+    color: 0x884444,
+    health: 50,
+    attack: 25,
+    defense: 8,
+    xpReward: 50,
+    aggressive: true,
+  },
+  {
+    id: 'quantum-beast',
+    name: 'Quantum Beast',
+    type: 'dragon',
+    position: { x: 0, y: 0, z: -50 },
+    area: 'asura-kingdom',
+    color: 0x004488,
+    health: 250,
+    attack: 35,
+    defense: 20,
+    xpReward: 120,
+    aggressive: true,
+  },
+  // Magic City Sharia area
+  {
+    id: 'void-creature',
+    name: 'Void Creature',
+    type: 'demon',
+    position: { x: 35, y: 0, z: -25 },
+    area: 'magic-city-sharia',
+    color: 0x442266,
+
+    health: 100,
+    attack: 25,
+    defense: 15,
+    xpReward: 60,
+    aggressive: true,
+  },
+  {
+    id: 'energy-phantom',
+    name: 'Energy Phantom',
+    type: 'demon',
+    position: { x: -35, y: 0, z: -25 },
+    area: 'magic-city-sharia',
+    color: 0x0088ff,
+    health: 80,
+    attack: 30,
+    defense: 10,
+    xpReward: 55,
+    aggressive: true,
+  },
+  {
+    id: 'shadow-droid',
+    name: 'Shadow Droid',
+    type: 'wolf',
+    position: { x: 0, y: 0, z: 45 },
+    area: 'magic-city-sharia',
+    color: 0x111122,
+    health: 90,
+    attack: 20,
+    defense: 15,
+    xpReward: 40,
+    aggressive: true,
+  },
+];
+
+// ============================================
+// 🎯 QUEST MARKERS
+// ====================================
+========
+export const QUEST_MARKERS = [
+  // Buena Village quests
+  {
+    id: 'buena-quest-1',
+    name: 'Investigate Energy Anomaly',
+    position: { x: 10, y: 0, z: -5 },
+    area: 'buena-village',
+    type: 'main',
+    completed: false,
+    questId: 'investigate-anomaly',
+  },
+  {
+    id: 'buena-quest-2',
+    name: 'Eliminate Rogue Drones',
+    position: { x: 25, y: 0, z: 25 },
+    area: 'buena-village',
+    type: 'side',
+    completed: false,
+    questId: 'eliminate-drones',
+  },
+  {
+    id: 'buena-quest-3',
+    name: 'Repair Energy Well',
+    position: { x: 0, y: 0, z: 10 },
+    area: 'buena-village',
+    type: 'side',
+    completed: false,
+    questId: 'repair-well',
+  },
+  // Asura Kingdom quests
+  {
+    id: 'asura-quest-1',
+    name: 'Meet the Quantum King',
+    position: { x: 0, y: 0, z: 0 },
+    area: 'asura-kingdom',
+    type: 'main',
+    completed: false,
+    questId: 'meet-quantum-king',
+  },
+  {
+    id: 'asura-quest-2',
+    name: 'Deactivate Sentinel Bots',
+    position: { x: 40, y: 0, z: 10 },
+    area: 'asura-kingdom',
+    type: 'side',
+    completed: false,
+    questId: 'deactivate-sentinels',
+  },
+  {
+    id: 'asura-quest-3',
+    name: 'Complete Combat Training',
+    position: { x: 0, y: 0, z: -40 },
+    area: 'asura-kingdom',
+    type: 'side',
+    completed: false,
+    questId: 'complete-training',
+  },
+  // Magic City Sharia quests
+  {
+    id: 'magic-quest-1',
+    name: 'Enroll in Quantum Academy',
+    position: { x: 0, y: 0, z: -30 },
+    area: 'magic-city-sharia',
+    type: 'main',
+    completed: false,
+    questId: 'enroll-academy',
+  },
+  {
+    id: 'magic-quest-2',
+    name: 'Defeat Void Creatures',
+    position: { x: 35, y: 0, z: -25 },
+    area: 'magic-city-sharia',
+    type: 'side',
+    completed: false,
+    questId: 'defeat-void-creatures',
+  },
+  {
+    id: 'magic-quest-3',
+    name: 'Explore Singularity Tower',
+    position: { x: 0, y: 0, z: -60 },
+    area: 'magic-city-sharia',
+    type: 'side',
+    completed: false,
+    questId: 'explo
+re-tower',
+  },
+];
+
+// ============================================
+// 👤 CHARACTER VISUAL PRESETS (Sci-Fi)
+// ============================================
+export const CHARACTER_VISUALS = {
+  rudeus: {
+    head: { geometry: 'sphere', radius: 0.25, color: 0xffccaa, position: { x: 0, y: 1.05, z: 0 } },
+    hair: { geometry: 'capsule', radius: 0.3, height: 0.4, color: 0x4a90d9, position: { x: 0, y: 1.2, z: 0 } },
+    body: { geometry: 'capsule', radius: 0.3, height: 0.8, color: 0x4a90d9, position: { x: 0, y: 0.4, z: 0 } },
+    sleeves: { 
+      left: { geometry: 'capsule', radius: 0.15, height: 0.6, color: 0x4a90d9, position: { x: -0.35, y: 0.7, z: 0 }, rotation: { x: 0, y: 0, z: Math.PI / 2 } }, 
+      right: { geometry: 'capsule', radius: 0.15
+
+... [Content truncated]
