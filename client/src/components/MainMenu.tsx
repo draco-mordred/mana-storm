@@ -35,7 +35,7 @@ export default function MainMenu({ onStartGame, onResume }: MainMenuProps) {
   }, []);
 
   const isStartMode = !!onStartGame;
-  const characterTypes: CharacterType[] = ['rudeus', 'warrior', 'mage', 'rogue', 'archer', 'healer'];
+  const characterTypes: CharacterType[] = ['rudeus', 'dracoAbie', 'warrior', 'mage', 'rogue', 'archer', 'healer'];
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +48,8 @@ export default function MainMenu({ onStartGame, onResume }: MainMenuProps) {
     setIsLoading(false);
     const saved = localStorage.getItem('manaStormSavedGames');
     if (saved && JSON.parse(saved).length > 0) {
-      setMenuState('load-game');
+      setMenuS
+tate('load-game');
     } else {
       setMenuState('character-select');
     }
@@ -112,8 +113,10 @@ export default function MainMenu({ onStartGame, onResume }: MainMenuProps) {
     localStorage.setItem('manaStormSavedGames', JSON.stringify(updatedGames));
   };
 
-  const getCharacterIcon = (type: CharacterType): string => {
+  const getCharacterIcon =
+ (type: CharacterType): string => {
     const icons: Record<CharacterType, string> = {
+      dracoAbie: '🏹',
       rudeus: '👦',
       warrior: '⚔️',
       mage: '🔮',
@@ -187,7 +190,8 @@ export default function MainMenu({ onStartGame, onResume }: MainMenuProps) {
       margin: '0.5rem',
       width: '100%',
     },
-    buttonSecondary: {
+    buttonS
+econdary: {
       padding: '1rem',
       background: 'rgba(255, 0, 255, 0.3)',
       border: '1px solid #ff00ff',
@@ -266,7 +270,8 @@ export default function MainMenu({ onStartGame, onResume }: MainMenuProps) {
       textAlign: 'center' as const,
     },
     savedGameCard: {
-      background: 'rgba(0, 0, 0, 0.7)',
+      background: 'rgb
+a(0, 0, 0, 0.7)',
       border: '1px solid rgba(0, 255, 255, 0.3)',
       borderRadius: '8px',
       padding: '1rem',
@@ -328,7 +333,8 @@ export default function MainMenu({ onStartGame, onResume }: MainMenuProps) {
           <button style={styles.buttonSecondary} onClick={() => setMenuState('login')}>
             Login
           </button>
-          <button style={styles.buttonSecondary} onClick={() => setMenuState('register')}>
+          <button style={styles.buttonSecondary} onClick={() => setMenuState('re
+gister')}>
             Register
           </button>
         </div>
@@ -398,7 +404,8 @@ export default function MainMenu({ onStartGame, onResume }: MainMenuProps) {
           style={styles.input}
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.va
+lue)}
           placeholder="Email (Optional)"
         />
         <input
@@ -459,7 +466,8 @@ export default function MainMenu({ onStartGame, onResume }: MainMenuProps) {
               >
                 {getCharacterIcon(type)}
               </div>
-              <div style={styles.characterName}>{preset.name}</div>
+              <div style={styles.characterName}>{preset.name
+}</div>
               <p style={styles.characterDesc}>{getCharacterDescription(type)}</p>
             </div>
           );
@@ -520,7 +528,8 @@ export default function MainMenu({ onStartGame, onResume }: MainMenuProps) {
       ) : (
         <div>
           {savedGames.map((game) => (
-            <div key={game.id} style={styles.savedGameCard}>
+            <div key={game.
+id} style={styles.savedGameCard}>
               <div>
                 <h4 style={{ color: '#fff', margin: '0 0 0.25rem 0' }}>
                   {game.characterName}
