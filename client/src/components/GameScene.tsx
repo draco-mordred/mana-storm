@@ -40,6 +40,7 @@ function useMobileControls(canvasRef) {
         const x = ((t.clientX - rect.left) / rect.width) * 2 - 1;
         const y = -((t.clientY - rect.top) / rect.height) * 2 + 1;
         if (x 
+
 < 0) setTouchControls(p => ({ ...p, moveJoystick: { active: true, x, y } }));
         else if (y > 0.3) setTouchControls(p => ({ ...p, jumpButton: true }));
         else if (y > -0.3) setTouchControls(p => ({ ...p, attackButton: true }));
@@ -84,7 +85,8 @@ function createGradientTexture() {
     data[i * 4] = (stop.color >> 16) & 0xff;
     data[i * 4 + 1] = (stop.color >> 8) & 0xff;
     data[i * 4 + 2] = stop.color & 0xff;
-    data[i * 4
+    data[i * 
+4
  + 3] = 255;
   }
   const texture = new DataTexture(data, size, 1, RGBAFormat, UnsignedByteType);
@@ -137,7 +139,8 @@ function HonkaiCharacter({ player, gradientTexture }) {
 
   return (
     <group ref={groupRef}>
-      <group position={[0, 1.7, 0]}>
+      <group position={[0, 1.7, 0
+]}>
         <mesh castShadow receiveShadow>
  
          <boxGeometry args={[0.3, 0.35, 0.3]} />
@@ -180,7 +183,8 @@ function HonkaiCharacter({ player, gradientTexture }) {
         </div>
       </Html>
       <Html position={[0, 2.05, 0]} center>
-        <div style={{ width: '80px', height: '6px', background: 'rgba(0,0,0,0.7)', border: '1px solid #333', borderRadiu
+        <div style={{ width: '80px', height: '6px', background: 'rgba(0,0,
+0,0.7)', border: '1px solid #333', borderRadiu
 s: '3px' }}>
           <div style={{ width: healthPercent + '%', height: '100%', background: healthBarColor, borderRadius: '2px', transition: 'width 0.2s ease' }} />
         </div>
@@ -230,9 +234,10 @@ interface GameSceneProps {
   onBackToMenu: () => void;
   playerName: string;
   serverUrl: string;
+  characterType?: CharacterType;
 }
 
-export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProps) {
+export function GameScene({ onBackToMenu, playerName, serverUrl, characterType }: GameSceneProps) {
   const canvasRef = useRef(null);
   const [socket, setSocket] = useState(null);
   const [gameState, setGameState] = useState({
@@ -250,7 +255,8 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
 
   useEffect(() => {
     const newSocket = io(serverUrl);
-    setSocket(newSocket);
+    setSocket(newS
+ocket);
     newSocket.on('connect', () => {
    
    newSocket.emit('join', { playerName, characterType: characterType || 'rudeus', area: 'Buena Village' });
@@ -307,7 +313,8 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
     window.addEventListener('keyup', handleKeyUp);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('keyup', handleKeyUp
+);
     };
   }, [socket, gameState.localPlayerId]);
 
@@ -350,7 +357,8 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
       }
       camera.updateProjectionMatrix();
     });
-    return null;
+ 
+   return null;
   }
 
   function LightingSetup() {
@@ -405,7 +413,8 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
             <planeGeometry args={[GAME_CONSTANTS.WORLD_SIZE, GAME_CONSTANTS.WORLD_SIZE]} />
             <meshToonMaterial color={WORLD_SETTINGS.groundColor} gradientMap={gradientTexture} />
           </mesh>
-          {currentArea.buildings && currentArea.buildings.map((b) => 
+  
+        {currentArea.buildings && currentArea.buildings.map((b) => 
 (
             <group key={b.id} position={[b.position.x, b.position.y || 0, b.position.z]}>
               <mesh castShadow receiveShadow>
@@ -435,7 +444,8 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
               return (
                 <group key={i} position={[d.position.x, d.position.y, d.position.z]}>
                   <Html center>
-                    <div style={{ color: 'rgb(' + ((d.color >> 16) & 0xff) + ', ' + ((d.color >> 8) & 0xff) + ', ' + (d.color & 0xff) + ')', fontSize: (d.size * 10) + 'px', fontWeight: 'bold', tex
+                    <div style={{ color: 'rgb(' + ((d.color >> 16) & 0xff) + ', ' + ((d.color >> 8) & 0xff) + ', ' + (d.color & 
+0xff) + ')', fontSize: (d.size * 10) + 'px', fontWeight: 'bold', tex
 tShadow: '0 0 10px rgba(0, 255, 255, 0.8)' }}>
                       {d.text}
                     </div>
@@ -469,7 +479,8 @@ tShadow: '0 0 10px rgba(0, 255, 255, 0.8)' }}>
         <button onClick={onBackToMenu} style={{ padding: '8px 12px', background: 'rgba(255,0,0,0.4)', color: '#ff0000', border: '1px solid #ff0000', borderRadius: '4px', cursor: 'pointer' }}>Menu</button>
       </div>
       <div style={{ position: 'absolute', top: '60px', left: '20px', zIndex: 1000 }}>
-        <button onClick={() => setCameraMode(p => p === 'third-person' ? 'first-person' : 'third-person')} style={{ padding: '8px 12px', background: 'rgba(0,170,255,0.4)', color: '#00aaff', border: '1px solid #00aaff', borderRadius: '4px', cursor: 'pointer' }}>
+        <button onClick={() => setCameraMode(p => p === 'third-person' ? 'first-person' : 'third-person')} style={{ padding: '8px 12px', background: 'rgba(0,170,255,0.4)', color: '#00aaff', border: '1px sol
+id #00aaff', borderRadius: '4px', cursor: 'pointer' }}>
           {ca
 meraMode === 'third-person' ? '1st Person' : '3rd Person'}
         </button>
@@ -499,7 +510,8 @@ meraMode === 'third-person' ? '1st Person' : '3rd Person'}
           </div>
           <div style={{ position: 'absolute', bottom: '20px', right: '20px', display: 'flex', flexDirection: 'column', gap: '10px', zIndex: 1000 }}>
             <button style={{ width: '50px', height: '50px', background: 'rgba(255,0,0,0.4)', border: '2px solid #ff0000', borderRadius: '50%', color: 'white', pointerEvents: 'none' }}>ATK</button>
-            <button style={{ width: '50px', height: '50px', background: 'rgba(0,170,255,0.4)', border: '2px solid #00aaff', borderRadius: '50%', color: 'white', pointerEvents: 'none' }}>SKILL</b
+            <button style={{ width: '50px', height: '50px', background: 'rgba(0,170,255,0.4)', border: '2px solid #00aaff', 
+borderRadius: '50%', color: 'white', pointerEvents: 'none' }}>SKILL</b
 utton>
             <button style={{ width: '50px', height: '50px', background: 'rgba(0,255,0,0.4)', border: '2px solid #00ff00', borderRadius: '50%', color: 'white', pointerEvents: 'none' }}>JUMP</button>
           </div>
