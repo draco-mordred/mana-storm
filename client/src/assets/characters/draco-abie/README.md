@@ -2,15 +2,15 @@
 
 ## Character Profile
 
-- **Full Name**: Draco Abie (Abielle)
-- **Class**: Marksman
-- **Nickname**: Gale Huntress
-- **Age**: 20 years old
-- **Height**: 168 cm
-- **Build**: Athletic
-- **Hair**: Short chestnut-brown
-- **Eyes**: Warm brown
-- **Relation**: Twin sister of Draco Noir (older by 6 minutes)
+- Full Name: Draco Abie (Abielle)
+- Class: Marksman
+- Nickname: Gale Huntress
+- Age: 20 years old
+- Height: 168 cm
+- Build: Athletic
+- Hair: Short chestnut-brown
+- Eyes: Warm brown
+- Relation: Twin sister of Draco Noir (older by 6 minutes)
 
 ## Appearance
 
@@ -23,8 +23,8 @@
 - High leather boots
 
 ### Equipment
-- **Primary**: Stormcaller Bow
-- **Secondary**: Zephyr & Tempest Daggers
+- Primary: Stormcaller Bow
+- Secondary: Zephyr and Tempest Daggers
 
 ## Mana Affinities
 
@@ -61,16 +61,16 @@
 
 This directory should contain the following character sheet images:
 
-1. draco-abie-full-sheet.png - Full character sheet with equipment (front, back, left, right views)
-2. draco-abie-equipment.png - Equipment breakdown (leather corset, shoulder harness, utility belt, thigh strap, quiver)
-3. draco-abie-body-reference.png - Body reference (undergarments, all views)
-4. draco-abie-multi-view.png - Simplified multi-view character sheet
+1. draco-abie-full-sheet.png - Full character sheet with equipment
+2. draco-abie-equipment.png - Equipment breakdown
+3. draco-abie-body-reference.png - Body reference
+4. draco-abie-multi-view.png - Multi-view character sheet
 
 ## Integration Notes
 
-- Character preset is defined in client/src/utils/constants.ts
-- Character selection is available in client/src/components/MainMenu.tsx
-- Character rendering uses the HonkaiCharacter component in client/src/components/GameScene.tsx
+- Character preset defined in client/src/utils/constants.ts
+- Character selection available in client/src/components/MainMenu.tsx
+- Character rendering uses HonkaiCharacter component in GameScene.tsx
 - Character type: dracoAbie
 - Model: dracoAbie (3D model to be created)
 - Color: 0x8b4513 (saddle brown)

@@ -230,7 +230,6 @@ interface GameSceneProps {
   onBackToMenu: () => void;
   playerName: string;
   serverUrl: string;
-  characterType?: CharacterType;
 }
 
 export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProps) {
