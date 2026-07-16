@@ -1,4 +1,4 @@
-// url: https://raw.githubusercontent.com/draco-mordred/mana-storm/main/client/src/utils/constants.ts
+X// url: https://raw.githubusercontent.com/draco-mordred/mana-storm/main/client/src/utils/constants.ts
 
 import type { CharacterPreset, Skill, CharacterType } from '../types';
 
@@ -149,23 +149,6 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     hairStyle: 
 'long',
     age: 'adult',
-  },
-  dracoAbie: {
-    type: 'dracoAbie',
-    name: 'Draco Abie',
-    baseHealth: 95,
-    baseMana: 140,
-    baseAttack: 30,
-    baseDefense: 12,
-    baseSpeed: 15,
-    skills: ['gale-arrow', 'thunder-fang', 'sky-piercer'],
-    model: 'dracoAbie',
-    color: 0x8b4513,
-    description: 'Elite Marksman and Mana Ranger',
-    outfit: 'ranger_coat',
-    hairColor: 0x8b4513,
-    hairStyle: 'short',
-    age: 'young_adult'
   },
 };
 
