@@ -126,6 +126,7 @@ function HonkaiCharacter({ player, gradientTexture }) {
       case 'stealth_suit': return 0x003322;
       case 'tactical_gear': return 0x330066;
       case 'medical_armor': return 0x00ffff;
+      case 'ranger_coat': return 0x8b4513;
       default: return preset.color || 0x444455;
     }
   };
@@ -190,63 +191,6 @@ s: '3px' }}>
 
 // Menu Component
 function MainMenu({ onStartGame }) {
-  const [selectedChar, setSelectedChar] = useState('rudeus');
-  const charPresets = CHARACTER_PRESETS;
-
-  return (
-    <div style={{
-      width: '100vw',
-      height: '100vh',
-      position: 'relative',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundImage: 'url(' + homeMenuBg + ')',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center'
-    }}>
-      <img src={manaStormLogo} alt="Mana Storm" style={{
-        width: '60%',
-        maxWidth: '600px',
-        marginBottom: '40px'
-      }} />
-      
-      <div style={{ display: 'flex', gap: '20px', marginBottom: '30px', flexWrap: 'wrap', justifyContent: 'center' }}>
-        {Object.entries(charPresets).map(([key, preset]) => (
-          <div key={key} onClick={() => setSelectedChar(key)} style={{
-            cursor: 'pointer',
-            padding: '10px',
-            border: selectedChar === key ? '3px solid #00aaff' : '2px solid transparent',
-            borderRadius: '8px',
-            background: 'rgba(0,0,0,0.5)',
-            transition: 'all 0.3s ease'
-          }}>
-            <div style={{ color: '#00ffff', fontSize: '14px', textAlign: 'center' }}>{preset.name}</div>
-            <div style={{ color: '#00aaff', fontSize: '12px', textAlign: 'center' }}>{preset.class || preset.type}</div>
-          </div>
-        ))}
-      </div>
-      
-      <button onClick={() => {
-        onStartGame();
-        setSelectedCharacter(selectedChar);
-      }} style={{
-        padding: '15px 40px',
-        fontSize: '24px',
-        background: 'rgba(0, 170, 255, 0.8)',
-        color: '#ffffff',
-        border: '2px solid #00aaff',
-        borderRadius: '10px',
-        cursor: 'pointer',
-        fontWeight: 'bold',
-        boxShadow: '0 0 20px rgba(0, 170, 255, 0.5)'
-      }}>
-        START GAME
-      </button>
-    </div>
-  );
-}) {
   return (
     <div style={{
       width: '100vw',
@@ -286,6 +230,7 @@ interface GameSceneProps {
   onBackToMenu: () => void;
   playerName: string;
   serverUrl: string;
+  characterType?: CharacterType;
 }
 
 export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProps) {
@@ -299,21 +244,17 @@ export function GameScene({ onBackToMenu, playerName, serverUrl }: GameSceneProp
   });
   const [cameraMode, setCameraMode] = useState('third-person');
   const [inMenu, setInMenu] = useState(true);
-  const [selectedCharacter, setSelectedCharacter] = useState(characterType || 'rudeus');
   const gradientTexture = useMemo(() => createGradientTexture(), []);
   const { touchControls, isMobile } = useMobileControls(canvasRef);
 
-  const startGame = () => {
-    setInMenu(false);
-    // Character is already selected via selectedCharacter state
-  };
+  const startGame = () => setInMenu(false);
 
   useEffect(() => {
     const newSocket = io(serverUrl);
     setSocket(newSocket);
     newSocket.on('connect', () => {
    
-   newSocket.emit('join', { playerName, characterType: 'rudeus', area: 'Buena Village' });
+   newSocket.emit('join', { playerName, characterType: characterType || 'rudeus', area: 'Buena Village' });
     });
     newSocket.on('gameState', (state) => setGameState(state));
     newSocket.on('disconnect', () => setGameState(p => ({ ...p, isConnected: false })));
