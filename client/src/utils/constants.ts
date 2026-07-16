@@ -71,7 +71,8 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     baseAttack: 25,
     baseDefense: 25,
     baseSpeed: 8,
-    skills: ['plasma-slash', 'energy-shield', 'ion-cannon', 'overcharge'],
+    skills: ['plasma-slash', 'energy-shield', 'ion-cannon', 'overcharge'
+],
     model: 'warrior',
     color: 0x222233,
     description: 'A cybernetically enhanced warrior with energy weapons',
@@ -131,6 +132,36 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     hairStyle: 'ponytail',
     age: 'adult',
   },
+  dracoAbie: {
+    type: 'dracoAbie',
+    name: 'Draco Abie',
+    baseHealth: 95,
+    baseMana: 140,
+    baseAttack: 30,
+    baseDefense: 12,
+    baseSpeed: 15,
+    skills: ['gale-arrow', 'thunder-fang', 'sky-piercer', 'tempest-volley', 'cyclone-shot', 'storm-rain', 'falcon-dive', 'gale-dance', 'lightning-cross', 'phantom-step', 'storm-waltz'],
+    model: 'dracoAbie',
+    color: 0x8b4513,
+    description: 'Elite Marksman and Mana Ranger. Master of Wind and Lightning magic. Twin sister of Draco Noir. Fearless leader with tactical genius.',
+    outfit: 'ranger_coat',
+    hairColor: 0x8b4513,
+    hairStyle: 'short',
+    age: 'young_adult',
+    manaAffinity: {
+      wind: 5,
+      lightning: 5,
+      water: 4
+    },
+    equipment: {
+      primary: 'stormcaller_bow',
+      secondary: ['zephyr_dagger', 'tempest_dagger']
+    },
+    class: 'marksman',
+    nickname: 'Gale Huntress',
+    twinBrother: 'dracoNoir'
+  },
+
   healer: {
     type: 'healer',
     name: 'Bio-Synth',
@@ -145,7 +176,8 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     description: 'A bio-engineered support specialist with healing nanites',
     outfit: 'medical_armor',
     hairColor: 0xffd700,
-    hairStyle: 'long',
+    hairStyle: 
+'long',
     age: 'adult',
   },
 };
@@ -168,7 +200,8 @@ export const SKILLS: Record<string, Skill> = {
   
   // Mage Skills
   'quantum-blast': { id: 'quantum-blast', name: 'Quantum Blast', description: 'Releases unstable quantum energy', type: 'attack', damage: 55, manaCost: 30, cooldown: 4000, range: 22 },
-  'void-shield': { id: 'void-shield', name: 'Void Shield', description: 'Creates a shield that absorbs energy attacks', type: 'defense', manaCost: 25, cooldown: 7000, range: 1 },
+  'void-shield': { id: 'void-shield', name: 'Void Shield', description: 'Creates a shield that absorbs energy attacks', type: 'defense', man
+aCost: 25, cooldown: 7000, range: 1 },
   'gravity-well': { id: 'gravity-well', name: 'Gravity Well', description: 'Creates a gravity field that pulls enemies in', type: 'utility', manaCost: 40, cooldown: 10000, range: 15 },
   'phase-shift': { id: 'phase-shift', name: 'Phase Shift', description: 'Become intangible for a short period', type: 'utility', manaCost: 35, cooldown: 18000, range: 1 },
   
@@ -185,7 +218,8 @@ export const SKILLS: Record<string, Skill> = {
   'orbital-barrage': { id: 'orbital-barrage', name: 'Orbital Barrage', description: 'Calls down an orbital strike', type: 'attack', damage: 45, manaCost: 35, cooldown: 15000, range: 25 },
   
   // Healer Skills
-  'nano-regeneration': { id: 'nano-regeneration', name: 'Nano Regeneration', description: 'Heals over time with nanobots', type: 'heal', healAmount: 60, manaCost: 30, cooldown: 5000, range: 15 },
+  'nano-regeneration': { id: 'nano-regeneration', name: 'Nano Regeneration', descripti
+on: 'Heals over time with nanobots', type: 'heal', healAmount: 60, manaCost: 30, cooldown: 5000, range: 15 },
   'stasis-field': { id: 'stasis-field', name: 'Stasis Field', description: 'Puts allies in protective stasis', type: 'defense', manaCost: 35, cooldown: 15000, range: 12 },
   'neural-boost': { id: 'neural-boost', name: 'Neural Boost', description: 'Enhances ally reflexes and speed', type: 'utility', manaCost: 25, cooldown: 10000, range: 15 },
   'bio-purge': { id: 'bio-purge', name: 'Bio Purge', description: 'Removes toxins and debuffs', type: 'utility', manaCost: 20, cooldown: 8000, range: 12 },
@@ -242,7 +276,8 @@ export const TOON_GRADIENT = {
 // 🏡 BUENA VILLAGE MAP DATA (Sci-Fi Retrofit)
 // ============================================
 export const BUENA_VILLAGE = {
-  name: 'Buena Village',
+  name: 'Buen
+a Village',
   description: 'A peaceful village retrofitted with advanced technology',
   spawnPoint: { x: 0, y: 0, z: 0 },
   size: { width: 80, height: 80 },
@@ -312,7 +347,8 @@ export const BUENA_VILLAGE = {
   trees: [
     { position: { x: 15, y: 0, z: 0 }, type: 'cyber-tree', height: 6, radius: 1, color: 0x004422, emissive: 0x008844 },
     { position: { x: -15, y: 0, z: 0 }, type: 'cyber-tree', height: 6, radius: 1, color: 0x004422, emissive: 0x008844 },
-    { position: { x: 0, y: 0, z: 20 }, type: 'cyber-tree', height: 6, radius: 1, color: 0x004422, emissive: 0x008844 },
+    { position: { x: 0, y: 0, z: 20 }, type: '
+cyber-tree', height: 6, radius: 1, color: 0x004422, emissive: 0x008844 },
     { position: { x: 20, y: 0, z: 15 }, type: 'crystal-tree', height: 8, radius: 1.2, color: 0x442266, emissive: 0x8844cc },
     { position: { x: -20, y: 0, z: 15 }, type: 'crystal-tree', height: 8, radius: 1.2, color: 0x442266, emissive: 0x8844cc },
     { position: { x: 18, y: 0, z: -10 }, type: 'cyber-tree', height: 6, radius: 1, color: 0x004422, emissive: 0x008844 },
@@ -333,7 +369,8 @@ export const BUENA_VILLAGE = {
   ],
   gates: [
     { position: { x: 0, z: 25 }, width: 4, height: 3, color: 0x444455, emissive: 0x00aaff, emissiveIntensity: 0.2 },
-    { position: { x: 25, z: 0 }, width: 4, height: 3, color: 0x444455, emissive: 0x00aaff, emissiveIntensity: 0.2 },
+    { position: { x: 25, z: 0 }, width: 4, height: 3, color: 0x444455, emissive: 0x00aaff, emissiveIntensit
+y: 0.2 },
   ],
   // Sci-Fi decorations
   sciFiDecorations: [
@@ -377,7 +414,8 @@ export const ASURA_KINGDOM = {
       color: 0x222233,
       roofColor: 0x0066aa,
       emissive: 0x4488cc,
-      emissiveIntensity: 0.15,
+      emissiveInte
+nsity: 0.15,
     },
     {
       id: 'noble-mansion-2',
@@ -424,7 +462,8 @@ export const ASURA_KINGDOM = {
   ],
   paths: [
     { start: { x: 0, z: 0 }, end: { x: 30, z: 20 }, width: 3, color: 0x111122, emissive: 0x0066aa, emissiveIntensity: 0.15 },
-    { start: { x: 0, z: 0 }, end: { x: -30, z: 20 }, width: 3, color: 0x111122, emissive: 0x0066aa, emissiveIntensity: 0.15 },
+    { start: { x: 0, z: 0 }, end: { x: -30, z: 20 }, width: 3, color: 0x111122, emissive: 0x0066aa, emissi
+veIntensity: 0.15 },
     { start: { x: 0, z: 0 }, end: { x: 0, z: 40 }, width: 3, color: 0x111122, emissive: 0x0066aa, emissiveIntensity: 0.15 },
     { start: { x: 0, z: 0 }, end: { x: 0, z: -40 }, width: 3, color: 0x111122, emissive: 0x0066aa, emissiveIntensity: 0.15 },
     { start: { x: 30, z: 20 }, end: { x: 50, z: 30 }, width: 2, color: 0x111122, emissive: 0x0066aa, emissiveIntensity: 0.1 },
@@ -457,7 +496,8 @@ export const MAGIC_CITY_SHARIA = {
       name: 'Quantum Academy',
       type: 'academy',
       position: { x: 0, y: 0, z: -30 },
-      size: { width: 40, depth: 30, height: 20 },
+      size: { width: 40
+, depth: 30, height: 20 },
       color: 0x004488,
       roofColor: 0x0066cc,
       emissive: 0x44aacc,
@@ -515,7 +555,8 @@ export const MAGIC_CITY_SHARIA = {
     { position: { x: 0, y: 0, z: 40 }, type: 'energy-spire', height: 12, radius: 0.8, color: 0xff00aa, emissive: 0xff44cc },
     { position: { x: 40, y: 0, z: 10 }, type: 'crystal-tree', height: 10, radius: 1.2, color: 0x662288, emissive: 0xcc44aa },
     { position: { x: -40, y: 0, z: 10 }, type: 'crystal-tree', height: 10, radius: 1.2, color: 0x662288, emissive: 0xcc44aa },
-    { position: { x: 15, y: 0, z: -70 }, type: 'energy-spire', height: 12, radius: 0.8, color: 0x00ffff, emissive: 0x44ffff },
+    { position: { x: 15, y: 0, z: -70 }, type: 'energy-spire', height: 12, r
+adius: 0.8, color: 0x00ffff, emissive: 0x44ffff },
     { position: { x: -15, y: 0, z: -70 }, type: 'energy-spire', height: 12, radius: 0.8, color: 0x00ffff, emissive: 0x44ffff },
   ],
   paths: [
@@ -537,7 +578,8 @@ export const MAGIC_CITY_SHARIA = {
     { type: 'floating-platform', position: { x: 20, y: 3, z: -15 }, size: { width: 8, depth: 8, height: 0.3 }, color: 0x222244, emissive: 0x4466cc, area: 'magic-city-sharia' },
     { type: 'energy-crystal', position: { x: 0, y: 2, z: -50 }, color: 0xff00ff, size: 3, glow: true, area: 'magic-city-sharia' },
     { type: 'neon-tube', start: { x: -30, y: 4, z: 0 }, end: { x: 30, y: 4, z: 0 }, color: 0xff00ff, width: 0.2, area: 'magic-city-sharia' },
-    { type: 'energy-shield', position: { x: 0, y: 0, z: -60 }, radius: 15, height: 45, color: 0x4400aa, area: 'magic-city-sharia' },
+    { type: 'energy-shield', position: { x: 0, y:
+ 0, z: -60 }, radius: 15, height: 45, color: 0x4400aa, area: 'magic-city-sharia' },
   ],
 };
 
@@ -606,7 +648,8 @@ export const NPCS = [
     id: 'training-droid',
     name: 'Combat Trainer',
     characterType: 'warrior',
-    position: { x: 0, y: 0, z: -35 },
+    position: { x: 0, y: 0, z: -
+35 },
     area: 'asura-kingdom',
     dialogue: ['Test your skills in the Combat Simulator.', 'Only the strongest can join our ranks.'],
     type: 'villager',
@@ -679,7 +722,8 @@ export const MONSTERS = [
     health: 70,
     attack: 18,
     defense: 12,
-    xpReward: 35,
+    xpRe
+ward: 35,
     aggressive: true,
   },
   {
@@ -780,7 +824,8 @@ export const MONSTERS = [
 
 // ============================================
 // 🎯 QUEST MARKERS
-// ============================================
+// ====================================
+========
 export const QUEST_MARKERS = [
   // Buena Village quests
   {
@@ -864,7 +909,8 @@ export const QUEST_MARKERS = [
     area: 'magic-city-sharia',
     type: 'side',
     completed: false,
-    questId: 'explore-tower',
+    questId: 'explo
+re-tower',
   },
 ];
 
@@ -878,43 +924,6 @@ export const CHARACTER_VISUALS = {
     body: { geometry: 'capsule', radius: 0.3, height: 0.8, color: 0x4a90d9, position: { x: 0, y: 0.4, z: 0 } },
     sleeves: { 
       left: { geometry: 'capsule', radius: 0.15, height: 0.6, color: 0x4a90d9, position: { x: -0.35, y: 0.7, z: 0 }, rotation: { x: 0, y: 0, z: Math.PI / 2 } }, 
-      right: { geometry: 'capsule', radius: 0.15, height: 0.6, color: 0x4a90d9, position: { x: 0.35, y: 0.7, z: 0 }, rotation: { x: 0, y: 0, z: Math.PI / 2 } } 
-    },
-    staff: { geometry: 'capsule', radius: 0.05, height: 1.5, color: 0x8b4513, position: { x: 0.2, y: 0.2, z: 0 }, rotation: { x: 0.2, y: 0, z: 0 } },
-    cameraOffset: { x: 0, y: 1.6, z: 3 },
-    // Sci-fi additions
-    cybernetics: {
-      leftArm: { geometry: 'box', width: 0.1, height: 0.4, depth: 0.1, color: 0x00aaff, emissive: 0x44ccff, position: { x: -0.3, y: 0.6, z: 0 } },
-      rightArm: { geometry: 'box', width: 0.1, height: 0.4, depth: 0.1, color: 0x00aaff, emissive: 0x44ccff, position: { x: 0.3, y: 0.6, z: 0 } },
-    },
-  },
-  warrior: {
-    head: { geometry: 'sphere', radius: 0.25, color: 0xffccaa, position: { x: 0, y: 1.05, z: 0 } },
-    hair: { geometry: 'capsule', radius: 0.3, height: 0.3, color: 0x444455, position: { x: 0, y: 1.2, z: 0 } },
-    body: { geometry: 'capsule', radius: 0.35, height: 0.85, color: 0x222233, position: { x: 0, y: 0.425, z: 0 } },
-    armor: { 
-      chest: { geometry: 'box', width: 0.5, height: 0.4, depth: 0.3, color: 0x333344, position: { x: 0, y: 0.6, z: 0 } }, 
-      shoulders: { geometry: 'box', width: 0.4, height: 0.2, depth: 0.3, color: 0x333344, position: { x: 0, y: 0.85, z: 0 } } 
-    },
-  },
-  mage: {
-    head: { geometry: 'sphere', radius: 0.25, color: 0xffccaa, position: { x: 0, y: 1.05, z: 0 } },
-    hair: { geometry: 'capsule', radius: 0.3, height: 0.35, color: 0xffffff, position: { x: 0, y: 1.25, z: 0 } },
-    body: { geometry: 'capsule', radius: 0.32, height: 0.8, color: 0x0066ff, position: { x: 0, y: 0.4, z: 0 } },
-  },
-  rogue: {
-    head: { geometry: 'sphere', radius: 0.25, color: 0xffccaa, position: { x: 0, y: 1.05, z: 0 } },
-    hair: { geometry: 'capsule', radius: 0.3, height: 0.25, color: 0x228b22, position: { x: 0, y: 1.2, z: 0 } },
-    body: { geometry: 'capsule', radius: 0.3, height: 0.75, color: 0x003322, position: { x: 0, y: 0.4, z: 0 } },
-  },
-  archer: {
-    head: { geometry: 'sphere', radius: 0.25, color: 0xffccaa, position: { x: 0, y: 1.05, z: 0 } },
-    hair: { geometry: 'capsule', radius: 0.3, height: 0.25, color: 0xdaa520, position: { x: 0, y: 1.2, z: 0 } },
-    body: { geometry: 'capsule', radius: 0.32, height: 0.78, color: 0x330066, position: { x: 0, y: 0.4, z: 0 } },
-  },
-  healer: {
-    head: { geometry: 'sphere', radius: 0.25, color: 0xffccaa, position: { x: 0, y: 1.05, z: 0 } },
-    hair: { geometry: 'capsule', radius: 0.3, height: 0.35, color: 0xffd700, position: { x: 0, y: 1.25, z: 0 } },
-    body: { geometry: 'capsule', radius: 0.32, height: 0.8, color: 0x00ffff, position: { x: 0, y: 0.4, z: 0 } },
-  },
-};
+      right: { geometry: 'capsule', radius: 0.15
+
+... [Content truncated]
