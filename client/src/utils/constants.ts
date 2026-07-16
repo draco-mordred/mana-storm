@@ -157,33 +157,23 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     baseDefense: 12,
     baseSpeed: 15,
     skills: [
-      'gale-arrow',
-      'thunder-fang',
-      'sky-piercer',
-      'tempest-volley',
-      'cyclone-shot',
-      'storm-rain',
-      'falcon-dive',
-      'gale-dance',
-      'lightning-cross',
-      'phantom-step',
-      'aqua-shot',
-      'hydro-blast',
-      'wind-rush',
-      'storm-barrage'
+      'gale-arrow', 'thunder-fang', 'sky-piercer', 'tempest-volley',
+      'cyclone-shot', 'storm-rain', 'falcon-dive', 'gale-dance',
+      'lightning-cross', 'phantom-step', 'water-veil', 'tidal-surge',
+      'aqua-prison', 'stormcaller-barrage'
     ],
     model: 'abie',
     color: 0x8B4513,
-    description: 'High-mobility marksman with Wind, Lightning, and Water mana affinities. Twin sister of Draco Noir. Wields Stormcaller bow and Zephyr & Tempest dual blades.',
-    outfit: 'leather_corset_marksman',
+    class: 'Marksman',
+    description: 'High-mobility marksman with Wind, Lightning, and Water mana affinities. Twin brother of Draco Noir. Wields Stormcaller bow and Zephyr & Tempest dual blades. Wears leather corset outfit.',
+    outfit: 'leather_corset',
     hairColor: 0x8B4513,
     hairStyle: 'short',
     age: 'adult',
-    class: 'Marksman',
     manaAffinity: { wind: 5, lightning: 5, water: 4 },
     equipment: {
-      primary: 'Stormcaller Bow',
-      secondary: 'Zephyr & Tempest Dual Blades',
+      weapon: 'Stormcaller Bow',
+      secondary: 'Zephyr & Tempest dual blades',
       armor: 'Leather Corset Outfit'
     },
   },
@@ -193,62 +183,371 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
 // ⚔️ SKILLS DATABASE (Honkai Sci-Fi Style)
 // ============================================
 export const SKILLS: Record<string, Skill> = {
-  // Rudeus Skills
-  'fireball': { id: 'fireball', name: 'Plasma Fireball', description: 'Launches a ball of ionized plasma', type: 'attack', damage: 45, manaCost: 25, cooldown: 3000, range: 18 },
-  'ice-shield': { id: 'ice-shield', name: 'Cryo Barrier', description: 'Creates a protective cryogenic shield', type: 'defense', manaCost: 20, cooldown: 8000, range: 1 },
-  'heal': { id: 'heal', name: 'Nano Heal', description: 'Deploys healing nanobots to a target', type: 'heal', healAmount: 45, manaCost: 25, cooldown: 3000, range: 12 },
-  'teleport': { id: 'teleport', name: 'Quantum Shift', description: 'Instantly teleport to a nearby location', type: 'utility', manaCost: 30, cooldown: 15000, range: 25 },
-  
-  // Warrior Skills
-  'plasma-slash': { id: 'plasma-slash', name: 'Plasma Slash', description: 'A powerful energy-infused melee strike', type: 'attack', damage: 30, manaCost: 15, cooldown: 2000, range: 2.5 },
-  'energy-shield': { id: 'energy-shield', name: 'Energy Shield', description: 'Creates a protective energy barrier', type: 'defense', manaCost: 20, cooldown: 6000, range: 1 },
-  'ion-cannon': { id: 'ion-cannon', name: 'Ion Cannon', description: 'Fires a devastating ion beam', type: 'attack', damage: 50, manaCost: 35, cooldown: 8000, range: 20 },
-  'overcharge': { id: 'overcharge', name: 'Overcharge', description: 'Boosts attack power temporarily', type: 'utility', manaCost: 25, cooldown: 12000, range: 1 },
-  
-  // Mage Skills
-  'quantum-blast': { id: 'quantum-blast', name: 'Quantum Blast', description: 'Releases unstable quantum energy', type: 'attack', damage: 55, manaCost: 30, cooldown: 4000, range: 22 },
-  'void-shield': { id: 'void-shield', name: 'Void Shield', description: 'Creates a shield that absorbs energy attacks', type: 'defense', manaCost: 25, cooldown: 7000, range: 1 },
-  'gravity-well': { id: 'gravity-well', name: 'Gravity Well', description: 'Creates a gravity field that pulls enemies in', type: 'utility', manaCost: 40, cooldown: 10000, range: 15 },
-  'phase-shift': { id: 'phase-shift', name: 'Phase Shift', description: 'Become intangible for a short period', type: 'utility', manaCost: 35, cooldown: 18000, range: 1 },
-  
-  // Rogue Skills
-  'hologram-cloak': { id: 'hologram-cloak', name: 'Hologram Cloak', description: 'Creates a holographic decoy', type: 'utility', manaCost: 20, cooldown: 10000, range: 1 },
-  'neural-disruptor': { id: 'neural-disruptor', name: 'Neural Disruptor', description: 'Disables enemy targeting systems', type: 'attack', damage: 25, manaCost: 20, cooldown: 6000, range: 10 },
-  'phase-dagger': { id: 'phase-dagger', name: 'Phase Dagger', description: 'A dagger that phases through defenses', type: 'attack', damage: 40, manaCost: 15, cooldown: 3000, range: 2 },
-  'quantum-blink': { id: 'quantum-blink', name: 'Quantum Blink', description: 'Short-range teleportation', type: 'utility', manaCost: 25, cooldown: 8000, range: 10 },
-  
-  // Archer Skills
-  'photon-arrow': { id: 'photon-arrow', name: 'Photon Arrow', description: 'Fires a high-energy photon arrow', type: 'attack', damage: 35, manaCost: 20, cooldown: 2500, range: 30 },
-  'black-hole-trap': { id: 'black-hole-trap', name: 'Black Hole Trap', description: 'Creates a gravity trap', type: 'utility', manaCost: 30, cooldown: 12000, range: 8 },
-  'precision-strike': { id: 'precision-strike', name: 'Precision Strike', description: 'A perfectly aimed critical shot', type: 'attack', damage: 70, manaCost: 40, cooldown: 10000, range: 35 },
-  'orbital-barrage': { id: 'orbital-barrage', name: 'Orbital Barrage', description: 'Calls down an orbital strike', type: 'attack', damage: 45, manaCost: 35, cooldown: 15000, range: 25 },
-  
-  // Healer Skills
-  'nano-regeneration': { id: 'nano-regeneration', name: 'Nano Regeneration', description: 'Heals over time with nanobots', type: 'heal', healAmount: 60, manaCost: 30, cooldown: 5000, range: 15 },
-  'stasis-field': { id: 'stasis-field', name: 'Stasis Field', description: 'Puts allies in protective stasis', type: 'defense', manaCost: 35, cooldown: 15000, range: 12 },
-  'neural-boost': { id: 'neural-boost', name: 'Neural Boost', description: 'Enhances ally reflexes and speed', type: 'utility', manaCost: 25, cooldown: 10000, range: 15 },
-  'bio-purge': { id: 'bio-purge', name: 'Bio Purge', description: 'Removes toxins and debuffs', type: 'utility', manaCost: 20, cooldown: 8000, range: 12 },
-  
-  // Draco Abielle Skills
-  'gale-arrow': { id: 'gale-arrow', name: 'Gale Arrow', description: 'Wind compresses around an arrow, tripling speed and armor penetration', type: 'attack', damage: 45, manaCost: 20, cooldown: 3000, range: 35 },
-  'thunder-fang': { id: 'thunder-fang', name: 'Thunder Fang', description: 'Lightning envelops an arrow before release, exploding on impact', type: 'attack', damage: 50, manaCost: 25, cooldown: 4000, range: 30 },
-  'sky-piercer': { id: 'sky-piercer', name: 'Sky Piercer', description: 'An arrow accelerated beyond the speed of sound, producing a sonic shockwave', type: 'attack', damage: 65, manaCost: 35, cooldown: 8000, range: 40 },
-  'tempest-volley': { id: 'tempest-volley', name: 'Tempest Volley', description: 'Hundreds of mana arrows rain across the battlefield', type: 'attack', damage: 35, manaCost: 40, cooldown: 12000, range: 30 },
-  'cyclone-shot': { id: 'cyclone-shot', name: 'Cyclone Shot', description: 'Creates a miniature tornado on impact', type: 'attack', damage: 40, manaCost: 30, cooldown: 6000, range: 25 },
-  'storm-rain': { id: 'storm-rain', name: 'Storm Rain', description: 'Fires dozens of arrows into the sky, redirected onto targets from impossible angles', type: 'attack', damage: 55, manaCost: 45, cooldown: 15000, range: 40 },
-  'falcon-dive': { id: 'falcon-dive', name: 'Falcon Dive', description: 'Launches herself with Wind magic while firing continuously', type: 'utility', manaCost: 30, cooldown: 10000, range: 20 },
-  'gale-dance': { id: 'gale-dance', name: 'Gale Dance', description: 'Extremely rapid slashes enhanced by Wind', type: 'attack', damage: 25, manaCost: 15, cooldown: 2000, range: 2 },
-  'lightning-cross': { id: 'lightning-cross', name: 'Lightning Cross', description: 'Two crossing strikes infused with lightning', type: 'attack', damage: 35, manaCost: 20, cooldown: 4000, range: 2 },
-  'phantom-step': { id: 'phantom-step', name: 'Phantom Step', description: 'Uses compressed wind for instantaneous repositioning', type: 'utility', manaCost: 20, cooldown: 5000, range: 10 },
-  'aqua-shot': { id: 'aqua-shot', name: 'Aqua Shot', description: 'Water-infused arrow that creates splashing waves on impact', type: 'attack', damage: 38, manaCost: 22, cooldown: 3500, range: 30 },
-  'hydro-blast': { id: 'hydro-blast', name: 'Hydro Blast', description: 'Creates a powerful water jet that pushes enemies back', type: 'attack', damage: 42, manaCost: 28, cooldown: 5000, range: 20 },
-  'wind-rush': { id: 'wind-rush', name: 'Wind Rush', description: 'Dash forward with wind propulsion, damaging enemies in path', type: 'attack', damage: 30, manaCost: 18, cooldown: 4000, range: 15 },
-  'storm-barrage': { id: 'storm-barrage', name: 'Storm Barrage', description: 'Unleashes a barrage of wind, lightning, and water arrows simultaneously', type: 'attack', damage: 50, manaCost: 40, cooldown: 12000, range: 35 },
+  'fireball': {
+    id: 'fireball',
+    name: 'Plasma Fireball',
+    description: 'Launches a ball of ionized plasma',
+    type: 'attack',
+    damage: 45,
+    manaCost: 25,
+    cooldown: 3000,
+    range: 18
+  },
+  'ice-shield': {
+    id: 'ice-shield',
+    name: 'Cryo Barrier',
+    description: 'Creates a protective cryogenic shield',
+    type: 'defense',
+    manaCost: 20,
+    cooldown: 8000,
+    range: 1
+  },
+  'heal': {
+    id: 'heal',
+    name: 'Nano Heal',
+    description: 'Deploys healing nanobots to a target',
+    type: 'heal',
+    healAmount: 45,
+    manaCost: 25,
+    cooldown: 3000,
+    range: 12
+  },
+  'teleport': {
+    id: 'teleport',
+    name: 'Quantum Shift',
+    description: 'Instantly teleport to a nearby location',
+    type: 'utility',
+    manaCost: 30,
+    cooldown: 15000,
+    range: 25
+  },
+  'plasma-slash': {
+    id: 'plasma-slash',
+    name: 'Plasma Slash',
+    description: 'A powerful energy-infused melee strike',
+    type: 'attack',
+    damage: 30,
+    manaCost: 15,
+    cooldown: 2000,
+    range: 2.5
+  },
+  'energy-shield': {
+    id: 'energy-shield',
+    name: 'Energy Shield',
+    description: 'Creates a protective energy barrier',
+    type: 'defense',
+    manaCost: 20,
+    cooldown: 6000,
+    range: 1
+  },
+  'ion-cannon': {
+    id: 'ion-cannon',
+    name: 'Ion Cannon',
+    description: 'Fires a devastating ion beam',
+    type: 'attack',
+    damage: 50,
+    manaCost: 35,
+    cooldown: 8000,
+    range: 20
+  },
+  'overcharge': {
+    id: 'overcharge',
+    name: 'Overcharge',
+    description: 'Boosts attack power temporarily',
+    type: 'utility',
+    manaCost: 25,
+    cooldown: 12000,
+    range: 1
+  },
+  'quantum-blast': {
+    id: 'quantum-blast',
+    name: 'Quantum Blast',
+    description: 'Releases unstable quantum energy',
+    type: 'attack',
+    damage: 55,
+    manaCost: 30,
+    cooldown: 4000,
+    range: 22
+  },
+  'void-shield': {
+    id: 'void-shield',
+    name: 'Void Shield',
+    description: 'Creates a shield that absorbs energy attacks',
+    type: 'defense',
+    manaCost: 25,
+    cooldown: 7000,
+    range: 1
+  },
+  'gravity-well': {
+    id: 'gravity-well',
+    name: 'Gravity Well',
+    description: 'Creates a gravity field that pulls enemies in',
+    type: 'utility',
+    manaCost: 40,
+    cooldown: 10000,
+    range: 15
+  },
+  'phase-shift': {
+    id: 'phase-shift',
+    name: 'Phase Shift',
+    description: 'Become intangible for a short period',
+    type: 'utility',
+    manaCost: 35,
+    cooldown: 18000,
+    range: 1
+  },
+  'hologram-cloak': {
+    id: 'hologram-cloak',
+    name: 'Hologram Cloak',
+    description: 'Creates a holographic decoy',
+    type: 'utility',
+    manaCost: 20,
+    cooldown: 10000,
+    range: 1
+  },
+  'neural-disruptor': {
+    id: 'neural-disruptor',
+    name: 'Neural Disruptor',
+    description: 'Disables enemy targeting systems',
+    type: 'attack',
+    damage: 25,
+    manaCost: 20,
+    cooldown: 6000,
+    range: 10
+  },
+  'phase-dagger': {
+    id: 'phase-dagger',
+    name: 'Phase Dagger',
+    description: 'A dagger that phases through defenses',
+    type: 'attack',
+    damage: 40,
+    manaCost: 15,
+    cooldown: 3000,
+    range: 2
+  },
+  'quantum-blink': {
+    id: 'quantum-blink',
+    name: 'Quantum Blink',
+    description: 'Short-range teleportation',
+    type: 'utility',
+    manaCost: 25,
+    cooldown: 8000,
+    range: 10
+  },
+  'photon-arrow': {
+    id: 'photon-arrow',
+    name: 'Photon Arrow',
+    description: 'Fires a high-energy photon arrow',
+    type: 'attack',
+    damage: 35,
+    manaCost: 20,
+    cooldown: 2500,
+    range: 30
+  },
+  'black-hole-trap': {
+    id: 'black-hole-trap',
+    name: 'Black Hole Trap',
+    description: 'Creates a gravity trap',
+    type: 'utility',
+    manaCost: 30,
+    cooldown: 12000,
+    range: 8
+  },
+  'precision-strike': {
+    id: 'precision-strike',
+    name: 'Precision Strike',
+    description: 'A perfectly aimed critical shot',
+    type: 'attack',
+    damage: 70,
+    manaCost: 40,
+    cooldown: 10000,
+    range: 35
+  },
+  'orbital-barrage': {
+    id: 'orbital-barrage',
+    name: 'Orbital Barrage',
+    description: 'Calls down an orbital strike',
+    type: 'attack',
+    damage: 45,
+    manaCost: 35,
+    cooldown: 15000,
+    range: 25
+  },
+  'nano-regeneration': {
+    id: 'nano-regeneration',
+    name: 'Nano Regeneration',
+    description: 'Heals over time with nanobots',
+    type: 'heal',
+    healAmount: 60,
+    manaCost: 30,
+    cooldown: 5000,
+    range: 15
+  },
+  'stasis-field': {
+    id: 'stasis-field',
+    name: 'Stasis Field',
+    description: 'Puts allies in protective stasis',
+    type: 'defense',
+    manaCost: 35,
+    cooldown: 15000,
+    range: 12
+  },
+  'neural-boost': {
+    id: 'neural-boost',
+    name: 'Neural Boost',
+    description: 'Enhances ally reflexes and speed',
+    type: 'utility',
+    manaCost: 25,
+    cooldown: 10000,
+    range: 15
+  },
+  'bio-purge': {
+    id: 'bio-purge',
+    name: 'Bio Purge',
+    description: 'Removes toxins and debuffs',
+    type: 'utility',
+    manaCost: 20,
+    cooldown: 8000,
+    range: 12
+  },
+  'gale-arrow': {
+    id: 'gale-arrow',
+    name: 'Gale Arrow',
+    description: 'Wind compresses around an arrow, tripling speed and armor penetration',
+    type: 'attack',
+    damage: 45,
+    manaCost: 20,
+    cooldown: 3000,
+    range: 35
+  },
+  'thunder-fang': {
+    id: 'thunder-fang',
+    name: 'Thunder Fang',
+    description: 'Lightning envelops an arrow before release, exploding on impact',
+    type: 'attack',
+    damage: 50,
+    manaCost: 25,
+    cooldown: 4000,
+    range: 30
+  },
+  'sky-piercer': {
+    id: 'sky-piercer',
+    name: 'Sky Piercer',
+    description: 'An arrow accelerated beyond the speed of sound, producing a sonic shockwave',
+    type: 'attack',
+    damage: 65,
+    manaCost: 35,
+    cooldown: 8000,
+    range: 40
+  },
+  'tempest-volley': {
+    id: 'tempest-volley',
+    name: 'Tempest Volley',
+    description: 'Hundreds of mana arrows rain across the battlefield',
+    type: 'attack',
+    damage: 35,
+    manaCost: 40,
+    cooldown: 12000,
+    range: 30
+  },
+  'cyclone-shot': {
+    id: 'cyclone-shot',
+    name: 'Cyclone Shot',
+    description: 'Creates a miniature tornado on impact',
+    type: 'attack',
+    damage: 40,
+    manaCost: 30,
+    cooldown: 6000,
+    range: 25
+  },
+  'storm-rain': {
+    id: 'storm-rain',
+    name: 'Storm Rain',
+    description: 'Fires dozens of arrows into the sky, redirected onto targets from impossible angles',
+    type: 'attack',
+    damage: 55,
+    manaCost: 45,
+    cooldown: 15000,
+    range: 40
+  },
+  'falcon-dive': {
+    id: 'falcon-dive',
+    name: 'Falcon Dive',
+    description: 'Launches herself with Wind magic while firing continuously',
+    type: 'utility',
+    manaCost: 30,
+    cooldown: 10000,
+    range: 20
+  },
+  'gale-dance': {
+    id: 'gale-dance',
+    name: 'Gale Dance',
+    description: 'Extremely rapid slashes enhanced by Wind',
+    type: 'attack',
+    damage: 25,
+    manaCost: 15,
+    cooldown: 2000,
+    range: 2
+  },
+  'lightning-cross': {
+    id: 'lightning-cross',
+    name: 'Lightning Cross',
+    description: 'Two crossing strikes infused with lightning',
+    type: 'attack',
+    damage: 35,
+    manaCost: 20,
+    cooldown: 4000,
+    range: 2
+  },
+  'phantom-step': {
+    id: 'phantom-step',
+    name: 'Phantom Step',
+    description: 'Uses compressed wind for instantaneous repositioning',
+    type: 'utility',
+    manaCost: 20,
+    cooldown: 5000,
+    range: 10
+  },
+  'water-veil': {
+    id: 'water-veil',
+    name: 'Water Veil',
+    description: 'Creates a protective barrier of swirling water that deflects projectiles',
+    type: 'defense',
+    manaCost: 25,
+    cooldown: 7000,
+    range: 1
+  },
+  'tidal-surge': {
+    id: 'tidal-surge',
+    name: 'Tidal Surge',
+    description: 'Summons a wave of water that pushes enemies back',
+    type: 'utility',
+    damage: 30,
+    manaCost: 30,
+    cooldown: 9000,
+    range: 15
+  },
+  'aqua-prison': {
+    id: 'aqua-prison',
+    name: 'Aqua Prison',
+    description: 'Encases targets in a sphere of water, immobilizing them',
+    type: 'utility',
+    manaCost: 35,
+    cooldown: 11000,
+    range: 12
+  },
+  'stormcaller-barrage': {
+    id: 'stormcaller-barrage',
+    name: 'Stormcaller Barrage',
+    description: 'Unleashes a rapid barrage of storm-infused arrows from the Stormcaller bow',
+    type: 'attack',
+    damage: 48,
+    manaCost: 40,
+    cooldown: 12000,
+    range: 35
+  },
 };
 
-// ============================================
-// 🗺️ WORLD CONSTANTS
-// ============================================
 export const GAME_CONSTANTS = {
   WORLD_SIZE: 1000,
   GRAVITY: -9.8,
@@ -262,9 +561,6 @@ export const GAME_CONSTANTS = {
   DEFAULT_MANA: 100,
 };
 
-// ============================================
-// 🎨 WORLD SETTINGS (Honkai Sci-Fi Style)
-// ============================================
 export const WORLD_SETTINGS = {
   groundColor: 0x0a0a1a,
   skyColor: 0x000033,
@@ -280,7 +576,6 @@ export const WORLD_SETTINGS = {
   toneMappingExposure: 1.2,
 };
 
-// Toon shading gradient texture for cel-shading
 export const TOON_GRADIENT = {
   stops: [
     { position: 0.0, color: 0x000000 },
@@ -292,9 +587,6 @@ export const TOON_GRADIENT = {
   ],
 };
 
-// ============================================
-// 🏡 BUENA VILLAGE MAP DATA (Sci-Fi Retrofit)
-// ============================================
 export const BUENA_VILLAGE = {
   name: 'Buena Village',
   description: 'A peaceful village retrofitted with advanced technology',
@@ -401,9 +693,6 @@ export const BUENA_VILLAGE = {
 
 export const BUena_VILLAGE = BUENA_VILLAGE;
 
-// ============================================
-// 🏰 ASURA KINGDOM MAP DATA (Sci-Fi)
-// ============================================
 export const ASURA_KINGDOM = {
   name: 'Asura Kingdom',
   description: 'A high-tech kingdom with towering spires and energy shields',
@@ -495,9 +784,6 @@ export const ASURA_KINGDOM = {
   ],
 };
 
-// ============================================
-// 🏙️ MAGIC CITY SHARIA MAP DATA (Sci-Fi)
-// ============================================
 export const MAGIC_CITY_SHARIA = {
   name: 'Magic City Sharia',
   description: 'A futuristic city of advanced magic and technology',
@@ -591,18 +877,14 @@ export const MAGIC_CITY_SHARIA = {
   ],
 };
 
-// ============================================
-// 👥 NPCS (Sci-Fi Style)
-// ============================================
 export const NPCS = [
-  // Buena Village NPCs
   {
     id: 'zenith',
     name: 'Zenith Greyrat',
     characterType: 'healer',
     position: { x: 0, y: 0, z: -12 },
     area: 'buena-village',
-    dialogue: ["Welcome to Buena Village, traveler!", 'Our village has embraced the new technologies.'],
+    dialogue: ["Welcome to Buena Village, traveler!", "Our village has embraced the new technologies."],
     type: 'villager',
   },
   {
@@ -611,7 +893,7 @@ export const NPCS = [
     characterType: 'warrior',
     position: { x: -8, y: 0, z: -3 },
     area: 'buena-village',
-    dialogue: ["The world has changed since the old days.", 'Technology and magic now walk hand in hand.'],
+    dialogue: ["The world has changed since the old days.", "Technology and magic now walk hand in hand."],
     type: 'villager',
   },
   {
@@ -629,17 +911,16 @@ export const NPCS = [
     characterType: 'rogue',
     position: { x: -12, y: 0, z: 8 },
     area: 'buena-village',
-    dialogue: ["Latest cybernetic enhancements!", 'Nano-tech, energy weapons, and more!'],
+    dialogue: ["Latest cybernetic enhancements!", "Nano-tech, energy weapons, and more!"],
     type: 'shopkeeper',
   },
-  // Asura Kingdom NPCs
   {
     id: 'asura-guard',
     name: 'Sentinel Droid',
     characterType: 'warrior',
     position: { x: 15, y: 0, z: 0 },
     area: 'asura-kingdom',
-    dialogue: ["Access granted.", 'The Quantum Citadel is ahead.'],
+    dialogue: ["Access granted.", "The Quantum Citadel is ahead."],
     type: 'guard',
   },
   {
@@ -648,7 +929,7 @@ export const NPCS = [
     characterType: 'mage',
     position: { x: 0, y: 0, z: 10 },
     area: 'asura-kingdom',
-    dialogue: ["Our energy shield protects the kingdom.", 'Quantum technology is the future.'],
+    dialogue: ["Our energy shield protects the kingdom.", "Quantum technology is the future."],
     type: 'villager',
   },
   {
@@ -657,17 +938,16 @@ export const NPCS = [
     characterType: 'warrior',
     position: { x: 0, y: 0, z: -35 },
     area: 'asura-kingdom',
-    dialogue: ["Test your skills in the Combat Simulator.", 'Only the strongest can join our ranks.'],
+    dialogue: ["Test your skills in the Combat Simulator.", "Only the strongest can join our ranks."],
     type: 'villager',
   },
-  // Magic City Sharia NPCs
   {
     id: 'magic-professor',
     name: 'Professor Sharia',
     characterType: 'mage',
     position: { x: 0, y: 0, z: -25 },
     area: 'magic-city-sharia',
-    dialogue: ["The Quantum Academy teaches the latest in magic-tech fusion.", 'Knowledge is power in the new age.'],
+    dialogue: ["The Quantum Academy teaches the latest in magic-tech fusion.", "Knowledge is power in the new age."],
     type: 'villager',
   },
   {
@@ -676,7 +956,7 @@ export const NPCS = [
     characterType: 'warrior',
     position: { x: 25, y: 0, z: 5 },
     area: 'magic-city-sharia',
-    dialogue: ["The Arcane Syndicate needs brave souls.", 'High-paying contracts available!'],
+    dialogue: ["The Arcane Syndicate needs brave souls.", "High-paying contracts available!"],
     type: 'quest-giver',
     quests: ['magic-city-quest-1'],
   },
@@ -686,7 +966,7 @@ export const NPCS = [
     characterType: 'healer',
     position: { x: -22, y: 0, z: 5 },
     area: 'magic-city-sharia',
-    dialogue: ["All knowledge is stored in the Data Archive.", 'From ancient spells to quantum algorithms.'],
+    dialogue: ["All knowledge is stored in the Data Archive.", "From ancient spells to quantum algorithms."],
     type: 'villager',
   },
   {
@@ -695,16 +975,12 @@ export const NPCS = [
     characterType: 'rogue',
     position: { x: 0, y: 0, z: 35 },
     area: 'magic-city-sharia',
-    dialogue: ["Rare tech and magic artifacts!", 'Come see my wares from across the stars!'],
+    dialogue: ["Rare tech and magic artifacts!", "Come see my wares from across the stars!"],
     type: 'shopkeeper',
   },
 ];
 
-// ============================================
-// 👹 MONSTERS (Sci-Fi Style)
-// ============================================
 export const MONSTERS = [
-  // Buena Village area
   {
     id: 'drone-1',
     name: 'Rogue Drone',
@@ -729,73 +1005,6 @@ export const MONSTERS = [
     attack: 20,
     defense: 12,
     xpReward: 40,
-    aggressive: true,
-  },
-  {
-    id: 'energy-slime',
-    name: 'Energy Slime',
-    type: 'slime',
-    position: { x: -20, y: 0, z: 15 },
-    area: 'buena-village',
-    color: 0x00aaff,
-    health: 40,
-    attack: 10,
-    defense: 5,
-    xpReward: 20,
-    aggressive: false,
-  },
-  // Asura Kingdom area
-  {
-    id: 'sentinel-drone',
-    name: 'Sentinel Drone',
-    type: 'drone',
-    position: { x: 10, y: 0, z: 10 },
-    area: 'asura-kingdom',
-    color: 0x0066aa,
-    health: 100,
-    attack: 25,
-    defense: 20,
-    xpReward: 60,
-    aggressive: true,
-  },
-  {
-    id: 'quantum-beast',
-    name: 'Quantum Beast',
-    type: 'beast',
-    position: { x: -25, y: 0, z: -15 },
-    area: 'asura-kingdom',
-    color: 0x4400aa,
-    health: 120,
-    attack: 30,
-    defense: 18,
-    xpReward: 80,
-    aggressive: true,
-  },
-  // Magic City Sharia area
-  {
-    id: 'magic-golem',
-    name: 'Magic Golem',
-    type: 'golem',
-    position: { x: 20, y: 0, z: -25 },
-    area: 'magic-city-sharia',
-    color: 0x664422,
-    health: 150,
-    attack: 35,
-    defense: 25,
-    xpReward: 100,
-    aggressive: false,
-  },
-  {
-    id: 'arcane-construct',
-    name: 'Arcane Construct',
-    type: 'construct',
-    position: { x: -30, y: 0, z: 20 },
-    area: 'magic-city-sharia',
-    color: 0x4466aa,
-    health: 90,
-    attack: 20,
-    defense: 15,
-    xpReward: 50,
     aggressive: true,
   },
 ];
