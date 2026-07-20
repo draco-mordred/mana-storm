@@ -43,6 +43,33 @@ export const ANIME_COLORS = {
 };
 
 // ============================================
+// 🎨 GENSHIN/HONKAI STYLE COLOR PALETTE
+// ============================================
+export const GENSHIN_COLORS = {
+  // Element colors matching Genshin Impact
+  pyro: 0xff6b35,
+  hydro: 0x1e90ff,
+  anemo: 0x68c87b,
+  electro: 0x9b59b6,
+  dendro: 0xf3d364,
+  cryo: 0x7fb3d3,
+  geo: 0xe6c86e,
+  // Character outfit themes
+  mondstadt: 0x4a6baf,
+  liyue: 0xc4a484,
+  inazuma: 0x9b59b6,
+  sumeru: 0x5e8c61,
+  fontaine: 0x1e90ff,
+  natlan: 0xff6b35,
+  snezhnaya: 0x7fb3d3,
+  // UI colors
+  primary: 0xffd700,
+  secondary: 0x00bfff,
+  background: 0x0a0a1a,
+  cardBg: 0x1a1a2e,
+};
+
+// ============================================
 // 🎭 CHARACTER PRESETS (Honkai Sci-Fi Style)
 // ============================================
 export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
@@ -62,6 +89,15 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     hairColor: 0x4a90d9,
     hairStyle: 'medium',
     age: 'teen',
+    artStyle: 'genshin',
+    silhouette: 'mage',
+    colorTheme: {
+      primary: 0x4a90d9,
+      secondary: 0x0066ff,
+      accent: 0x00aaff,
+      hair: 0x4a90d9,
+      eyes: 0x00ffff
+    },
   },
   warrior: {
     type: 'warrior',
@@ -79,6 +115,15 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     hairColor: 0x444455,
     hairStyle: 'short',
     age: 'adult',
+    artStyle: 'genshin',
+    silhouette: 'tank',
+    colorTheme: {
+      primary: 0x222233,
+      secondary: 0x111111,
+      accent: 0x4444ff,
+      hair: 0x444455,
+      eyes: 0xff4444
+    },
   },
   mage: {
     type: 'mage',
@@ -96,6 +141,15 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     hairColor: 0xffffff,
     hairStyle: 'long',
     age: 'adult',
+    artStyle: 'genshin',
+    silhouette: 'mage',
+    colorTheme: {
+      primary: 0x0066ff,
+      secondary: 0x4488ff,
+      accent: 0x88aaff,
+      hair: 0xffffff,
+      eyes: 0x00aaff
+    },
   },
   rogue: {
     type: 'rogue',
@@ -113,6 +167,15 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     hairColor: 0x228b22,
     hairStyle: 'short',
     age: 'adult',
+    artStyle: 'genshin',
+    silhouette: 'rogue',
+    colorTheme: {
+      primary: 0x003322,
+      secondary: 0x005533,
+      accent: 0x00ff88,
+      hair: 0x228b22,
+      eyes: 0x00ff00
+    },
   },
   archer: {
     type: 'archer',
@@ -130,6 +193,15 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     hairColor: 0xdaa520,
     hairStyle: 'ponytail',
     age: 'adult',
+    artStyle: 'genshin',
+    silhouette: 'archer',
+    colorTheme: {
+      primary: 0x330066,
+      secondary: 0x663399,
+      accent: 0xffcc00,
+      hair: 0xdaa520,
+      eyes: 0xffaa00
+    },
   },
   healer: {
     type: 'healer',
@@ -147,6 +219,15 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
     hairColor: 0xffd700,
     hairStyle: 'long',
     age: 'adult',
+    artStyle: 'genshin',
+    silhouette: 'healer',
+    colorTheme: {
+      primary: 0x00ffff,
+      secondary: 0x00cccc,
+      accent: 0xffffff,
+      hair: 0xffd700,
+      eyes: 0x00ff00
+    },
   },
   abie: {
     type: 'abie',
@@ -175,6 +256,18 @@ export const CHARACTER_PRESETS: Record<string, CharacterPreset> = {
       weapon: 'Stormcaller Bow',
       secondary: 'Zephyr & Tempest dual blades',
       armor: 'Leather Corset Outfit'
+    },
+    artStyle: 'honkai',
+    silhouette: 'marksman',
+    colorTheme: {
+      primary: 0x8B4513,
+      secondary: 0xA0522D,
+      accent: 0x00aaff,
+      hair: 0x8B4513,
+      eyes: 0x228B22,
+      wind: 0x40e0d0,
+      lightning: 0x9b59b6,
+      water: 0x1e90ff
     },
   },
 };
@@ -548,6 +641,9 @@ export const SKILLS: Record<string, Skill> = {
   },
 };
 
+// ============================================
+// 🗺️ WORLD CONSTANTS
+// ============================================
 export const GAME_CONSTANTS = {
   WORLD_SIZE: 1000,
   GRAVITY: -9.8,
@@ -576,17 +672,37 @@ export const WORLD_SETTINGS = {
   toneMappingExposure: 1.2,
 };
 
+// ============================================
+// 🎨 TOON SHADING GRADIENT (Genshin/Honkai Style)
+// ============================================
+// Optimized for vibrant anime cel-shading with strong contrast
+// and cool-toned shadows matching Genshin Impact & Honkai aesthetics
 export const TOON_GRADIENT = {
   stops: [
-    { position: 0.0, color: 0x000000 },
-    { position: 0.25, color: 0x222244 },
-    { position: 0.45, color: 0x444488 },
-    { position: 0.65, color: 0x8888cc },
-    { position: 0.85, color: 0xccccff },
+    { position: 0.0, color: 0x1a1a2e },   // Deep shadow (dark blue-black)
+    { position: 0.25, color: 0x3a3a5a },  // Shadow (cool purple-blue)
+    { position: 0.4, color: 0x5a5a8a },   // Mid-tone (blue-purple)
+    { position: 0.6, color: 0x8a8ab8 },   // Base color (soft purple)
+    { position: 0.8, color: 0xccccff },   // Highlight (light blue-white)
+    { position: 1.0, color: 0xffffff },    // Full highlight (pure white)
+  ],
+};
+
+// Alternative: Warmer gradient for fire/earth characters
+export const TOON_GRADIENT_WARM = {
+  stops: [
+    { position: 0.0, color: 0x2a1a1a },
+    { position: 0.25, color: 0x4a2a1a },
+    { position: 0.4, color: 0x6a4a2a },
+    { position: 0.6, color: 0x8a6a4a },
+    { position: 0.8, color: 0xffcc88 },
     { position: 1.0, color: 0xffffff },
   ],
 };
 
+// ============================================
+// 🏡 BUENA VILLAGE MAP DATA (Sci-Fi Retrofit)
+// ============================================
 export const BUENA_VILLAGE = {
   name: 'Buena Village',
   description: 'A peaceful village retrofitted with advanced technology',
