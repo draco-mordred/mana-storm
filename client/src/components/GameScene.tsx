@@ -7,11 +7,21 @@ import { io, Socket } from 'socket.io-client';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 import type { CharacterPreset, Skill, Player, CharacterType } from '../types';
-import { CHARACTER_PRESETS, SKILLS, GAME_CONSTANTS, WORLD_SETTINGS, TOON_GRADIENT, BUENA_VILLAGE, ASURA_KINGDOM, MAGIC_CITY_SHARIA } from '../utils/constants';
+import { CHARACTER_PRESETS, SKILLS, GAME_CONSTANTS, WORLD_SETTINGS, TOON_GRADIENT, BUENA_VILLAGE, ASURA_KINGDOM, MAGIC_CITY_SHARIA, GENSHIN_COLORS } from '../utils/constants';
 
 // Import model components
 import { AbieModel } from './AbieModel';
 import { StormcallerBow, ZephyrBlade, TempestBlade, DualBlades } from './Weapons';
+
+// Import outline effects
+import { 
+  CharacterOutline,
+  SceneOutline,
+  CharacterOutlineGroup,
+  HonkaiOutline,
+  GenshinOutline,
+  ElementalOutline 
+} from './OutlineEffect';
 
 // Import background images
 import homeMenuBg from '../assets/images/home-menu-bg.jpg';
@@ -138,44 +148,92 @@ function HonkaiCharacter({ player, gradientTexture }) {
   const outfitMaterial = useMemo(() => createToonMaterial(getOutfitColor(), gradientTexture), [gradientTexture]);
   const hairMaterial = useMemo(() => createToonMaterial(preset.hairColor || 0x4a90d9, gradientTexture), [gradientTexture, preset.hairColor]);
 
+  // Get outline color based on character's art style
+  const outlineColor = preset.colorTheme?.primary || preset.color || 0x000000;
+
   return (
     <group ref={groupRef}>
-      <group position={[0, 1.7, 0]}>
-        <mesh castShadow receiveShadow>
-          <boxGeometry args={[0.3, 0.35, 0.3]} />
-          {skinMaterial}
-        </mesh>
-        <mesh position={[0, 0.15, 0.05]} castShadow receiveShadow>
-          <boxGeometry args={[0.4, 0.25, 0.4]} />
-          {hairMaterial}
-        </mesh>
-        <mesh position={[0.07, 0.05, 0.15]} castShadow>
-          <sphereGeometry args={[0.03, 16, 16]} />
-          <meshToonMaterial color={0xffffff} gradientMap={gradientTexture} emissive={0x00aaff} emissiveIntensity={0.3} />
-        </mesh>
-        <mesh position={[-0.07, 0.05, 0.15]} castShadow>
-          <sphereGeometry args={[0.03, 16, 16]} />
-          <meshToonMaterial color={0xffffff} gradientMap={gradientTexture} emissive={0x00aaff} emissiveIntensity={0.3} />
-        </mesh>
-      </group>
-      <group position={[0, 1.3, 0]}>
-        <mesh castShadow receiveShadow>
-          <boxGeometry args={[0.45, 0.5, 0.25]} />
-          {outfitMaterial}
-        </mesh>
-      </group>
-      <group position={[-0.3, 1.25, 0]}>
-        <mesh castShadow receiveShadow><boxGeometry args={[0.12, 0.4, 0.12]} />{outfitMaterial}</mesh>
-      </group>
-      <group position={[0.3, 1.25, 0]}>
-        <mesh castShadow receiveShadow><boxGeometry args={[0.12, 0.4, 0.12]} />{outfitMaterial}</mesh>
-      </group>
-      <group position={[-0.12, 0.65, 0]}>
-        <mesh castShadow receiveShadow><boxGeometry args={[0.13, 0.55, 0.13]} />{outfitMaterial}</mesh>
-      </group>
-      <group position={[0.12, 0.65, 0]}>
-        <mesh castShadow receiveShadow><boxGeometry args={[0.13, 0.55, 0.13]} />{outfitMaterial}</mesh>
-      </group>
+      {/* Apply outline based on art style */}
+      {preset.artStyle === 'honkai' ? (
+        <HonkaiOutline>
+          <group position={[0, 1.7, 0]}>
+            <mesh castShadow receiveShadow>
+              <boxGeometry args={[0.3, 0.35, 0.3]} />
+              {skinMaterial}
+            </mesh>
+            <mesh position={[0, 0.15, 0.05]} castShadow receiveShadow>
+              <boxGeometry args={[0.4, 0.25, 0.4]} />
+              {hairMaterial}
+            </mesh>
+            <mesh position={[0.07, 0.05, 0.15]} castShadow>
+              <sphereGeometry args={[0.03, 16, 16]} />
+              <meshToonMaterial color={0xffffff} gradientMap={gradientTexture} emissive={0x00aaff} emissiveIntensity={0.3} />
+            </mesh>
+            <mesh position={[-0.07, 0.05, 0.15]} castShadow>
+              <sphereGeometry args={[0.03, 16, 16]} />
+              <meshToonMaterial color={0xffffff} gradientMap={gradientTexture} emissive={0x00aaff} emissiveIntensity={0.3} />
+            </mesh>
+          </group>
+          <group position={[0, 1.3, 0]}>
+            <mesh castShadow receiveShadow>
+              <boxGeometry args={[0.45, 0.5, 0.25]} />
+              {outfitMaterial}
+            </mesh>
+          </group>
+          <group position={[-0.3, 1.25, 0]}>
+            <mesh castShadow receiveShadow><boxGeometry args={[0.12, 0.4, 0.12]} />{outfitMaterial}</mesh>
+          </group>
+          <group position={[0.3, 1.25, 0]}>
+            <mesh castShadow receiveShadow><boxGeometry args={[0.12, 0.4, 0.12]} />{outfitMaterial}</mesh>
+          </group>
+          <group position={[-0.12, 0.65, 0]}>
+            <mesh castShadow receiveShadow><boxGeometry args={[0.13, 0.55, 0.13]} />{outfitMaterial}</mesh>
+          </group>
+          <group position={[0.12, 0.65, 0]}>
+            <mesh castShadow receiveShadow><boxGeometry args={[0.13, 0.55, 0.13]} />{outfitMaterial}</mesh>
+          </group>
+        </HonkaiOutline>
+      ) : (
+        <GenshinOutline>
+          <group position={[0, 1.7, 0]}>
+            <mesh castShadow receiveShadow>
+              <boxGeometry args={[0.3, 0.35, 0.3]} />
+              {skinMaterial}
+            </mesh>
+            <mesh position={[0, 0.15, 0.05]} castShadow receiveShadow>
+              <boxGeometry args={[0.4, 0.25, 0.4]} />
+              {hairMaterial}
+            </mesh>
+            <mesh position={[0.07, 0.05, 0.15]} castShadow>
+              <sphereGeometry args={[0.03, 16, 16]} />
+              <meshToonMaterial color={0xffffff} gradientMap={gradientTexture} emissive={0x00aaff} emissiveIntensity={0.3} />
+            </mesh>
+            <mesh position={[-0.07, 0.05, 0.15]} castShadow>
+              <sphereGeometry args={[0.03, 16, 16]} />
+              <meshToonMaterial color={0xffffff} gradientMap={gradientTexture} emissive={0x00aaff} emissiveIntensity={0.3} />
+            </mesh>
+          </group>
+          <group position={[0, 1.3, 0]}>
+            <mesh castShadow receiveShadow>
+              <boxGeometry args={[0.45, 0.5, 0.25]} />
+              {outfitMaterial}
+            </mesh>
+          </group>
+          <group position={[-0.3, 1.25, 0]}>
+            <mesh castShadow receiveShadow><boxGeometry args={[0.12, 0.4, 0.12]} />{outfitMaterial}</mesh>
+          </group>
+          <group position={[0.3, 1.25, 0]}>
+            <mesh castShadow receiveShadow><boxGeometry args={[0.12, 0.4, 0.12]} />{outfitMaterial}</mesh>
+          </group>
+          <group position={[-0.12, 0.65, 0]}>
+            <mesh castShadow receiveShadow><boxGeometry args={[0.13, 0.55, 0.13]} />{outfitMaterial}</mesh>
+          </group>
+          <group position={[0.12, 0.65, 0]}>
+            <mesh castShadow receiveShadow><boxGeometry args={[0.13, 0.55, 0.13]} />{outfitMaterial}</mesh>
+          </group>
+        </GenshinOutline>
+      )}
+
       <Html position={[0, 2.2, 0]} center>
         <div style={{ background: 'rgba(0,0,0,0.7)', color: '#00ffff', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', border: '1px solid #00aaff' }}>
           {player.name}
@@ -190,7 +248,7 @@ function HonkaiCharacter({ player, gradientTexture }) {
   );
 }
 
-// Abie Character Component with 3D model
+// Abie Character Component with 3D model and elemental outline
 function AbieCharacter({ player, gradientTexture }) {
   const groupRef = useRef<THREE.Group>(null);
   const preset = CHARACTER_PRESETS[player.characterType] || CHARACTER_PRESETS.abie;
@@ -208,45 +266,66 @@ function AbieCharacter({ player, gradientTexture }) {
     }
   });
 
-  // Update animation based on player actions (you can expand this)
+  // Update animation based on player actions
   useEffect(() => {
-    // This would be connected to your game state
-    // For now, we'll keep it simple
     setAnimation('Idle');
     setWeapon('bow');
   }, [player]);
 
+  // Get primary elemental affinity for outline color
+  const getPrimaryElement = () => {
+    if (preset.manaAffinity) {
+      const affinities = Object.entries(preset.manaAffinity);
+      // Find the element with highest value
+      let maxElement = 'wind';
+      let maxValue = 0;
+      for (const [element, value] of affinities) {
+        if (value > maxValue) {
+          maxValue = value;
+          maxElement = element;
+        }
+      }
+      return maxElement as 'wind' | 'lightning' | 'water';
+    }
+    return 'wind';
+  };
+
+  const primaryElement = getPrimaryElement();
+
   return (
     <group ref={groupRef}>
       <Suspense fallback={null}>
-        <AbieModel
-          position={[0, 0, 0]}
-          rotation={[0, 0, 0]}
-          scale={1}
-          animation={animation}
-          weapon={weapon}
-          castShadow
-          receiveShadow
-        />
-        {weapon === 'bow' && (
-          <StormcallerBow
-            position={[0.3, 0.2, -0.3]}
-            rotation={[0, 0, -Math.PI / 4]}
-            scale={0.8}
-            castShadow
-            receiveShadow
-          />
-        )}
-        {weapon === 'blades' && (
-          <DualBlades
-            position={[0, 0.1, -0.2]}
+        {/* Elemental outline based on Draco Abielle's affinities */}
+        <ElementalOutline element={primaryElement}>
+          <AbieModel
+            position={[0, 0, 0]}
             rotation={[0, 0, 0]}
-            scale={0.8}
-            bladeSpacing={0.4}
+            scale={1}
+            animation={animation}
+            weapon={weapon}
             castShadow
             receiveShadow
           />
-        )}
+          {weapon === 'bow' && (
+            <StormcallerBow
+              position={[0.3, 0.2, -0.3]}
+              rotation={[0, 0, -Math.PI / 4]}
+              scale={0.8}
+              castShadow
+              receiveShadow
+            />
+          )}
+          {weapon === 'blades' && (
+            <DualBlades
+              position={[0, 0.1, -0.2]}
+              rotation={[0, 0, 0]}
+              scale={0.8}
+              bladeSpacing={0.4}
+              castShadow
+              receiveShadow
+            />
+          )}
+        </ElementalOutline>
       </Suspense>
       <Html position={[0, 2.2, 0]} center>
         <div style={{ background: 'rgba(0,0,0,0.7)', color: '#00ffff', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', border: '1px solid #00aaff' }}>
